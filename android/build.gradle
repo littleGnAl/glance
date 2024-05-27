@@ -1,0 +1,88 @@
+group = "com.littlegnal.glance"
+version = "1.0-SNAPSHOT"
+
+buildscript {
+    ext.kotlin_version = "1.7.10"
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace = "com.littlegnal.glance"
+    }
+
+    compileSdk = 34
+    
+    externalNativeBuild {
+        cmake {
+            path "../src/CMakeLists.txt"
+
+            // The default CMake version for the Android Gradle Plugin is 3.10.2.
+            // https://developer.android.com/studio/projects/install-ndk#vanilla_cmake
+            //
+            // The Flutter tooling requires that developers have CMake 3.10 or later
+            // installed. You should not increase this version, as doing so will cause
+            // the plugin to fail to compile for some customers of the plugin.
+            // version "3.10.2"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 21
+
+       externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_static'
+            }
+        }
+    }
+
+    dependencies {
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
+        testImplementation("org.mockito:mockito-core:5.0.0")
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
+}
