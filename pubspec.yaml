@@ -15,6 +15,9 @@ dependencies:
   # json: ^0.20.2
   # macros: ^0.1.0-main
 
+  args: ^2.3.1
+  file: ^7.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
