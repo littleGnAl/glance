@@ -4,7 +4,7 @@ version: 0.0.1
 homepage:
 
 environment:
-  sdk: '>=3.5.0-152 <4.0.0'
+  sdk: '>=3.4.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
@@ -12,21 +12,21 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
   ffi: '>=1.1.2'
-  json: ^0.20.2
-  macros: ^0.1.0-main
+  # json: ^0.20.2
+  # macros: ^0.1.0-main
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
 
-dependency_overrides:
-  # Not yet published.
-  _fe_analyzer_shared:
-    git:
-      url: https://github.com/dart-lang/sdk.git
-      path: pkg/_fe_analyzer_shared
-      ref: main
+# dependency_overrides:
+#   # Not yet published.
+#   _fe_analyzer_shared:
+#     git:
+#       url: https://github.com/dart-lang/sdk.git
+#       path: pkg/_fe_analyzer_shared
+#       ref: main
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

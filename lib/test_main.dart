@@ -1,5 +1,5 @@
-import 'src/test_macro.dart';
+// import 'src/test_macro.dart';
 
-void main() {
-  User().add();
-}
+// void main() {
+//   User().add();
+// }

@@ -10,8 +10,8 @@ export 'src/test_macro.dart';
 //   }
 // }
 
-// void glance() {
-//   collectStack();
-// }
+void glance() {
+  collectStack();
+}
 
 

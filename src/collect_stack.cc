@@ -8,6 +8,9 @@
 #include <signal.h>
 #include <ucontext.h>
 #include <unistd.h>
+#include <sys/errno.h>
+#include <cxxabi.h>  // NOLINT
+#include <dlfcn.h>   // NOLINT
 
 #if defined(_M_X64) || defined(__x86_64__)
 #define HOST_ARCH_X64 1

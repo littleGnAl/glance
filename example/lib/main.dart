@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:glance/glance.dart';
 
 void main() {
-  // glance();
-  User().add();
+  glance();
+  // User().add();
   runApp(const MyApp());
 }
 
