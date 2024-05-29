@@ -17,6 +17,7 @@ dependencies:
 
   args: ^2.3.1
   file: ^7.0.0
+  process: ^5.0.2
 
 dev_dependencies:
   flutter_test:
