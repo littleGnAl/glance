@@ -10,7 +10,7 @@ import 'package:process/process.dart';
 void main(List<String> arguments) {
   const file.FileSystem fileSystem = LocalFileSystem();
   final processManager = const LocalProcessManager();
-  _symbolize(fileSystem, processManager, '', '');
+  _symbolize(fileSystem, processManager, '/Users/fenglang/codes/aw/glance_plugin/example/debug-info/app.android-arm.symbols', '/Users/fenglang/codes/aw/glance_plugin/example/stack_trace.json');
 }
 
 /// pc: 0xab333
@@ -47,11 +47,11 @@ void _symbolize(
       module = NativeModule(
         id: 0,
         path: path,
-        baseAddress: baseAddress,
+        baseAddress: int.parse(baseAddress),
         symbolName: '',
       );
     }
-    return NativeFrame(pc: pc, module: module);
+    return NativeFrame(pc: int.parse(pc), module: module);
   });
 
   for (final frame in frames) {
@@ -60,7 +60,7 @@ void _symbolize(
       final cmd = [
         'llvm-symbolizer',
         '--exe',
-        stackTraceFilePath,
+        symbolFilePath,
         '--adjust-vma',
         frame.module!.baseAddress,
         frame.pc,

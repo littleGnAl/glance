@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:isolate';
@@ -201,7 +202,6 @@ class NativeIrisEventBinding {
   }
 }
 
-
 // const int kBasicResultLength = 65536;
 
 // NativeStack captureStackOfTargetThread() {
@@ -268,19 +268,51 @@ void collectStack() {
   Isolate.run(() async {
     try {
       while (true) {
-        await Future.delayed(const Duration(milliseconds: 5));
+        await Future.delayed(const Duration(milliseconds: 100));
         final collect_stack = NativeIrisEventBinding(_loadLib());
         final stack = collect_stack.captureStackOfTargetThread();
 
-        for (var frame in stack.frames) {
+        final jsonMapList = stack.frames.map((frame) {
           if (frame.module != null) {
             final module = frame.module!;
-            print(
-                "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
+            // print(
+            //     "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
+
+            return {
+              "pc": frame.pc.toString(),
+              "baseAddress": module.baseAddress.toString(),
+              "path": module.path,
+            };
           } else {
-            print("Frame(pc: ${frame.pc})");
+            // print("Frame(pc: ${frame.pc})");
+            return {
+              "pc": frame.pc.toString(),
+            };
           }
+        }).toList();
+
+        // print(jsonEncode(jsonMapList));
+        for (final json in jsonMapList) {
+          print(jsonEncode(json));
         }
+
+        // for (var frame in stack.frames) {
+        //   if (frame.module != null) {
+        //     final module = frame.module!;
+        //     print(
+        //         "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
+
+        //     [
+        //       {
+        //         "pc": frame.pc.toString(),
+        //         "baseAddress": module.baseAddress.toString(),
+        //         "path": module.path,
+        //       }
+        //     ];
+        //   } else {
+        //     print("Frame(pc: ${frame.pc})");
+        //   }
+        // }
         print("");
       }
     } catch (e, st) {
