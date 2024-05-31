@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
 import 'package:glance/src/collect_stack.dart';
@@ -8,9 +9,17 @@ import 'package:path/path.dart' as path;
 import 'package:process/process.dart';
 
 void main(List<String> arguments) {
+  final parser = ArgParser();
+  parser.addOption('symbol-file', help: 'The symbol file path');
+  parser.addOption('stack-trace-file', help: 'The stack trace file path');
+
+  final results = parser.parse(['some', 'command', 'line', 'args']);
+  final symbolFile = results.option('symbol-file');
+  final stackTraceFile = results.option('stack-trace-file');
+
   const file.FileSystem fileSystem = LocalFileSystem();
-  final processManager = const LocalProcessManager();
-  _symbolize(fileSystem, processManager, '/Users/fenglang/codes/aw/glance_plugin/example/debug-info/app.android-arm.symbols', '/Users/fenglang/codes/aw/glance_plugin/example/stack_trace.json');
+  const processManager = LocalProcessManager();
+  _symbolize(fileSystem, processManager, symbolFile!, stackTraceFile!);
 }
 
 /// pc: 0xab333
