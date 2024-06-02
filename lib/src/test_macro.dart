@@ -1,4 +1,5 @@
 // @LibMacro()
+<<<<<<< Updated upstream
 // library my_lib;
 
 // import 'package:glance/src/modify_code_macro.dart';
@@ -9,6 +10,19 @@
 //   // final int? age;
 //   // final String name;
 //   // final String username;
+=======
+library my_lib;
+
+import 'package:glance/src/execution_trace_macro.dart';
+import 'package:glance/src/modify_code_macro.dart';
+
+// @JsonCodable() // Macro annotation.
+@ExecutionTraceMacro()
+class User {
+  // final int? age;
+  // final String name;
+  // final String username;
+>>>>>>> Stashed changes
 
 //   void add() {
 //     int a = 1;

@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 
 /// Dl_info from dlfcn.h.
 ///
@@ -266,6 +269,8 @@ void collectStack() {
   binding.SetCurrentThreadAsTarget();
 
   Isolate.run(() async {
+    final CircularBuffer<NativeFrame> circularBuffer = CircularBuffer(256);
+    scheduleMicrotask(() {});
     try {
       while (true) {
         await Future.delayed(const Duration(milliseconds: 100));
@@ -273,6 +278,7 @@ void collectStack() {
         final stack = collect_stack.captureStackOfTargetThread();
 
         final jsonMapList = stack.frames.map((frame) {
+          circularBuffer.add(frame);
           if (frame.module != null) {
             final module = frame.module!;
             // print(
@@ -320,3 +326,146 @@ void collectStack() {
     }
   });
 }
+
+class CircularBuffer<T> {
+  final List<T?> _buffer;
+  final int _size;
+  int _start = 0;
+  int _end = 0;
+
+  CircularBuffer(int size)
+      : _size = size + 1, // Extra space to differentiate full from empty
+        _buffer = List<T?>.filled(size + 1, null, growable: false);
+
+  bool get isFull => (_end + 1) % _size == _start;
+
+  bool get isEmpty => _start == _end;
+
+  void add(T element) {
+    if (isFull) {
+      throw StateError('Buffer is full');
+    }
+    _buffer[_end] = element;
+    _end = (_end + 1) % _size;
+  }
+
+  T? remove() {
+    if (isEmpty) {
+      throw StateError('Buffer is empty');
+    }
+    final element = _buffer[_start];
+    _buffer[_start] = null; // Clear the slot
+    _start = (_start + 1) % _size;
+    return element;
+  }
+
+  List<T?> getContents() {
+    if (isEmpty) {
+      return [];
+    }
+    if (_end > _start) {
+      return _buffer.sublist(_start, _end);
+    } else {
+      return _buffer.sublist(_start) + _buffer.sublist(0, _end);
+    }
+  }
+}
+
+class SampleThread {
+  final SendPort _commands;
+  final ReceivePort _responses;
+  final Map<int, Completer<Object?>> _activeRequests = {};
+  int _idCounter = 0;
+  bool _closed = false;
+
+  void getSample(List<int> timestampRange) {
+
+  }
+
+  Future<Object?> parseJson(String message) async {
+    if (_closed) throw StateError('Closed');
+    final completer = Completer<Object?>.sync();
+    final id = _idCounter++;
+    _activeRequests[id] = completer;
+    _commands.send((id, message));
+    return await completer.future;
+  }
+
+  static Future<SampleThread> spawn() async {
+    // Create a receive port and add its initial message handler
+    final initPort = RawReceivePort();
+    final connection = Completer<(ReceivePort, SendPort)>.sync();
+    initPort.handler = (initialMessage) {
+      final commandPort = initialMessage as SendPort;
+      connection.complete((
+        ReceivePort.fromRawReceivePort(initPort),
+        commandPort,
+      ));
+    };
+
+    // Spawn the isolate.
+    try {
+      await Isolate.spawn(_startRemoteIsolate, (initPort.sendPort));
+    } on Object {
+      initPort.close();
+      rethrow;
+    }
+
+    final (ReceivePort receivePort, SendPort sendPort) =
+        await connection.future;
+
+    return SampleThread._(receivePort, sendPort);
+  }
+
+  SampleThread._(this._responses, this._commands) {
+    _responses.listen(_handleResponsesFromIsolate);
+  }
+
+  void _handleResponsesFromIsolate(dynamic message) {
+    final (int id, Object? response) = message as (int, Object?);
+    final completer = _activeRequests.remove(id)!;
+
+    if (response is RemoteError) {
+      completer.completeError(response);
+    } else {
+      completer.complete(response);
+    }
+
+    if (_closed && _activeRequests.isEmpty) _responses.close();
+  }
+
+  static void _handleCommandsToIsolate(
+    ReceivePort receivePort,
+    SendPort sendPort,
+  ) {
+    receivePort.listen((message) {
+      if (message == 'shutdown') {
+        receivePort.close();
+        return;
+      }
+      final (int id, String jsonText) = message as (int, String);
+      try {
+        final jsonData = jsonDecode(jsonText);
+        sendPort.send((id, jsonData));
+      } catch (e) {
+        sendPort.send((id, RemoteError(e.toString(), '')));
+      }
+    });
+  }
+
+  static void _startRemoteIsolate(SendPort sendPort) {
+    final receivePort = ReceivePort();
+    sendPort.send(receivePort.sendPort);
+    _handleCommandsToIsolate(receivePort, sendPort);
+  }
+
+  void close() {
+    if (!_closed) {
+      _closed = true;
+      _commands.send('shutdown');
+      if (_activeRequests.isEmpty) _responses.close();
+      print('--- port closed --- ');
+    }
+  }
+}
+
