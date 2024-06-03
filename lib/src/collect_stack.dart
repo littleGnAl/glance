@@ -371,6 +371,19 @@ class CircularBuffer<T> {
   }
 }
 
+abstract class _Request {}
+
+abstract class _Response {}
+
+class _ShutdownRequest extends _Request {}
+
+class _GetSamplesRequest extends _Request {}
+
+class _GetSamplesResponse extends _Response {
+  final List<NativeFrame> samples;
+  _GetSamplesResponse(this.samples);
+}
+
 class SampleThread {
   final SendPort _commands;
   final ReceivePort _responses;
@@ -378,9 +391,7 @@ class SampleThread {
   int _idCounter = 0;
   bool _closed = false;
 
-  void getSample(List<int> timestampRange) {
-
-  }
+  void getSample(List<int> timestampRange) {}
 
   Future<Object?> parseJson(String message) async {
     if (_closed) throw StateError('Closed');
@@ -389,6 +400,19 @@ class SampleThread {
     _activeRequests[id] = completer;
     _commands.send((id, message));
     return await completer.future;
+  }
+
+  static ffi.DynamicLibrary _loadLib() {
+    const _libName = 'glance';
+    if (Platform.isWindows) {
+      return ffi.DynamicLibrary.open('$_libName.dll');
+    }
+
+    if (Platform.isAndroid) {
+      return ffi.DynamicLibrary.open('lib$_libName.so');
+    }
+
+    return ffi.DynamicLibrary.process();
   }
 
   static Future<SampleThread> spawn() async {
@@ -438,18 +462,67 @@ class SampleThread {
     ReceivePort receivePort,
     SendPort sendPort,
   ) {
+    final CircularBuffer<NativeFrame> circularBuffer = CircularBuffer(256);
+    
+    Future<void> _loop() async {
+      final collect_stack = NativeIrisEventBinding(_loadLib());
+
+      try {
+        while (true) {
+          await Future.delayed(const Duration(milliseconds: 100));
+
+          final stack = collect_stack.captureStackOfTargetThread();
+
+          final jsonMapList = stack.frames.map((frame) {
+            circularBuffer.add(frame);
+            if (frame.module != null) {
+              final module = frame.module!;
+              // print(
+              //     "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
+
+              return {
+                "pc": frame.pc.toString(),
+                "baseAddress": module.baseAddress.toString(),
+                "path": module.path,
+              };
+            } else {
+              // print("Frame(pc: ${frame.pc})");
+              return {
+                "pc": frame.pc.toString(),
+              };
+            }
+          }).toList();
+
+          // print(jsonEncode(jsonMapList));
+          for (final json in jsonMapList) {
+            print(jsonEncode(json));
+          }
+
+          print("");
+        }
+      } catch (e, st) {
+        print('$e\n$st');
+      }
+    }
+
+    _loop();
+
     receivePort.listen((message) {
-      if (message == 'shutdown') {
+      if (message is _ShutdownRequest) {
         receivePort.close();
         return;
+      } else if (message is _GetSamplesRequest) {
+        sendPort.send(_GetSamplesResponse(circularBuffer.getContents()));
+        return;
       }
-      final (int id, String jsonText) = message as (int, String);
-      try {
-        final jsonData = jsonDecode(jsonText);
-        sendPort.send((id, jsonData));
-      } catch (e) {
-        sendPort.send((id, RemoteError(e.toString(), '')));
-      }
+
+      // final (int id, String jsonText) = message as (int, String);
+      // try {
+      //   final jsonData = jsonDecode(jsonText);
+      //   sendPort.send((id, jsonData));
+      // } catch (e) {
+      //   sendPort.send((id, RemoteError(e.toString(), '')));
+      // }
     });
   }
 
@@ -468,4 +541,3 @@ class SampleThread {
     }
   }
 }
-
