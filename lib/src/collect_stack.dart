@@ -270,6 +270,7 @@ void collectStack() {
 
   Isolate.run(() async {
     final CircularBuffer<NativeFrame> circularBuffer = CircularBuffer(256);
+    circularBuffer.getContents().where((e) => e != null);
     scheduleMicrotask(() {});
     try {
       while (true) {
@@ -371,17 +372,88 @@ class CircularBuffer<T> {
   }
 }
 
+class StackCollector {
+  CircularBuffer<NativeFrame>? circularBuffer;
+
+  ffi.DynamicLibrary _loadLib() {
+    const _libName = 'glance';
+    if (Platform.isWindows) {
+      return ffi.DynamicLibrary.open('$_libName.dll');
+    }
+
+    if (Platform.isAndroid) {
+      return ffi.DynamicLibrary.open('lib$_libName.so');
+    }
+
+    return ffi.DynamicLibrary.process();
+  }
+
+  List<NativeFrame> getStacktrace() {
+    assert(circularBuffer != null);
+    return List.unmodifiable(
+        circularBuffer!.getContents().where((e) => e != null));
+  }
+
+  void setCurrentThreadAsTarget() {
+    final binding = NativeIrisEventBinding(_loadLib());
+    binding.SetCurrentThreadAsTarget();
+  }
+
+  Future<void> loop() async {
+    circularBuffer ??= CircularBuffer(256);
+    try {
+      while (true) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        final collect_stack = NativeIrisEventBinding(_loadLib());
+        final stack = collect_stack.captureStackOfTargetThread();
+
+        final jsonMapList = stack.frames.map((frame) {
+          circularBuffer?.add(frame);
+          if (frame.module != null) {
+            final module = frame.module!;
+            // print(
+            //     "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
+
+            return {
+              "pc": frame.pc.toString(),
+              "baseAddress": module.baseAddress.toString(),
+              "path": module.path,
+            };
+          } else {
+            // print("Frame(pc: ${frame.pc})");
+            return {
+              "pc": frame.pc.toString(),
+            };
+          }
+        }).toList();
+
+        // print(jsonEncode(jsonMapList));
+        for (final json in jsonMapList) {
+          print(jsonEncode(json));
+        }
+
+        print("");
+      }
+    } catch (e, st) {
+      print('$e\n$st');
+    }
+  }
+}
+
 abstract class _Request {}
 
 abstract class _Response {}
 
-class _ShutdownRequest extends _Request {}
+class _ShutdownRequest implements _Request {}
 
-class _GetSamplesRequest extends _Request {}
+class _GetSamplesRequest implements _Request {
+  const _GetSamplesRequest(this.timestampRange);
+  final List<int> timestampRange;
+}
 
-class _GetSamplesResponse extends _Response {
-  final List<NativeFrame> samples;
-  _GetSamplesResponse(this.samples);
+class _GetSamplesResponse implements _Response {
+  const _GetSamplesResponse(this.data);
+  final List<NativeFrame> data;
 }
 
 class SampleThread {
@@ -391,15 +463,13 @@ class SampleThread {
   int _idCounter = 0;
   bool _closed = false;
 
-  void getSample(List<int> timestampRange) {}
-
-  Future<Object?> parseJson(String message) async {
+  Future<List<NativeFrame>> getSamples(List<int> timestampRange) async {
     if (_closed) throw StateError('Closed');
     final completer = Completer<Object?>.sync();
     final id = _idCounter++;
     _activeRequests[id] = completer;
-    _commands.send((id, message));
-    return await completer.future;
+    _commands.send((id, _GetSamplesRequest(timestampRange)));
+    return (await completer.future) as List<NativeFrame>;
   }
 
   static ffi.DynamicLibrary _loadLib() {
@@ -416,6 +486,8 @@ class SampleThread {
   }
 
   static Future<SampleThread> spawn() async {
+    StackCollector().setCurrentThreadAsTarget();
+
     // Create a receive port and add its initial message handler
     final initPort = RawReceivePort();
     final connection = Completer<(ReceivePort, SendPort)>.sync();
@@ -452,6 +524,7 @@ class SampleThread {
     if (response is RemoteError) {
       completer.completeError(response);
     } else {
+      assert(response is _GetSamplesResponse);
       completer.complete(response);
     }
 
@@ -462,59 +535,24 @@ class SampleThread {
     ReceivePort receivePort,
     SendPort sendPort,
   ) {
-    final CircularBuffer<NativeFrame> circularBuffer = CircularBuffer(256);
-    
-    Future<void> _loop() async {
-      final collect_stack = NativeIrisEventBinding(_loadLib());
-
-      try {
-        while (true) {
-          await Future.delayed(const Duration(milliseconds: 100));
-
-          final stack = collect_stack.captureStackOfTargetThread();
-
-          final jsonMapList = stack.frames.map((frame) {
-            circularBuffer.add(frame);
-            if (frame.module != null) {
-              final module = frame.module!;
-              // print(
-              //     "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
-
-              return {
-                "pc": frame.pc.toString(),
-                "baseAddress": module.baseAddress.toString(),
-                "path": module.path,
-              };
-            } else {
-              // print("Frame(pc: ${frame.pc})");
-              return {
-                "pc": frame.pc.toString(),
-              };
-            }
-          }).toList();
-
-          // print(jsonEncode(jsonMapList));
-          for (final json in jsonMapList) {
-            print(jsonEncode(json));
-          }
-
-          print("");
-        }
-      } catch (e, st) {
-        print('$e\n$st');
-      }
-    }
-
-    _loop();
-
+    final StackCollector collector = StackCollector();
     receivePort.listen((message) {
       if (message is _ShutdownRequest) {
         receivePort.close();
         return;
-      } else if (message is _GetSamplesRequest) {
-        sendPort.send(_GetSamplesResponse(circularBuffer.getContents()));
+      }
+
+      if (message is _GetSamplesRequest) {
+        int start = message.timestampRange[0];
+        int end = message.timestampRange[1];
+        final stacktrace = collector.getStacktrace();
+
+        sendPort.send(_GetSamplesResponse(collector.getStacktrace()));
         return;
       }
+
+      // Not reachable.
+      assert(false);
 
       // final (int id, String jsonText) = message as (int, String);
       // try {
