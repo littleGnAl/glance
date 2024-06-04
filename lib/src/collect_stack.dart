@@ -21,7 +21,12 @@ final class DlInfo extends ffi.Struct {
 class NativeFrame {
   final NativeModule? module;
   final int pc;
-  NativeFrame({this.module, required this.pc});
+  final int timestamp;
+  NativeFrame({
+    this.module,
+    required this.pc,
+    required this.timestamp,
+  });
 }
 
 class NativeModule {
@@ -172,7 +177,10 @@ class NativeIrisEventBinding {
           .map((addr) {
         final found = Dladdr(ffi.Pointer<ffi.Void>.fromAddress(addr), dlInfo);
         if (found == 0) {
-          return NativeFrame(pc: addr);
+          return NativeFrame(
+            pc: addr,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+          );
         }
 
         if (dlInfo.ref.symbolName != ffi.nullptr) {
@@ -196,7 +204,11 @@ class NativeIrisEventBinding {
           symbolName: sn != ffi.nullptr ? sn.toDartString() : '',
         );
 
-        return NativeFrame(module: module, pc: addr);
+        return NativeFrame(
+          module: module,
+          pc: addr,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+        );
       }).toList(growable: false);
 
       return NativeStack(
@@ -536,6 +548,8 @@ class SampleThread {
     SendPort sendPort,
   ) {
     final StackCollector collector = StackCollector();
+    collector.loop();
+
     receivePort.listen((message) {
       if (message is _ShutdownRequest) {
         receivePort.close();
@@ -545,9 +559,11 @@ class SampleThread {
       if (message is _GetSamplesRequest) {
         int start = message.timestampRange[0];
         int end = message.timestampRange[1];
-        final stacktrace = collector.getStacktrace();
+        final stacktrace = collector.getStacktrace().where((e) {
+          return start >= e.timestamp && e.timestamp <= end;
+        }).toList();
 
-        sendPort.send(_GetSamplesResponse(collector.getStacktrace()));
+        sendPort.send(_GetSamplesResponse(stacktrace));
         return;
       }
 
