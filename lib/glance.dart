@@ -1,8 +1,4 @@
-import 'package:glance/src/collect_stack.dart';
-
-import 'glance_platform_interface.dart';
-
-export 'src/test_macro.dart';
+export 'src/glance_internal.dart';
 
 // class Glance {
 //   Future<String?> getPlatformVersion() {
@@ -10,8 +6,8 @@ export 'src/test_macro.dart';
 //   }
 // }
 
-void glance() {
-  collectStack();
-}
+// void glance() {
+//   collectStack();
+// }
 
 

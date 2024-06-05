@@ -5,8 +5,6 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 
 /// Dl_info from dlfcn.h.
 ///
@@ -481,7 +479,9 @@ class SampleThread {
     final id = _idCounter++;
     _activeRequests[id] = completer;
     _commands.send((id, _GetSamplesRequest(timestampRange)));
-    return (await completer.future) as List<NativeFrame>;
+    final (_, response) =
+        (await completer.future) as (int, _GetSamplesResponse);
+    return response.data;
   }
 
   static ffi.DynamicLibrary _loadLib() {
@@ -536,7 +536,7 @@ class SampleThread {
     if (response is RemoteError) {
       completer.completeError(response);
     } else {
-      assert(response is _GetSamplesResponse);
+      // assert(response is _GetSamplesResponse);
       completer.complete(response);
     }
 
@@ -556,9 +556,10 @@ class SampleThread {
         return;
       }
 
-      if (message is _GetSamplesRequest) {
-        int start = message.timestampRange[0];
-        int end = message.timestampRange[1];
+      if (message is (int, _GetSamplesRequest)) {
+        final (_, request) = message;
+        int start = request.timestampRange[0];
+        int end = request.timestampRange[1];
         final stacktrace = collector.getStacktrace().where((e) {
           return start >= e.timestamp && e.timestamp <= end;
         }).toList();
@@ -567,6 +568,7 @@ class SampleThread {
         return;
       }
 
+      print('Not reachable message: $message');
       // Not reachable.
       assert(false);
 

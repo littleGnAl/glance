@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:glance/glance.dart';
 
 void main() {
-  glance();
+  Glance.instance.addJankCallback((stacktrace) {
+    print(stacktrace.toString());
+  });
+  Glance.instance.start();
   runApp(const MyApp());
 }
 

@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:isolate';
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'dart:ui';
 
 import 'package:flutter/scheduler.dart';
@@ -39,7 +36,7 @@ class Glance {
 
   final List<JankCallback> _jankCallbacks = [];
 
-  Future<void> start(GlanceConfiguration? config) async {
+  Future<void> start({GlanceConfiguration? config}) async {
     _sampleThread ??= await SampleThread.spawn();
 
     final jankThreshold = config?.jankThreshold ?? _kDefaultJankThreshold;
