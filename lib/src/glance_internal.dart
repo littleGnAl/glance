@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/scheduler.dart';
@@ -12,6 +13,19 @@ typedef JankCallback = void Function(StackTrace stacktrace);
 class StackTrace {
   const StackTrace._(this.frames);
   final List<NativeFrame> frames;
+
+  @override
+  String toString() {
+    return jsonEncode(frames.map((frame) {
+      return {
+        "pc": frame.pc.toString(),
+        "timestamp": frame.timestamp,
+        if (frame.module != null)
+          "baseAddress": frame.module!.baseAddress.toString(),
+        if (frame.module != null) "path": frame.module!.path,
+      };
+    }).toList());
+  }
 }
 
 class GlanceConfiguration {
@@ -44,8 +58,10 @@ class Glance {
       int now = DateTime.now().millisecondsSinceEpoch;
       for (int i = 0; i < timings.length; ++i) {
         final timing = timings[i];
+        final diff = timing.timestampInMicroseconds(FramePhase.rasterFinish) -
+            timing.timestampInMicroseconds(FramePhase.buildStart);
         final totalSpan = timing.totalSpan.inMilliseconds;
-        if (now - totalSpan > jankThreshold) {
+        if (diff > jankThreshold) {
           // report jank
           _report(timings, i);
           break;
@@ -76,6 +92,7 @@ class Glance {
 
     assert(_sampleThread != null);
     final frames = await _sampleThread!.getSamples(timestampRange);
+    print('hhhh');
     final stacktrace = StackTrace._(frames);
 
     final callbacks = List.from(_jankCallbacks);

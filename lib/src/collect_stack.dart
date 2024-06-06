@@ -177,22 +177,22 @@ class NativeIrisEventBinding {
         if (found == 0) {
           return NativeFrame(
             pc: addr,
-            timestamp: DateTime.now().millisecondsSinceEpoch,
+            timestamp: DateTime.now().microsecondsSinceEpoch,
           );
         }
 
-        if (dlInfo.ref.symbolName != ffi.nullptr) {
-          print(
-              'dlInfo.ref.symbolName: ${dlInfo.ref.symbolName.toDartString()}');
-        }
+        // if (dlInfo.ref.symbolName != ffi.nullptr) {
+        //   print(
+        //       'dlInfo.ref.symbolName: ${dlInfo.ref.symbolName.toDartString()}');
+        // }
 
         final sn = LookupSymbolName(dlInfo);
-        if (sn != ffi.nullptr) {
-          print('sn: ${sn.toDartString()}');
-        }
-        if (dlInfo.ref.fileName != ffi.nullptr) {
-          print('dlInfo.ref.fileName: ${dlInfo.ref.fileName.toDartString()}');
-        }
+        // if (sn != ffi.nullptr) {
+        //   print('sn: ${sn.toDartString()}');
+        // }
+        // if (dlInfo.ref.fileName != ffi.nullptr) {
+        //   print('dlInfo.ref.fileName: ${dlInfo.ref.fileName.toDartString()}');
+        // }
 
         final modulePath = dlInfo.ref.fileName.toDartString();
         final module = modules[modulePath] ??= NativeModule(
@@ -205,7 +205,7 @@ class NativeIrisEventBinding {
         return NativeFrame(
           module: module,
           pc: addr,
-          timestamp: DateTime.now().millisecondsSinceEpoch,
+          timestamp: DateTime.now().microsecondsSinceEpoch,
         );
       }).toList(growable: false);
 
@@ -259,84 +259,84 @@ class NativeIrisEventBinding {
 //   });
 // }
 
-void collectStack() {
-  ffi.DynamicLibrary _loadLib() {
-    const _libName = 'glance';
-    if (Platform.isWindows) {
-      return ffi.DynamicLibrary.open('$_libName.dll');
-    }
+// void collectStack() {
+//   ffi.DynamicLibrary _loadLib() {
+//     const _libName = 'glance';
+//     if (Platform.isWindows) {
+//       return ffi.DynamicLibrary.open('$_libName.dll');
+//     }
 
-    if (Platform.isAndroid) {
-      return ffi.DynamicLibrary.open('lib$_libName.so');
-    }
+//     if (Platform.isAndroid) {
+//       return ffi.DynamicLibrary.open('lib$_libName.so');
+//     }
 
-    return ffi.DynamicLibrary.process();
-  }
+//     return ffi.DynamicLibrary.process();
+//   }
 
-  final binding = NativeIrisEventBinding(_loadLib());
-  // final collect_stack
+//   final binding = NativeIrisEventBinding(_loadLib());
+//   // final collect_stack
 
-  binding.SetCurrentThreadAsTarget();
+//   binding.SetCurrentThreadAsTarget();
 
-  Isolate.run(() async {
-    final CircularBuffer<NativeFrame> circularBuffer = CircularBuffer(256);
-    circularBuffer.readAll().where((e) => e != null);
-    scheduleMicrotask(() {});
-    try {
-      while (true) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        final collect_stack = NativeIrisEventBinding(_loadLib());
-        final stack = collect_stack.captureStackOfTargetThread();
+//   Isolate.run(() async {
+//     final CircularBuffer<NativeFrame> circularBuffer = CircularBuffer(256);
+//     circularBuffer.readAll().where((e) => e != null);
+//     scheduleMicrotask(() {});
+//     try {
+//       while (true) {
+//         await Future.delayed(const Duration(milliseconds: 100));
+//         final collect_stack = NativeIrisEventBinding(_loadLib());
+//         final stack = collect_stack.captureStackOfTargetThread();
 
-        final jsonMapList = stack.frames.map((frame) {
-          circularBuffer.write(frame);
-          if (frame.module != null) {
-            final module = frame.module!;
-            // print(
-            //     "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
+//         final jsonMapList = stack.frames.map((frame) {
+//           circularBuffer.write(frame);
+//           if (frame.module != null) {
+//             final module = frame.module!;
+//             // print(
+//             //     "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
 
-            return {
-              "pc": frame.pc.toString(),
-              "baseAddress": module.baseAddress.toString(),
-              "path": module.path,
-            };
-          } else {
-            // print("Frame(pc: ${frame.pc})");
-            return {
-              "pc": frame.pc.toString(),
-            };
-          }
-        }).toList();
+//             return {
+//               "pc": frame.pc.toString(),
+//               "baseAddress": module.baseAddress.toString(),
+//               "path": module.path,
+//             };
+//           } else {
+//             // print("Frame(pc: ${frame.pc})");
+//             return {
+//               "pc": frame.pc.toString(),
+//             };
+//           }
+//         }).toList();
 
-        // print(jsonEncode(jsonMapList));
-        for (final json in jsonMapList) {
-          print(jsonEncode(json));
-        }
+//         // print(jsonEncode(jsonMapList));
+//         // for (final json in jsonMapList) {
+//         //   print(jsonEncode(json));
+//         // }
 
-        // for (var frame in stack.frames) {
-        //   if (frame.module != null) {
-        //     final module = frame.module!;
-        //     print(
-        //         "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
+//         // for (var frame in stack.frames) {
+//         //   if (frame.module != null) {
+//         //     final module = frame.module!;
+//         //     print(
+//         //         "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
 
-        //     [
-        //       {
-        //         "pc": frame.pc.toString(),
-        //         "baseAddress": module.baseAddress.toString(),
-        //         "path": module.path,
-        //       }
-        //     ];
-        //   } else {
-        //     print("Frame(pc: ${frame.pc})");
-        //   }
-        // }
-        print("");
-      }
-    } catch (e, st) {
-      print('$e\n$st');
-    }
-  });
-}
+//         //     [
+//         //       {
+//         //         "pc": frame.pc.toString(),
+//         //         "baseAddress": module.baseAddress.toString(),
+//         //         "path": module.path,
+//         //       }
+//         //     ];
+//         //   } else {
+//         //     print("Frame(pc: ${frame.pc})");
+//         //   }
+//         // }
+//         print("");
+//       }
+//     } catch (e, st) {
+//       print('$e\n$st');
+//     }
+//   });
+// }
 
 class CircularBuffer<T> {
   final List<T?> _buffer;
@@ -364,7 +364,7 @@ class CircularBuffer<T> {
 
   T? read() {
     if (isEmpty) {
-      throw Exception('Buffer is empty');
+      return null;
     }
 
     final value = _buffer[_head];
@@ -448,11 +448,11 @@ class StackCollector {
         }).toList();
 
         // print(jsonEncode(jsonMapList));
-        for (final json in jsonMapList) {
-          print(jsonEncode(json));
-        }
+        // for (final json in jsonMapList) {
+        //   print(jsonEncode(json));
+        // }
 
-        print("");
+        // print("");
       }
     } catch (e, st) {
       print('$e\n$st');
@@ -467,12 +467,14 @@ abstract class _Response {}
 class _ShutdownRequest implements _Request {}
 
 class _GetSamplesRequest implements _Request {
-  const _GetSamplesRequest(this.timestampRange);
+  const _GetSamplesRequest(this.id, this.timestampRange);
+  final int id;
   final List<int> timestampRange;
 }
 
 class _GetSamplesResponse implements _Response {
-  const _GetSamplesResponse(this.data);
+  const _GetSamplesResponse(this.id, this.data);
+  final int id;
   final List<NativeFrame> data;
 }
 
@@ -488,9 +490,8 @@ class SampleThread {
     final completer = Completer<Object?>.sync();
     final id = _idCounter++;
     _activeRequests[id] = completer;
-    _commands.send((id, _GetSamplesRequest(timestampRange)));
-    final (_, response) =
-        (await completer.future) as (int, _GetSamplesResponse);
+    _commands.send(_GetSamplesRequest(id, timestampRange));
+    final response = (await completer.future) as _GetSamplesResponse;
     return response.data;
   }
 
@@ -540,12 +541,11 @@ class SampleThread {
   }
 
   void _handleResponsesFromIsolate(dynamic message) {
-    final (int id, _GetSamplesResponse? response) =
-        message as (int, _GetSamplesResponse?);
-    final completer = _activeRequests.remove(id)!;
+    final _GetSamplesResponse response = message as _GetSamplesResponse;
+    final completer = _activeRequests.remove(response.id)!;
 
     if (response is RemoteError) {
-      // completer.completeError(response);
+      completer.completeError(response);
     } else {
       // assert(response is _GetSamplesResponse);
       completer.complete(response);
@@ -567,24 +567,25 @@ class SampleThread {
         return;
       }
 
-      if (message is (int, _GetSamplesRequest)) {
-        final (_, request) = message;
-        int start = request.timestampRange[0];
-        int end = request.timestampRange[1];
+      if (message is _GetSamplesRequest) {
+        int start = message.timestampRange[0];
+        int end = message.timestampRange[1];
+        print('start: $start, end: $end');
         // /lib/arm64/libflutter.so
         List<String> pathFilters = <String>[
           'libflutter.so',
           'libapp.so',
         ];
         final stacktrace = collector.getStacktrace().where((e) {
-          return start >= e.timestamp &&
-              e.timestamp <= end &&
-              pathFilters.any((pathFilter) {
-                return e.module?.path.contains(pathFilter) == true;
-              });
+          // return e.timestamp >=start  && e.timestamp <= end;
+          return true;
+          // &&
+          // pathFilters.any((pathFilter) {
+          //   return e.module?.path.contains(pathFilter) == true;
+          // });
         }).toList();
 
-        sendPort.send(_GetSamplesResponse(stacktrace));
+        sendPort.send(_GetSamplesResponse(message.id, stacktrace));
         return;
       }
 

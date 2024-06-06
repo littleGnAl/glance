@@ -3,7 +3,7 @@ import 'package:glance/glance.dart';
 
 void main() {
   Glance.instance.addJankCallback((stacktrace) {
-    print(stacktrace.toString());
+    debugPrint('stacktrace: ${stacktrace.toString()}', wrapWidth: 2048);
   });
   Glance.instance.start();
   runApp(const MyApp());
