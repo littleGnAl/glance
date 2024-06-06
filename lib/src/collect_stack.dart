@@ -280,7 +280,7 @@ void collectStack() {
 
   Isolate.run(() async {
     final CircularBuffer<NativeFrame> circularBuffer = CircularBuffer(256);
-    circularBuffer.getContents().where((e) => e != null);
+    circularBuffer.readAll().where((e) => e != null);
     scheduleMicrotask(() {});
     try {
       while (true) {
@@ -289,7 +289,7 @@ void collectStack() {
         final stack = collect_stack.captureStackOfTargetThread();
 
         final jsonMapList = stack.frames.map((frame) {
-          circularBuffer.add(frame);
+          circularBuffer.write(frame);
           if (frame.module != null) {
             final module = frame.module!;
             // print(
@@ -340,45 +340,56 @@ void collectStack() {
 
 class CircularBuffer<T> {
   final List<T?> _buffer;
-  final int _size;
-  int _start = 0;
-  int _end = 0;
+  int _head = 0;
+  int _tail = 0;
+  bool _isFull = false;
 
-  CircularBuffer(int size)
-      : _size = size + 1, // Extra space to differentiate full from empty
-        _buffer = List<T?>.filled(size + 1, null, growable: false);
+  CircularBuffer(int size) : _buffer = List<T?>.filled(size, null);
 
-  bool get isFull => (_end + 1) % _size == _start;
+  bool get isEmpty => !_isFull && _head == _tail;
+  bool get isFull => _isFull;
 
-  bool get isEmpty => _start == _end;
-
-  void add(T element) {
-    if (isFull) {
-      throw StateError('Buffer is full');
+  void write(T value) {
+    if (_isFull) {
+      _head = (_head + 1) % _buffer.length;
     }
-    _buffer[_end] = element;
-    _end = (_end + 1) % _size;
+
+    _buffer[_tail] = value;
+    _tail = (_tail + 1) % _buffer.length;
+
+    if (_tail == _head) {
+      _isFull = true;
+    }
   }
 
-  T? remove() {
+  T? read() {
     if (isEmpty) {
-      throw StateError('Buffer is empty');
+      throw Exception('Buffer is empty');
     }
-    final element = _buffer[_start];
-    _buffer[_start] = null; // Clear the slot
-    _start = (_start + 1) % _size;
-    return element;
+
+    final value = _buffer[_head];
+    _buffer[_head] = null; // Clear the slot
+    _head = (_head + 1) % _buffer.length;
+    _isFull = false;
+
+    return value;
   }
 
-  List<T?> getContents() {
-    if (isEmpty) {
-      return [];
+  List<T?> readAll() {
+    List<T?> result = [];
+    int current = _head;
+
+    while (current != _tail || (_isFull && result.length < _buffer.length)) {
+      result.add(_buffer[current]);
+      current = (current + 1) % _buffer.length;
     }
-    if (_end > _start) {
-      return _buffer.sublist(_start, _end);
-    } else {
-      return _buffer.sublist(_start) + _buffer.sublist(0, _end);
-    }
+
+    return result;
+  }
+
+  @override
+  String toString() {
+    return _buffer.toString();
   }
 }
 
@@ -400,8 +411,7 @@ class StackCollector {
 
   List<NativeFrame> getStacktrace() {
     assert(circularBuffer != null);
-    return List.unmodifiable(
-        circularBuffer!.getContents().where((e) => e != null));
+    return List.unmodifiable(circularBuffer!.readAll().where((e) => e != null));
   }
 
   void setCurrentThreadAsTarget() {
@@ -418,7 +428,7 @@ class StackCollector {
         final stack = collect_stack.captureStackOfTargetThread();
 
         final jsonMapList = stack.frames.map((frame) {
-          circularBuffer?.add(frame);
+          circularBuffer?.write(frame);
           if (frame.module != null) {
             final module = frame.module!;
             // print(
@@ -530,11 +540,12 @@ class SampleThread {
   }
 
   void _handleResponsesFromIsolate(dynamic message) {
-    final (int id, Object? response) = message as (int, Object?);
+    final (int id, _GetSamplesResponse? response) =
+        message as (int, _GetSamplesResponse?);
     final completer = _activeRequests.remove(id)!;
 
     if (response is RemoteError) {
-      completer.completeError(response);
+      // completer.completeError(response);
     } else {
       // assert(response is _GetSamplesResponse);
       completer.complete(response);
@@ -560,8 +571,17 @@ class SampleThread {
         final (_, request) = message;
         int start = request.timestampRange[0];
         int end = request.timestampRange[1];
+        // /lib/arm64/libflutter.so
+        List<String> pathFilters = <String>[
+          'libflutter.so',
+          'libapp.so',
+        ];
         final stacktrace = collector.getStacktrace().where((e) {
-          return start >= e.timestamp && e.timestamp <= end;
+          return start >= e.timestamp &&
+              e.timestamp <= end &&
+              pathFilters.any((pathFilter) {
+                return e.module?.path.contains(pathFilter) == true;
+              });
         }).toList();
 
         sendPort.send(_GetSamplesResponse(stacktrace));
