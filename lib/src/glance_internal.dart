@@ -55,9 +55,13 @@ class Glance {
 
     final jankThreshold = config?.jankThreshold ?? _kDefaultJankThreshold;
     SchedulerBinding.instance.addTimingsCallback((List<FrameTiming> timings) {
-      int now = DateTime.now().millisecondsSinceEpoch;
+      int now = DateTime.now().microsecondsSinceEpoch;
+      print('now: $now');
       for (int i = 0; i < timings.length; ++i) {
         final timing = timings[i];
+        print('timing: ${timing.toString()}');
+        print('timing.timestampInMicroseconds(FramePhase.rasterFinish): ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
+        print('timing.timestampInMicroseconds(FramePhase.buildStart): ${timing.timestampInMicroseconds(FramePhase.buildStart)}');
         final diff = timing.timestampInMicroseconds(FramePhase.rasterFinish) -
             timing.timestampInMicroseconds(FramePhase.buildStart);
         final totalSpan = timing.totalSpan.inMilliseconds;
