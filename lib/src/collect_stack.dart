@@ -177,7 +177,7 @@ class NativeIrisEventBinding {
         if (found == 0) {
           return NativeFrame(
             pc: addr,
-            timestamp: DateTime.now().microsecondsSinceEpoch,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
           );
         }
 
@@ -205,7 +205,7 @@ class NativeIrisEventBinding {
         return NativeFrame(
           module: module,
           pc: addr,
-          timestamp: DateTime.now().microsecondsSinceEpoch,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
         );
       }).toList(growable: false);
 
