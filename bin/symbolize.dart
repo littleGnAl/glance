@@ -51,6 +51,7 @@ void _symbolize(
     final baseAddress = e['baseAddress'];
     final path = e['path'];
     final pc = e['pc'];
+    final ts = e['timestamp'];
     NativeModule? module;
     if (baseAddress != null && path != null) {
       module = NativeModule(
@@ -60,7 +61,7 @@ void _symbolize(
         symbolName: '',
       );
     }
-    return NativeFrame(pc: int.parse(pc), module: module);
+    return NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
   });
 
   for (final frame in frames) {

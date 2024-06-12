@@ -57,23 +57,56 @@ class GlanceWidgetBinding extends WidgetsFlutterBinding {
 /// 16ms
 const int _kDefaultJankThreshold = 16;
 
-typedef JankCallback = void Function(StackTrace stacktrace);
+typedef JankCallback = void Function(JankInformation info);
 
-class StackTrace {
-  const StackTrace._(this.frames);
-  final List<NativeFrame> frames;
+// class StackTrace {
+//   const StackTrace._(this.frames);
+//   final List<NativeFrame> frames;
+
+//   @override
+//   String toString() {
+//     return jsonEncode(toJson());
+//   }
+
+//   List<Map<String, Object?>> toJson() {
+//     return frames.map((frame) {
+//       return {
+//         "pc": frame.pc.toString(),
+//         "timestamp": frame.timestamp,
+//         if (frame.module != null)
+//           "baseAddress": frame.module!.baseAddress.toString(),
+//         if (frame.module != null) "path": frame.module!.path,
+//       };
+//     }).toList();
+//   }
+// }
+
+class JankInformation {
+  const JankInformation._({
+    required this.stackTraces,
+    required this.jankDuration,
+  });
+  final List<NativeFrame> stackTraces;
+  final Duration jankDuration;
 
   @override
   String toString() {
-    return jsonEncode(frames.map((frame) {
-      return {
-        "pc": frame.pc.toString(),
-        "timestamp": frame.timestamp,
-        if (frame.module != null)
-          "baseAddress": frame.module!.baseAddress.toString(),
-        if (frame.module != null) "path": frame.module!.path,
-      };
-    }).toList());
+    return jsonEncode(toJson());
+  }
+
+  Map<String, Object?> toJson() {
+    return {
+      'jankDuration': jankDuration.inMilliseconds,
+      'stackTraces': stackTraces.map((frame) {
+        return {
+          "pc": frame.pc.toString(),
+          "timestamp": frame.timestamp,
+          if (frame.module != null)
+            "baseAddress": frame.module!.baseAddress.toString(),
+          if (frame.module != null) "path": frame.module!.path,
+        };
+      }).toList()
+    };
   }
 }
 
@@ -137,6 +170,9 @@ class Glance {
   }
 
   Future<void> _report(int startTimestamp, int endTimestamp) async {
+    if (_sampleThread == null) {
+      return;
+    }
     // Report the nearest 3 timings if possiable.
     // int preIndex = index - 1;
     // int nextIndex = index + 1;
@@ -155,8 +191,10 @@ class Glance {
 
     assert(_sampleThread != null);
     final frames = await _sampleThread!.getSamples(timestampRange);
-    print('hhhh');
-    final stacktrace = StackTrace._(frames);
+    final stacktrace = JankInformation._(
+      stackTraces: frames,
+      jankDuration: Duration(milliseconds: endTimestamp - startTimestamp),
+    );
 
     final callbacks = List.from(_jankCallbacks);
     for (final callback in callbacks) {

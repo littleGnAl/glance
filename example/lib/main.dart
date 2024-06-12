@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:glance/glance.dart';
 
 void main() {
-  Glance.instance.addJankCallback((stacktrace) {
-    debugPrint('stacktrace: ${stacktrace.toString()}', wrapWidth: 2048);
+  Glance.instance.addJankCallback((info) {
+    // debugPrint('stacktrace: ${stacktrace.toString()}', wrapWidth: 2048);
+    print('stacktrace: ${info.toJson()}');
   });
   Glance.instance.start();
   runApp(const MyApp());
@@ -57,6 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
+    for (int i = 0; i < 1000; ++i) {
+      jsonEncode({
+        for (int i = 0; i < 10000; ++i) 'aaa': 0,
+      });
+    }
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
