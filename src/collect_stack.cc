@@ -11,6 +11,8 @@
 #include <sys/errno.h>
 #include <cxxabi.h>  // NOLINT
 #include <dlfcn.h>   // NOLINT
+#include <chrono>
+#include "dart_sdk/include/dart_tools_api.h"
 
 #if defined(_M_X64) || defined(__x86_64__)
 #define HOST_ARCH_X64 1
@@ -260,3 +262,29 @@ extern "C" char * LookupSymbolName(Dl_info *info) {
   
   return const_cast<char *>(info->dli_sname);
 }
+
+extern "C" int64_t TimestampNowInMicrosSinceEpoch() {
+  const auto elapsed = std::chrono::system_clock::now().time_since_epoch();
+  return std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() / 1000;
+}
+
+// static constexpr int64_t kNanosPerSecond = 1000000000;
+
+// int64_t ConvertToNanos(int64_t ticks, int64_t frequency) {
+//   int64_t nano_seconds = (ticks / frequency) * kNanosPerSecond;
+//   int64_t leftover_ticks = ticks % frequency;
+//   int64_t leftover_nanos = (leftover_ticks * kNanosPerSecond) / frequency;
+//   return nano_seconds + leftover_nanos;
+// }
+
+// extern "C" int64_t TimestampNowInMicrosSinceEpoch() {
+//   const int64_t ticks = Dart_TimelineGetTicks();
+//   const int64_t frequency = Dart_TimelineGetTicksFrequency();
+//   // optimization for the most common case.
+//   if (frequency != kNanosPerSecond) {
+//     return ConvertToNanos(ticks, frequency) / 1000;
+//   } else {
+//     return ticks / 1000;
+//   }
+// }
+

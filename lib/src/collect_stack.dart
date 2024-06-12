@@ -129,6 +129,18 @@ class NativeIrisEventBinding {
   late final _LookupSymbolName = _LookupSymbolNamePtr.asFunction<
       ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>();
 
+  // TimestampNowInMicrosSinceEpoch
+
+  int TimestampNowInMicrosSinceEpoch() {
+    return _TimestampNowInMicrosSinceEpoch();
+  }
+
+  late final _TimestampNowInMicrosSinceEpochPtr =
+      _lookup<ffi.NativeFunction<ffi.Int64 Function()>>(
+          'TimestampNowInMicrosSinceEpoch');
+  late final _TimestampNowInMicrosSinceEpoch =
+      _TimestampNowInMicrosSinceEpochPtr.asFunction<int Function()>();
+
   int Dladdr(
     ffi.Pointer<ffi.Void> addr,
     ffi.Pointer<DlInfo> info,
@@ -177,7 +189,8 @@ class NativeIrisEventBinding {
         if (found == 0) {
           return NativeFrame(
             pc: addr,
-            timestamp: DateTime.now().millisecondsSinceEpoch,
+            timestamp:
+                TimestampNowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
           );
         }
 
@@ -205,7 +218,8 @@ class NativeIrisEventBinding {
         return NativeFrame(
           module: module,
           pc: addr,
-          timestamp: DateTime.now().millisecondsSinceEpoch,
+          timestamp:
+              TimestampNowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
         );
       }).toList(growable: false);
 

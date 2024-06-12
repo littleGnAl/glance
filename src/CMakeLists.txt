@@ -11,6 +11,7 @@ project(${LIBRARY_NAME} VERSION ${LIBRARY_VERSION})
 
 set(SOURCES 
     "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack.cc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/dart_sdk/include/dart_tools_api.h"
     )
 
 add_library(${LIBRARY_NAME} SHARED
