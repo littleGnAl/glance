@@ -224,7 +224,6 @@ class Glance {
 
     assert(_sampleThread != null);
     final frames = await _sampleThread!.getSamples(timestampRange);
-    print('hhhh');
     final stacktrace = JankInformation._(
       stackTraces: frames,
       jankDuration: Duration(microseconds: 0),

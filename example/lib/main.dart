@@ -1,12 +1,30 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:glance/glance.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 void main() {
-  Glance.instance.addJankCallback((info) {
+  Glance.instance.addJankCallback((info) async {
     // debugPrint('stacktrace: ${stacktrace.toString()}', wrapWidth: 2048);
     print('stacktrace: ${info.toJson()}');
+
+    compute((msg) async {
+      final (token, info) = msg;
+      BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
+
+      final docDir = await getApplicationDocumentsDirectory();
+      final stacktraceFilePath = path.join(
+        docDir.absolute.path,
+        'jank_trace',
+        'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
+      );
+      await File(stacktraceFilePath).writeAsString(jsonEncode(info.toJson()));
+    }, (RootIsolateToken.instance, info));
   });
   Glance.instance.start();
   runApp(const MyApp());

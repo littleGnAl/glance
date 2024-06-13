@@ -408,6 +408,11 @@ class CircularBuffer<T> {
 }
 
 class StackCollector {
+  // With all default configurations, the length is approximately 641 of 2s
+  // based on the dart sdk implementation.
+  // https://github.com/dart-lang/sdk/blob/bcaf745a9be6c4af0c338c43e6304c9e1c4c5535/runtime/vm/profiler.cc#L642
+  static const _bufferCount = 641;
+
   CircularBuffer<NativeFrame>? circularBuffer;
 
   ffi.DynamicLibrary _loadLib() {
@@ -434,10 +439,31 @@ class StackCollector {
   }
 
   Future<void> loop() async {
-    circularBuffer ??= CircularBuffer(256);
+// max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
+
+// intptr_t Profiler::CalculateSampleBufferCapacity() {
+//   if (FLAG_sample_buffer_duration <= 0) {
+//     return SampleBlockBuffer::kDefaultBlockCount;
+//   }
+//   // Deeper stacks require more than a single Sample object to be represented
+//   // correctly. These samples are chained, so we need to determine the worst
+//   // case sample chain length for a single stack.
+//   // Sample::kPCArraySizeInWords* kMaxSamplesPerTick / 4
+//   // 32 * 4 / 4
+//   const intptr_t max_sample_chain_length =
+//       FLAG_max_profile_depth / kMaxSamplesPerTick;
+//       // 2 * 1000 * （32 * 4 / 4）
+//   const intptr_t sample_count = FLAG_sample_buffer_duration *
+//                                 SamplesPerSecond() * max_sample_chain_length;
+//       // （2 * 1000 * （32 * 4 / 4））/ 100 + 1
+//   return (sample_count / SampleBlock::kSamplesPerBlock) + 1;
+// }
+
+    //
+    circularBuffer ??= CircularBuffer(_bufferCount);
     try {
       while (true) {
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 5));
         final collect_stack = NativeIrisEventBinding(_loadLib());
         final stack = collect_stack.captureStackOfTargetThread();
 
@@ -592,11 +618,10 @@ class SampleThread {
         ];
         final stacktrace = collector.getStacktrace().where((e) {
           // return e.timestamp >=start  && e.timestamp <= end;
-          return true;
-          // &&
-          // pathFilters.any((pathFilter) {
-          //   return e.module?.path.contains(pathFilter) == true;
-          // });
+          return e.module != null &&
+              pathFilters.any((pathFilter) {
+                return e.module?.path.contains(pathFilter) == true;
+              });
         }).toList();
 
         sendPort.send(_GetSamplesResponse(message.id, stacktrace));
