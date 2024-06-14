@@ -13,7 +13,7 @@ void main(List<String> arguments) {
   parser.addOption('symbol-file', help: 'The symbol file path');
   parser.addOption('stack-trace-file', help: 'The stack trace file path');
 
-  final results = parser.parse(['some', 'command', 'line', 'args']);
+  final results = parser.parse(arguments);
   final symbolFile = results.option('symbol-file');
   final stackTraceFile = results.option('stack-trace-file');
 
@@ -47,7 +47,7 @@ void _symbolize(
   final stackTrackFileContent = stackTrackFile.readAsStringSync();
   final stackTraceJson = jsonDecode(stackTrackFileContent);
 
-  final frames = List.from(stackTraceJson).map((e) {
+  final frames = List.from(stackTraceJson['stackTraces']).map((e) {
     final baseAddress = e['baseAddress'];
     final path = e['path'];
     final pc = e['pc'];

@@ -23,7 +23,12 @@ void main() {
         'jank_trace',
         'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
       );
-      await File(stacktraceFilePath).writeAsString(jsonEncode(info.toJson()));
+      final file = File(stacktraceFilePath);
+      file.createSync(recursive: true);
+      File(stacktraceFilePath).writeAsStringSync(
+        jsonEncode(info.toJson()),
+        flush: true,
+      );
     }, (RootIsolateToken.instance, info));
   });
   Glance.instance.start();

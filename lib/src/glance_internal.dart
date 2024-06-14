@@ -94,6 +94,10 @@ class JankInformation {
     return jsonEncode(toJson());
   }
 
+  // JankInformation fromJson(Map<String, Object?> json) {
+
+  // }
+
   Map<String, Object?> toJson() {
     return {
       'jankDuration': jankDuration.inMilliseconds,
