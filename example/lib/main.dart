@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -7,22 +8,34 @@ import 'package:flutter/services.dart';
 import 'package:glance/glance.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
+  _startGlance();
+  runApp(const MyApp());
+}
+
+Future<void> _startGlance() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  Glance.instance.start();
+
+  await Permission.storage.request();
+
   Glance.instance.addJankCallback((info) async {
     // debugPrint('stacktrace: ${stacktrace.toString()}', wrapWidth: 2048);
-    print('stacktrace: ${info.toJson()}');
+    // print('stacktrace: ${info.toJson()}');
 
     compute((msg) async {
       final (token, info) = msg;
       BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
 
-      final docDir = await getApplicationDocumentsDirectory();
+      final docDir = await getExternalStorageDirectory();
       final stacktraceFilePath = path.join(
-        docDir.absolute.path,
+        docDir!.absolute.path,
         'jank_trace',
         'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
       );
+      print('stacktraceFilePath: ${stacktraceFilePath}');
       final file = File(stacktraceFilePath);
       file.createSync(recursive: true);
       File(stacktraceFilePath).writeAsStringSync(
@@ -31,8 +44,7 @@ void main() {
       );
     }, (RootIsolateToken.instance, info));
   });
-  Glance.instance.start();
-  runApp(const MyApp());
+  // Glance.instance.start();
 }
 
 class MyApp extends StatelessWidget {
@@ -83,11 +95,16 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
+    final watch = Stopwatch();
+    watch.start();
     for (int i = 0; i < 1000; ++i) {
       jsonEncode({
         for (int i = 0; i < 10000; ++i) 'aaa': 0,
       });
     }
+    Timeline.now;
+    watch.stop();
+    print('_incrementCounter time spend: ${watch.elapsedMilliseconds}');
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below

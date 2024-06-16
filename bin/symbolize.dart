@@ -76,7 +76,11 @@ void _symbolize(
         frame.pc,
       ];
       final result = processManager.runSync(cmd);
-      stdout.writeln(result.stdout);
+      stdout.writeln(
+          'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}');
+      String outString = result.stdout;
+      outString = outString.split('\n').join('##');
+      stdout.writeln(outString);
     }
   }
 }

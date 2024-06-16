@@ -39,6 +39,11 @@ class GlanceWidgetBinding extends WidgetsFlutterBinding {
 
   @override
   void handleBeginFrame(Duration? rawTimeStamp) {
+    // onHandleDrawFrameEndCallback_?.call(
+    //   beginFrameTimeInMillis_,
+    //   DateTime.now().millisecondsSinceEpoch,
+    // );
+
     beginFrameTimeInMillis_ = DateTime.now().millisecondsSinceEpoch;
     super.handleBeginFrame(rawTimeStamp);
   }
@@ -139,15 +144,17 @@ class Glance {
   Future<void> start({GlanceConfiguration? config}) async {
     final jankThreshold = config?.jankThreshold ?? _kDefaultJankThreshold;
 
-    // final binding = GlanceWidgetBinding.ensureInitialized();
-    // binding.setOnHandleDrawFrameEndCallback(
-    //     (int beginFrameTimeInMillis, int drawFrameTimeInMillis) {
-    //   final diff = drawFrameTimeInMillis - beginFrameTimeInMillis;
-    //   if (diff > jankThreshold) {
-    //     // report jank
-    //     _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
-    //   }
-    // });
+    final binding = GlanceWidgetBinding.ensureInitialized();
+    binding.setOnHandleDrawFrameEndCallback(
+        (int beginFrameTimeInMillis, int drawFrameTimeInMillis) {
+      final diff = drawFrameTimeInMillis - beginFrameTimeInMillis;
+      print('diff: $diff');
+      if (diff > jankThreshold) {
+        // report jank
+        // _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
+      }
+      _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
+    });
 
     _sampleThread ??= await SampleThread.spawn();
 
@@ -155,82 +162,50 @@ class Glance {
       int now = DateTime.now().microsecondsSinceEpoch;
       print('now: $now');
       for (int i = 0; i < timings.length; ++i) {
-        final timing = timings[i];
-        print('timing: ${timing.toString()}');
+        final FrameTiming timing = timings[i];
         print(
-            'timing.timestampInMicroseconds(FramePhase.rasterFinish): ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
-        print(
-            'timing.timestampInMicroseconds(FramePhase.buildStart): ${timing.timestampInMicroseconds(FramePhase.buildStart)}');
-        final diff = timing.timestampInMicroseconds(FramePhase.rasterFinish) -
-            timing.timestampInMicroseconds(FramePhase.buildStart);
-        final totalSpan = timing.totalSpan.inMilliseconds;
-        if (diff > jankThreshold) {
-          // report jank
-          _report(timings, i);
-          break;
-        }
+            'timing.buildDuration: ${timing.buildDuration.inMilliseconds}, timing.rasterDuration: ${timing.rasterDuration.inMilliseconds}, timing.totalSpan: ${timing.totalSpan.inMilliseconds}');
+        //   print(
+        //       'timing.timestampInMicroseconds(FramePhase.rasterFinish): ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
+        //   print(
+        //       'timing.timestampInMicroseconds(FramePhase.buildStart): ${timing.timestampInMicroseconds(FramePhase.buildStart)}');
+        //   final diff = timing.timestampInMicroseconds(FramePhase.rasterFinish) -
+        //       timing.timestampInMicroseconds(FramePhase.buildStart);
+        //   final totalSpan = timing.totalSpan.inMilliseconds;
+        //   if (diff > jankThreshold) {
+        //     // report jank
+        //     _report(timings, i);
+        //     break;
+        //   }
       }
     });
   }
 
-  // Future<void> _report(int startTimestamp, int endTimestamp) async {
-  //   if (_sampleThread == null) {
-  //     return;
-  //   }
-  //   // Report the nearest 3 timings if possiable.
-  //   // int preIndex = index - 1;
-  //   // int nextIndex = index + 1;
-  //   // List<FrameTiming> reportTimings = [];
-  //   // if (preIndex >= 0) {
-  //   //   reportTimings.add(timings[preIndex]);
-  //   // }
-  //   // reportTimings.add(timings[index]);
-  //   // if (nextIndex < timings.length) {
-  //   //   reportTimings.add(timings[nextIndex]);
-  //   // }
-  //   // assert(reportTimings.isNotEmpty);
-
-  //   // // Request stacktraces
-  //   final timestampRange = [startTimestamp, endTimestamp];
-
-  //   assert(_sampleThread != null);
-  //   final frames = await _sampleThread!.getSamples(timestampRange);
-  //   final stacktrace = JankInformation._(
-  //     stackTraces: frames,
-  //     jankDuration: Duration(milliseconds: endTimestamp - startTimestamp),
-  //   );
-
-  //   final callbacks = List.from(_jankCallbacks);
-  //   for (final callback in callbacks) {
-  //     callback(stacktrace);
-  //   }
-  // }
-
-  Future<void> _report(List<FrameTiming> timings, int index) async {
+  Future<void> _report(int startTimestamp, int endTimestamp) async {
+    if (_sampleThread == null) {
+      return;
+    }
     // Report the nearest 3 timings if possiable.
-    int preIndex = index - 1;
-    int nextIndex = index + 1;
-    List<FrameTiming> reportTimings = [];
-    if (preIndex >= 0) {
-      reportTimings.add(timings[preIndex]);
-    }
-    reportTimings.add(timings[index]);
-    if (nextIndex < timings.length) {
-      reportTimings.add(timings[nextIndex]);
-    }
-    assert(reportTimings.isNotEmpty);
+    // int preIndex = index - 1;
+    // int nextIndex = index + 1;
+    // List<FrameTiming> reportTimings = [];
+    // if (preIndex >= 0) {
+    //   reportTimings.add(timings[preIndex]);
+    // }
+    // reportTimings.add(timings[index]);
+    // if (nextIndex < timings.length) {
+    //   reportTimings.add(timings[nextIndex]);
+    // }
+    // assert(reportTimings.isNotEmpty);
 
-    // Request stacktraces
-    final timestampRange = [
-      reportTimings.first.timestampInMicroseconds(FramePhase.buildStart),
-      reportTimings.last.timestampInMicroseconds(FramePhase.rasterFinish),
-    ];
+    // // Request stacktraces
+    final timestampRange = [startTimestamp, endTimestamp];
 
     assert(_sampleThread != null);
     final frames = await _sampleThread!.getSamples(timestampRange);
     final stacktrace = JankInformation._(
       stackTraces: frames,
-      jankDuration: Duration(microseconds: 0),
+      jankDuration: Duration(milliseconds: endTimestamp - startTimestamp),
     );
 
     final callbacks = List.from(_jankCallbacks);
@@ -238,6 +213,39 @@ class Glance {
       callback(stacktrace);
     }
   }
+
+  // Future<void> _report(List<FrameTiming> timings, int index) async {
+  //   // Report the nearest 3 timings if possiable.
+  //   int preIndex = index - 1;
+  //   int nextIndex = index + 1;
+  //   List<FrameTiming> reportTimings = [];
+  //   if (preIndex >= 0) {
+  //     reportTimings.add(timings[preIndex]);
+  //   }
+  //   reportTimings.add(timings[index]);
+  //   if (nextIndex < timings.length) {
+  //     reportTimings.add(timings[nextIndex]);
+  //   }
+  //   assert(reportTimings.isNotEmpty);
+
+  //   // Request stacktraces
+  //   final timestampRange = [
+  //     reportTimings.first.timestampInMicroseconds(FramePhase.buildStart),
+  //     reportTimings.last.timestampInMicroseconds(FramePhase.rasterFinish),
+  //   ];
+
+  //   assert(_sampleThread != null);
+  //   final frames = await _sampleThread!.getSamples(timestampRange);
+  //   final stacktrace = JankInformation._(
+  //     stackTraces: frames,
+  //     jankDuration: Duration(microseconds: 0),
+  //   );
+
+  //   final callbacks = List.from(_jankCallbacks);
+  //   for (final callback in callbacks) {
+  //     callback(stacktrace);
+  //   }
+  // }
 
   void addJankCallback(JankCallback callback) {
     _jankCallbacks.add(callback);

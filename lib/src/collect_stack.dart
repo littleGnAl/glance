@@ -412,6 +412,8 @@ class StackCollector {
   // based on the dart sdk implementation.
   // https://github.com/dart-lang/sdk/blob/bcaf745a9be6c4af0c338c43e6304c9e1c4c5535/runtime/vm/profiler.cc#L642
   static const _bufferCount = 641;
+  // static const _bufferCount = 1281;
+  static const _sampleRateInMilliseconds = 1;
 
   CircularBuffer<NativeFrame>? circularBuffer;
 
@@ -463,12 +465,24 @@ class StackCollector {
     circularBuffer ??= CircularBuffer(_bufferCount);
     try {
       while (true) {
-        await Future.delayed(const Duration(milliseconds: 5));
+        await Future.delayed(
+            const Duration(milliseconds: _sampleRateInMilliseconds));
         final collect_stack = NativeIrisEventBinding(_loadLib());
         final stack = collect_stack.captureStackOfTargetThread();
 
         final jsonMapList = stack.frames.map((frame) {
-          circularBuffer?.write(frame);
+          List<String> pathFilters = <String>[
+            'libflutter.so',
+            'libapp.so',
+          ];
+
+          if (frame.module != null &&
+              pathFilters.any((pathFilter) {
+                return frame.module?.path.contains(pathFilter) == true;
+              })) {
+            circularBuffer?.write(frame);
+          }
+
           if (frame.module != null) {
             final module = frame.module!;
             // print(
