@@ -7,6 +7,8 @@ import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
 
+import 'glance_internal.dart';
+
 /// Dl_info from dlfcn.h.
 ///
 /// See `man dladdr`.
@@ -428,6 +430,12 @@ class StackCollector {
 
   CircularBuffer<NativeFrame>? circularBuffer;
 
+  SlowFunctionsDetectedCallback? _slowFunctionsDetectedCallback;
+  void setSlowFunctionsDetectedCallback(
+      SlowFunctionsDetectedCallback callback) {
+    _slowFunctionsDetectedCallback = callback;
+  }
+
   ffi.DynamicLibrary _loadLib() {
     const _libName = 'glance';
     if (Platform.isWindows) {
@@ -548,6 +556,11 @@ class StackCollector {
         maps[pc] = timeSpent;
       }
     }
+
+    if (needReport) {
+      _slowFunctionsDetectedCallback?.call(SlowFunctionsInformation(
+          stackTraces: List.from(maps.values), jankDuration: Duration()));
+    }
   }
 }
 
@@ -569,12 +582,21 @@ class _GetSamplesResponse implements _Response {
   final List<NativeFrame> data;
 }
 
+class _SlowFunctionsDetectedResponse implements _Response {
+  const _SlowFunctionsDetectedResponse(this.id, this.data);
+  final int id;
+  final SlowFunctionsInformation data;
+}
+
 class SampleThread {
   final SendPort _commands;
   final ReceivePort _responses;
   final Map<int, Completer<Object?>> _activeRequests = {};
   int _idCounter = 0;
   bool _closed = false;
+
+  List<SlowFunctionsDetectedCallback> _slowFunctionsDetectedCallbackCallbacks =
+      [];
 
   Future<List<NativeFrame>> getSamples(List<int> timestampRange) async {
     if (_closed) throw StateError('Closed');
@@ -631,7 +653,20 @@ class SampleThread {
     _responses.listen(_handleResponsesFromIsolate);
   }
 
+  void addSlowFunctionsDetectedCallback(
+      SlowFunctionsDetectedCallback callback) {
+    _slowFunctionsDetectedCallbackCallbacks.add(callback);
+  }
+
   void _handleResponsesFromIsolate(dynamic message) {
+    if (message is _SlowFunctionsDetectedResponse) {
+      for (final callback
+          in List.from(_slowFunctionsDetectedCallbackCallbacks)) {
+        callback(message.data);
+      }
+      return;
+    }
+
     final _GetSamplesResponse response = message as _GetSamplesResponse;
     final completer = _activeRequests.remove(response.id)!;
 
@@ -650,6 +685,9 @@ class SampleThread {
     SendPort sendPort,
   ) {
     final StackCollector collector = StackCollector();
+    collector.setSlowFunctionsDetectedCallback((info) {
+      sendPort.send(_SlowFunctionsDetectedResponse(0, info));
+    });
     collector.loop();
 
     receivePort.listen((message) {

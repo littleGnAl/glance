@@ -64,6 +64,9 @@ const int _kDefaultJankThreshold = 16;
 
 typedef JankCallback = void Function(JankInformation info);
 
+typedef SlowFunctionsDetectedCallback = void Function(
+    SlowFunctionsInformation info);
+
 // class StackTrace {
 //   const StackTrace._(this.frames);
 //   final List<NativeFrame> frames;
@@ -119,6 +122,42 @@ class JankInformation {
   }
 }
 
+class SlowFunctionsInformation {
+  const SlowFunctionsInformation({
+    required this.stackTraces,
+    required this.jankDuration,
+  });
+  final List<NativeFrameTimeSpent> stackTraces;
+  final Duration jankDuration;
+
+  @override
+  String toString() {
+    return jsonEncode(toJson());
+  }
+
+  // JankInformation fromJson(Map<String, Object?> json) {
+
+  // }
+
+  Map<String, Object?> toJson() {
+    return {
+      'jankDuration': jankDuration.inMilliseconds,
+      'stackTraces': stackTraces.map((frameTimeSpent) {
+        final frame = frameTimeSpent.frame;
+        final spent = frameTimeSpent.timestampInMacros;
+        return {
+          "pc": frame.pc.toString(),
+          "timestamp": frame.timestamp,
+          if (frame.module != null)
+            "baseAddress": frame.module!.baseAddress.toString(),
+          if (frame.module != null) "path": frame.module!.path,
+          'spent': spent,
+        };
+      }).toList()
+    };
+  }
+}
+
 class GlanceConfiguration {
   const GlanceConfiguration({
     this.jankThreshold = _kDefaultJankThreshold,
@@ -140,6 +179,8 @@ class Glance {
   SampleThread? _sampleThread;
 
   final List<JankCallback> _jankCallbacks = [];
+  // final List<SlowFunctionsDetectedCallback>
+  //     _slowFunctionsDetectedCallbackCallbacks = [];
 
   Future<void> start({GlanceConfiguration? config}) async {
     final jankThreshold = config?.jankThreshold ?? _kDefaultJankThreshold;
