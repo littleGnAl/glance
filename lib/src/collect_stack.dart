@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
 import 'dart:io';
@@ -25,6 +26,16 @@ class NativeFrame {
     required this.pc,
     required this.timestamp,
   });
+}
+
+class NativeFrameTimeSpent {
+  final NativeFrame frame;
+  int timestampInMacros = 0;
+  NativeFrameTimeSpent(this.frame);
+
+  // set timestampInMacros(int value) {
+  //   _timestampInMacros = value;
+  // }
 }
 
 class NativeModule {
@@ -462,13 +473,15 @@ class StackCollector {
 // }
 
     //
-    circularBuffer ??= CircularBuffer(_bufferCount);
+
     try {
       while (true) {
         await Future.delayed(
             const Duration(milliseconds: _sampleRateInMilliseconds));
         final collect_stack = NativeIrisEventBinding(_loadLib());
         final stack = collect_stack.captureStackOfTargetThread();
+
+        final circularBuffer = CircularBuffer<NativeFrame>(_bufferCount);
 
         final jsonMapList = stack.frames.map((frame) {
           List<String> pathFilters = <String>[
@@ -507,9 +520,33 @@ class StackCollector {
         // }
 
         // print("");
+
+        aggregateStacks(circularBuffer);
       }
     } catch (e, st) {
       print('$e\n$st');
+    }
+  }
+
+  void aggregateStacks(CircularBuffer<NativeFrame> buffer) {
+    final maps = LinkedHashMap<int, NativeFrameTimeSpent>();
+    final allFrames = buffer.readAll();
+    bool needReport = false;
+    for (final frame in allFrames) {
+      final pc = frame!.pc;
+      if (maps.containsKey(pc)) {
+        final timeSpent = maps[pc]!;
+        final timestampInMacros =
+            timeSpent.timestampInMacros + _sampleRateInMilliseconds;
+        timeSpent.timestampInMacros = timestampInMacros;
+        if (timestampInMacros > 0) {
+          needReport = true;
+        }
+      } else {
+        final timeSpent = NativeFrameTimeSpent(frame);
+        timeSpent.timestampInMacros = _sampleRateInMilliseconds;
+        maps[pc] = timeSpent;
+      }
     }
   }
 }
