@@ -430,6 +430,8 @@ class StackCollector {
 
   CircularBuffer<NativeFrame>? circularBuffer;
 
+  LinkedHashMap<int, NativeFrameTimeSpent>? _frameTimeSpentMap;
+
   SlowFunctionsDetectedCallback? _slowFunctionsDetectedCallback;
   void setSlowFunctionsDetectedCallback(
       SlowFunctionsDetectedCallback callback) {
@@ -537,13 +539,14 @@ class StackCollector {
   }
 
   void aggregateStacks(CircularBuffer<NativeFrame> buffer) {
-    final maps = LinkedHashMap<int, NativeFrameTimeSpent>();
+    // final maps = LinkedHashMap<int, NativeFrameTimeSpent>();
+    _frameTimeSpentMap ??= LinkedHashMap<int, NativeFrameTimeSpent>();
     final allFrames = buffer.readAll();
     bool needReport = false;
     for (final frame in allFrames) {
       final pc = frame!.pc;
-      if (maps.containsKey(pc)) {
-        final timeSpent = maps[pc]!;
+      if (_frameTimeSpentMap!.containsKey(pc)) {
+        final timeSpent = _frameTimeSpentMap![pc]!;
         final timestampInMacros =
             timeSpent.timestampInMacros + _sampleRateInMilliseconds;
         timeSpent.timestampInMacros = timestampInMacros;
@@ -553,13 +556,13 @@ class StackCollector {
       } else {
         final timeSpent = NativeFrameTimeSpent(frame);
         timeSpent.timestampInMacros = _sampleRateInMilliseconds;
-        maps[pc] = timeSpent;
+        _frameTimeSpentMap![pc] = timeSpent;
       }
     }
 
     if (needReport) {
       _slowFunctionsDetectedCallback?.call(SlowFunctionsInformation(
-          stackTraces: List.from(maps.values), jankDuration: Duration()));
+          stackTraces: List.from(_frameTimeSpentMap!.values), jankDuration: Duration()));
     }
   }
 }

@@ -291,6 +291,11 @@ class Glance {
   void addJankCallback(JankCallback callback) {
     _jankCallbacks.add(callback);
   }
+
+  void addSlowFunctionsDetectedCallback(
+      SlowFunctionsDetectedCallback callback) {
+    _sampleThread?.addSlowFunctionsDetectedCallback(callback);
+  }
 }
 
 
