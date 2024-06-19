@@ -52,6 +52,7 @@ void _symbolize(
     final path = e['path'];
     final pc = e['pc'];
     final ts = e['timestamp'];
+    final spent = e['spent'];
     NativeModule? module;
     if (baseAddress != null && path != null) {
       module = NativeModule(
@@ -61,10 +62,13 @@ void _symbolize(
         symbolName: '',
       );
     }
-    return NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
+    final nativeFrame =
+        NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
+    return NativeFrameTimeSpent(nativeFrame)..timestampInMacros = spent;
   });
 
-  for (final frame in frames) {
+  for (final f in frames) {
+    final frame = f.frame;
     if (frame.module != null) {
       // $ llvm-symbolizer --exe debug-info/app.android-arm.symbols --adjust-vma 3396415488 3396957692 3396957536 3397044152 3397056056 3397112352 3396903540 3397112352 3397057696 3397111684 3396845236 3396662844
       final cmd = [
@@ -77,7 +81,7 @@ void _symbolize(
       ];
       final result = processManager.runSync(cmd);
       stdout.writeln(
-          'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}');
+          'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}, spent: ${f.timestampInMacros}');
       String outString = result.stdout;
       outString = outString.split('\n').join('##');
       stdout.writeln(outString);

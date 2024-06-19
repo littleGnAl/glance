@@ -194,7 +194,7 @@ class Glance {
         // report jank
         // _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
       }
-      _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
+      // _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
     });
 
     _sampleThread ??= await SampleThread.spawn();
