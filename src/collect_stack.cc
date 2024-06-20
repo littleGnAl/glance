@@ -146,7 +146,7 @@ void DumpHandler(int signal, siginfo_t *info, void *context) {
   mcontext_t mcontext = ucontext->uc_mcontext;
   uword pc = GetProgramCounter(mcontext);
   uword fp = GetFramePointer(mcontext);
-  // TODO(littlegnal): Investigate why the fp is null.
+  // TODO(littlegnal): In my device the fp becomes null in some frames, need investigate why?
   if (!fp) {
     return;
   }
