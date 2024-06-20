@@ -186,16 +186,16 @@ class Glance {
     final jankThreshold = config?.jankThreshold ?? _kDefaultJankThreshold;
 
     final binding = GlanceWidgetBinding.ensureInitialized();
-    binding.setOnHandleDrawFrameEndCallback(
-        (int beginFrameTimeInMillis, int drawFrameTimeInMillis) {
-      final diff = drawFrameTimeInMillis - beginFrameTimeInMillis;
-      print('diff: $diff');
-      if (diff > jankThreshold) {
-        // report jank
-        // _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
-      }
-      _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
-    });
+    // binding.setOnHandleDrawFrameEndCallback(
+    //     (int beginFrameTimeInMillis, int drawFrameTimeInMillis) {
+    //   final diff = drawFrameTimeInMillis - beginFrameTimeInMillis;
+    //   print('diff: $diff');
+    //   if (diff > jankThreshold) {
+    //     // report jank
+    //     // _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
+    //   }
+    //   _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
+    // });
 
     _sampleThread ??= await SampleThread.spawn();
 

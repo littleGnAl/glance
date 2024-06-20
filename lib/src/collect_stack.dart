@@ -428,7 +428,7 @@ class StackCollector {
   // static const _bufferCount = 1281;
   static const _sampleRateInMilliseconds = 1;
 
-  CircularBuffer<NativeFrame>? circularBuffer;
+  CircularBuffer<NativeFrame>? _circularBuffer;
 
   LinkedHashMap<int, NativeFrameTimeSpent>? _frameTimeSpentMap;
 
@@ -452,8 +452,9 @@ class StackCollector {
   }
 
   List<NativeFrame> getStacktrace() {
-    assert(circularBuffer != null);
-    return List.unmodifiable(circularBuffer!.readAll().where((e) => e != null));
+    // assert(circularBuffer != null);
+    // return List.unmodifiable(circularBuffer!.readAll().where((e) => e != null));
+    return [];
   }
 
   void setCurrentThreadAsTarget() {
@@ -531,7 +532,7 @@ class StackCollector {
 
         // print("");
 
-        aggregateStacks(circularBuffer);
+        // aggregateStacks(circularBuffer);
       }
     } catch (e, st) {
       print('$e\n$st');
