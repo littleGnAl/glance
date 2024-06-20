@@ -454,7 +454,6 @@ class StackCollector {
   List<NativeFrame> getStacktrace() {
     // assert(circularBuffer != null);
     // return List.unmodifiable(circularBuffer!.readAll().where((e) => e != null));
-
     return [];
   }
 

@@ -12,7 +12,7 @@
 #include <cxxabi.h>  // NOLINT
 #include <dlfcn.h>   // NOLINT
 #include <chrono>
-#include "dart_sdk/include/dart_tools_api.h"
+// #include "dart_sdk/include/dart_tools_api.h"
 
 #if defined(_M_X64) || defined(__x86_64__)
 #define HOST_ARCH_X64 1
@@ -146,6 +146,10 @@ void DumpHandler(int signal, siginfo_t *info, void *context) {
   mcontext_t mcontext = ucontext->uc_mcontext;
   uword pc = GetProgramCounter(mcontext);
   uword fp = GetFramePointer(mcontext);
+  // TODO(littlegnal): In my device the fp becomes null in some frames, need investigate why?
+  if (!fp) {
+    return;
+  }
   uword sp = GetCStackPointer(mcontext);
   uword dart_sp = GetDartStackPointer(mcontext);
 
