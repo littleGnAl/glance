@@ -56,7 +56,8 @@ Future<void> _startGlance() async {
         'jank_trace',
         'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
       );
-      print('stacktraceFilePath: ${stacktraceFilePath}');
+      print(
+          'SlowFunctionsDetectedCallback stacktraceFilePath: ${stacktraceFilePath}');
       final file = File(stacktraceFilePath);
       file.createSync(recursive: true);
       File(stacktraceFilePath).writeAsStringSync(

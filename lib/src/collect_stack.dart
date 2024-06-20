@@ -7,7 +7,7 @@ import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
 
-import 'glance_internal.dart';
+// import 'glance_internal.dart' ;
 
 /// Dl_info from dlfcn.h.
 ///
@@ -185,7 +185,9 @@ class NativeIrisEventBinding {
       if (error != ffi.nullptr) {
         final errorString = error.toDartString();
         malloc.free(error);
-        throw StateError(errorString); // Something went wrong.
+        print('errorString: $errorString');
+        return NativeStack(frames: [], modules: []);
+        // throw StateError(errorString); // Something went wrong. but just discard info this time.
       }
 
       final dlInfo = arena.allocate<DlInfo>(ffi.sizeOf<DlInfo>());
@@ -231,6 +233,8 @@ class NativeIrisEventBinding {
         return NativeFrame(
           module: module,
           pc: addr,
+          // Base on the implementation of Flutter Engine, we should use the `Timeline.now` as the current timestamp.
+          // https://github.com/flutter/engine/blob/5d97d2bcdffc8b21bc0b9742f1136583f4cc8e16/runtime/dart_timestamp_provider.cc#L24
           timestamp:
               TimestampNowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
         );
@@ -420,6 +424,45 @@ class CircularBuffer<T> {
   }
 }
 
+class SlowFunctionsInformation {
+  const SlowFunctionsInformation({
+    required this.stackTraces,
+    required this.jankDuration,
+  });
+  final List<NativeFrameTimeSpent> stackTraces;
+  final Duration jankDuration;
+
+  @override
+  String toString() {
+    return jsonEncode(toJson());
+  }
+
+  // JankInformation fromJson(Map<String, Object?> json) {
+
+  // }
+
+  Map<String, Object?> toJson() {
+    return {
+      'jankDuration': jankDuration.inMilliseconds,
+      'stackTraces': stackTraces.map((frameTimeSpent) {
+        final frame = frameTimeSpent.frame;
+        final spent = frameTimeSpent.timestampInMacros;
+        return {
+          "pc": frame.pc.toString(),
+          "timestamp": frame.timestamp,
+          if (frame.module != null)
+            "baseAddress": frame.module!.baseAddress.toString(),
+          if (frame.module != null) "path": frame.module!.path,
+          'spent': spent,
+        };
+      }).toList()
+    };
+  }
+}
+
+typedef SlowFunctionsDetectedCallback = void Function(
+    SlowFunctionsInformation info);
+
 class StackCollector {
   // With all default configurations, the length is approximately 641 of 2s
   // based on the dart sdk implementation.
@@ -532,7 +575,7 @@ class StackCollector {
 
         // print("");
 
-        // aggregateStacks(circularBuffer);
+        aggregateStacks(circularBuffer);
       }
     } catch (e, st) {
       print('$e\n$st');
@@ -551,7 +594,7 @@ class StackCollector {
         final timestampInMacros =
             timeSpent.timestampInMacros + _sampleRateInMilliseconds;
         timeSpent.timestampInMacros = timestampInMacros;
-        if (timestampInMacros > 0) {
+        if (timestampInMacros > 50) {
           needReport = true;
         }
       } else {
@@ -561,10 +604,12 @@ class StackCollector {
       }
     }
 
+    // print('needReport: $needReport');
     if (needReport) {
       _slowFunctionsDetectedCallback?.call(SlowFunctionsInformation(
           stackTraces: List.from(_frameTimeSpentMap!.values),
           jankDuration: Duration()));
+      _frameTimeSpentMap!.clear();
     }
   }
 }
@@ -691,6 +736,7 @@ class SampleThread {
   ) {
     final StackCollector collector = StackCollector();
     collector.setSlowFunctionsDetectedCallback((info) {
+      // print('setSlowFunctionsDetectedCallback');
       sendPort.send(_SlowFunctionsDetectedResponse(0, info));
     });
     collector.loop();
