@@ -1,64 +1,402 @@
-frame.module!.baseAddress: 540623380480 frame.pc: 540624202916, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624784576, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 6
-jsonEncode##third_party/dart/sdk/lib/convert/json.dart:114:10##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:123:7####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624784320, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:119:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624439496, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-_InkResponseState.handleTap##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624696340, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-_InkResponseState.handleTap##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625932096, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-GestureRecognizer.invokeCallback##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:358:18####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625666116, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-TapGestureRecognizer.handleTapUp##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:0:0####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625503476, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-BaseTapGestureRecognizer._checkUp##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:310:5####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625503280, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-BaseTapGestureRecognizer.acceptGesture##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:273:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624846744, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-GestureArenaManager.sweep##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/arena.dart:170:26####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624846400, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-GestureBinding.handleEvent##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:493:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625903196, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-ListIterator.moveNext##third_party/dart/sdk/lib/internal/iterable.dart:348:13##GestureBinding.dispatchEvent##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:473:52####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624619128, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-RendererBinding.dispatchEvent##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:441:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624618936, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-GestureBinding._handlePointerEventImmediately##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:386:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624617604, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-GestureBinding._flushPointerEventQueue##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:326:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625965088, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-GestureBinding._handlePointerDataPacket##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:306:18####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625598196, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-GestureBinding._handlePointerDataPacket##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:293:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624208124, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-_invoke1##lib/ui/hooks.dart:330:10####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624220468, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-PlatformDispatcher._dispatchPointerDataPacket##lib/ui/platform_dispatcher.dart:440:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624220348, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-_dispatchPointerDataPacket##lib/ui/hooks.dart:260:1####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624224064, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-_dispatchPointerDataPacket##lib/ui/hooks.dart:260:1####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624182460, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 9
-stub InvokeDartCode##??:0:0####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624202896, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624202824, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624784580, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-jsonEncode##third_party/dart/sdk/lib/convert/json.dart:114:10##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:123:7####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624204416, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624202820, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 3
-_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624204508, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624204544, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
-frame.module!.baseAddress: 540623380480 frame.pc: 540624203028, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:518:3####
-frame.module!.baseAddress: 540623380480 frame.pc: 540625930000, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so, spent: 1
-String.hashCode##third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:0:0####
-frame.module!.baseAddress: 540721647616 frame.pc: 540726350796, frame.module!.path: /data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libflutter.so, spent: 51
+frame.module!.baseAddress: 540721344512 frame.pc: 540726047692, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so, spent: 566
 ??##??:0:0####
+
+frame.module!.baseAddress: 540721344512 frame.pc: 540728876628, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so, spent: 1
+??##??:0:0####
+
+frame.module!.baseAddress: 540721344512 frame.pc: 540729865856, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so, spent: 1
+??##??:0:0####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400652, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918552, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 59
+jsonEncode##third_party/dart/sdk/lib/convert/json.dart:114:10##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:120:7####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918296, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:116:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618718396, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+_InkResponseState.handleTap##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618807332, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+_InkResponseState.handleTap##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620131768, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+GestureRecognizer.invokeCallback##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:358:18####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619864908, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+TapGestureRecognizer.handleTapUp##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:0:0####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619706116, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+BaseTapGestureRecognizer._checkUp##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:310:5####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619705920, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+BaseTapGestureRecognizer.acceptGesture##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:273:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619055220, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+GestureArenaManager.sweep##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/arena.dart:170:26####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619054876, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+GestureBinding.handleEvent##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:493:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620113268, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+ListIterator.moveNext##third_party/dart/sdk/lib/internal/iterable.dart:348:13##GestureBinding.dispatchEvent##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:473:52####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618993944, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+RendererBinding.dispatchEvent##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:441:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618993752, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+GestureBinding._handlePointerEventImmediately##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:386:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618992420, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+GestureBinding._flushPointerEventQueue##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:326:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620164680, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+GestureBinding._handlePointerDataPacket##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:306:18####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619796968, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+GestureBinding._handlePointerDataPacket##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:293:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618405976, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 73
+_invoke1##lib/ui/hooks.dart:330:10####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618418320, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+PlatformDispatcher._dispatchPointerDataPacket##lib/ui/platform_dispatcher.dart:440:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618418200, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+_dispatchPointerDataPacket##lib/ui/hooks.dart:260:1####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618421916, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
+_dispatchPointerDataPacket##lib/ui/hooks.dart:260:1####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618382524, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 77
+stub InvokeDartCode##??:0:0####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402456, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:486:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400672, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 27
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402188, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402228, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402292, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918524, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin.[]=##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:121:46####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400696, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918536, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+_LinkedHashMapMixin.[]=##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:121:46####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402176, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400764, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400644, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 3
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400604, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400748, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402368, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918520, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_LinkedHashMapMixin.[]=##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:121:46####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402268, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400780, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400520, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402372, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400804, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400592, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400684, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619448700, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+String.==##third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:1027:18####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400636, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400588, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402168, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402180, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402152, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402264, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402232, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402184, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402340, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918516, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._hashCode##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33##_LinkedHashMapMixin.[]=##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:514:26##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:121:46####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402256, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402288, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400640, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918484, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._hashCode##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33##_LinkedHashMapMixin.[]=##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:514:26##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:121:46####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918492, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._hashCode##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33##_LinkedHashMapMixin.[]=##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:514:26##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:121:46####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402220, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402160, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400720, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400540, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402156, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402260, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400688, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400524, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402400, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402280, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_OperatorEqualsAndHashCode._equals##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46##_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:502:15####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918532, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin.[]=##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:121:46####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400660, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400508, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400536, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618379200, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+stub Subtype1TestCache##??:0:0####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620109860, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_JsonStringifier.writeObject##third_party/dart/sdk/lib/convert/json.dart:785:5####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618919620, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_JsonStringStringifier.printOn##third_party/dart/sdk/lib/convert/json.dart:974:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618919368, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_JsonStringStringifier.stringify##third_party/dart/sdk/lib/convert/json.dart:968:19####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618919276, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+JsonCodec.encode##third_party/dart/sdk/lib/convert/json.dart:229:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618918592, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+Timeline.now##third_party/dart/sdk/lib/developer/timeline.dart:184:25##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:124:14####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618402460, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._findValueOrInsertPoint##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:486:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618400600, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619006024, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+SchedulerBinding._adjustForEpoch##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1098:12####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620176756, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+SchedulerBinding.handleBeginFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1232:55####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618551264, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+SchedulerBinding._handleBeginFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1150:5####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618551096, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+SchedulerBinding._handleBeginFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1141:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618416892, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+PlatformDispatcher._beginFrame##lib/ui/platform_dispatcher.dart:396:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618416632, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_beginFrame##lib/ui/hooks.dart:273:31####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618417140, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_beginFrame##lib/ui/hooks.dart:270:1####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618676616, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+new Layer##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/layer.dart:141:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618675816, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+PaintingContext._startRecording##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:335:42####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618675712, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+PaintingContext.canvas##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:323:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618685208, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+RenderPhysicalModel.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:2028:14####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620076172, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 27
+RenderObject._paintWithContext##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:3243:7####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618668160, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 24
+PaintingContext.paintChild##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:235:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618698696, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 19
+RenderProxyBoxMixin.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:130:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618670816, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+PaintingContext._repaintCompositedChild##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:172:18####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619837888, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+PaintingContext.updateLayerProperties##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:191:62##PipelineOwner.flushPaint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:1185:31####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619838152, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+ListIterator.moveNext##third_party/dart/sdk/lib/internal/iterable.dart:348:13##PipelineOwner.flushPaint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:1177:39####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619810308, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+RendererBinding.drawFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:606:43####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619809096, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+WidgetsBinding.drawFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/binding.dart:1169:19####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619807300, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+RendererBinding._handlePersistentFrameCallback##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:469:5####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540619807240, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+RendererBinding._handlePersistentFrameCallback##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:467:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620176500, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+SchedulerBinding._invokeFrameCallback##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1398:18####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620175872, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+new _GrowableList.of##third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:144:28##new List.of##third_party/dart/sdk/lib/_internal/vm_shared/lib/array_patch.dart:39:18##SchedulerBinding.handleDrawFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1319:11####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618550928, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+SchedulerBinding._handleDrawFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1171:5####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618550592, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+SchedulerBinding._handleDrawFrame##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1153:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618396668, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+_invoke##lib/ui/hooks.dart:314:10####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618417680, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+PlatformDispatcher._drawFrame##lib/ui/platform_dispatcher.dart:418:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618417612, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+_drawFrame##lib/ui/hooks.dart:281:1####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618417728, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 4
+_drawFrame##lib/ui/hooks.dart:281:1####
+
+frame.module!.baseAddress: 540721344512 frame.pc: 540730064220, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so, spent: 4
+??##??:0:0####
+
+frame.module!.baseAddress: 540721344512 frame.pc: 540726013376, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so, spent: 1
+??##??:0:0####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540620076444, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_NativePictureRecorder.__endRecording$Method$FfiNative##lib/ui/painting.dart:0:0####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618671832, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+_NativePictureRecorder.endRecording##lib/ui/painting.dart:6478:13####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618671224, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+PaintingContext.stopRecordingIfNeeded##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:389:20####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618679472, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+PaintingContext.pushLayer##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:477:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618698220, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 2
+RenderAnnotatedRegion.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:5039:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618667920, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 3
+RenderBoxContainerDefaultsMixin.defaultPaint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/box.dart:3155:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618667664, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 3
+RenderCustomMultiChildLayoutBox.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/custom_layout.dart:407:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618672808, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 3
+new Paint##lib/ui/painting.dart:1127:26##InkSplash.paintFeature##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_splash.dart:200:25##InkFeature._paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/material.dart:818:7##_RenderInkFeatures.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/material.dart:656:20####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618688480, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 3
+RenderPhysicalShape.paint.<anonymous closure>##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:2160:7####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618685912, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 3
+PaintingContext.pushClipRRect##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:579:38####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618685704, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 3
+RenderObject.layer=##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2814:18##RenderPhysicalModel.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:2042:5####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618684764, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+RenderPhysicalModel.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:0:0####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618682964, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+RenderProxyBoxMixin.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:130:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618679464, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+PaintingContext.pushLayer##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:488:18####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618650068, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+RenderParagraph._layoutTextWithConstraints##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/paragraph.dart:768:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618703156, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+RenderBoxContainerDefaultsMixin.defaultPaint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/box.dart:3155:3####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618702636, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+RenderFlex.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/flex.dart:1095:9####
+
+frame.module!.baseAddress: 540617580544 frame.pc: 540618672084, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
+RenderShiftedBox.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/shifted_box.dart:71:3####
+

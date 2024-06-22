@@ -2,228 +2,942 @@
     "jankDuration": 0,
     "stackTraces": [
         {
-            "pc": "540624202916",
-            "timestamp": 1718898884374750,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540726047692",
+            "timestamp": 52524040574,
+            "baseAddress": "540721344512",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so",
+            "spent": 566
+        },
+        {
+            "pc": "540728876628",
+            "timestamp": 52526059422,
+            "baseAddress": "540721344512",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so",
             "spent": 1
         },
         {
-            "pc": "540624784576",
-            "timestamp": 1718898884374753,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 6
-        },
-        {
-            "pc": "540624784320",
-            "timestamp": 1718898884374756,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624439496",
-            "timestamp": 1718898884374758,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624696340",
-            "timestamp": 1718898884374760,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540625932096",
-            "timestamp": 1718898884374762,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540625666116",
-            "timestamp": 1718898884374764,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540625503476",
-            "timestamp": 1718898884374766,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540625503280",
-            "timestamp": 1718898884374768,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624846744",
-            "timestamp": 1718898884374770,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624846400",
-            "timestamp": 1718898884374772,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540625903196",
-            "timestamp": 1718898884374774,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624619128",
-            "timestamp": 1718898884374776,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624618936",
-            "timestamp": 1718898884374778,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624617604",
-            "timestamp": 1718898884374779,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540625965088",
-            "timestamp": 1718898884374781,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540625598196",
-            "timestamp": 1718898884374783,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624208124",
-            "timestamp": 1718898884374785,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624220468",
-            "timestamp": 1718898884374787,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624220348",
-            "timestamp": 1718898884374789,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624224064",
-            "timestamp": 1718898884374791,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624182460",
-            "timestamp": 1718898884374793,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
-            "spent": 9
-        },
-        {
-            "pc": "540624202896",
-            "timestamp": 1718898884378642,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540729865856",
+            "timestamp": 52526111273,
+            "baseAddress": "540721344512",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so",
             "spent": 1
         },
         {
-            "pc": "540624202824",
-            "timestamp": 1718898884381565,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618400652",
+            "timestamp": 52526142240,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 1
         },
         {
-            "pc": "540624784580",
-            "timestamp": 1718898884384618,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618918552",
+            "timestamp": 52526142252,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 59
+        },
+        {
+            "pc": "540618918296",
+            "timestamp": 52526142260,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618718396",
+            "timestamp": 52526142267,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618807332",
+            "timestamp": 52526142276,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540620131768",
+            "timestamp": 52526142281,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540619864908",
+            "timestamp": 52526142290,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540619706116",
+            "timestamp": 52526142296,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540619705920",
+            "timestamp": 52526142302,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540619055220",
+            "timestamp": 52526142307,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540619054876",
+            "timestamp": 52526142312,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540620113268",
+            "timestamp": 52526142317,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618993944",
+            "timestamp": 52526142325,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618993752",
+            "timestamp": 52526142330,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618992420",
+            "timestamp": 52526142335,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540620164680",
+            "timestamp": 52526142340,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540619796968",
+            "timestamp": 52526142347,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618405976",
+            "timestamp": 52526142354,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 73
+        },
+        {
+            "pc": "540618418320",
+            "timestamp": 52526142360,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618418200",
+            "timestamp": 52526142366,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618421916",
+            "timestamp": 52526142371,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 72
+        },
+        {
+            "pc": "540618382524",
+            "timestamp": 52526142376,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 77
+        },
+        {
+            "pc": "540618402456",
+            "timestamp": 52526147008,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 1
         },
         {
-            "pc": "540624204416",
-            "timestamp": 1718898884387366,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618400672",
+            "timestamp": 52526147020,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 27
+        },
+        {
+            "pc": "540618402188",
+            "timestamp": 52526152516,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 1
         },
         {
-            "pc": "540624202820",
-            "timestamp": 1718898884387369,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618402228",
+            "timestamp": 52526156900,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402292",
+            "timestamp": 52526161371,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618918524",
+            "timestamp": 52526172182,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400696",
+            "timestamp": 52526176058,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618918536",
+            "timestamp": 52526179991,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618402176",
+            "timestamp": 52526185098,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618400764",
+            "timestamp": 52526189048,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618400644",
+            "timestamp": 52526193397,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 3
         },
         {
-            "pc": "540624204508",
-            "timestamp": 1718898884390714,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618400604",
+            "timestamp": 52526197397,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618400748",
+            "timestamp": 52526201096,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 1
         },
         {
-            "pc": "540624204544",
-            "timestamp": 1718898884394739,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618402368",
+            "timestamp": 52526205765,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 1
         },
         {
-            "pc": "540624203028",
-            "timestamp": 1718898884398651,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618918520",
+            "timestamp": 52526209583,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618402268",
+            "timestamp": 52526217322,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 1
         },
         {
-            "pc": "540625930000",
-            "timestamp": 1718898884407187,
-            "baseAddress": "540623380480",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libapp.so",
+            "pc": "540618400780",
+            "timestamp": 52526221192,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618400520",
+            "timestamp": 52526233376,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
             "spent": 1
         },
         {
-            "pc": "540726350796",
-            "timestamp": 1718898884417137,
-            "baseAddress": "540721647616",
-            "path": "/data/app/com.littlegnal.glance_example-U_TCQ4aC-LpD2w-R9dsKag==/lib/arm64/libflutter.so",
-            "spent": 51
+            "pc": "540618402372",
+            "timestamp": 52526237237,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400804",
+            "timestamp": 52526249241,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618400592",
+            "timestamp": 52526253213,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400684",
+            "timestamp": 52526257211,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540619448700",
+            "timestamp": 52526261388,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400636",
+            "timestamp": 52526265180,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400588",
+            "timestamp": 52526269394,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402168",
+            "timestamp": 52526277396,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402180",
+            "timestamp": 52526281236,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618402152",
+            "timestamp": 52526285358,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618402264",
+            "timestamp": 52526293343,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402232",
+            "timestamp": 52526297347,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402184",
+            "timestamp": 52526301358,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402340",
+            "timestamp": 52526305686,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618918516",
+            "timestamp": 52526309352,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402256",
+            "timestamp": 52526321222,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402288",
+            "timestamp": 52526325328,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400640",
+            "timestamp": 52526329320,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618918484",
+            "timestamp": 52526333357,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618918492",
+            "timestamp": 52526341356,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402220",
+            "timestamp": 52526345330,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402160",
+            "timestamp": 52526349325,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400720",
+            "timestamp": 52526353358,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400540",
+            "timestamp": 52526361523,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402156",
+            "timestamp": 52526369520,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402260",
+            "timestamp": 52526373522,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618400688",
+            "timestamp": 52526389321,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400524",
+            "timestamp": 52526393424,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402400",
+            "timestamp": 52526397358,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402280",
+            "timestamp": 52526401378,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618918532",
+            "timestamp": 52526409341,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400660",
+            "timestamp": 52526413392,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400508",
+            "timestamp": 52526417363,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400536",
+            "timestamp": 52526430093,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618379200",
+            "timestamp": 52526438452,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540620109860",
+            "timestamp": 52526438456,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618919620",
+            "timestamp": 52526438458,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618919368",
+            "timestamp": 52526438460,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618919276",
+            "timestamp": 52526438462,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618918592",
+            "timestamp": 52526438464,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618402460",
+            "timestamp": 52526442452,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618400600",
+            "timestamp": 52526446196,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540619006024",
+            "timestamp": 52526450367,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540620176756",
+            "timestamp": 52526450370,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618551264",
+            "timestamp": 52526450372,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618551096",
+            "timestamp": 52526450374,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618416892",
+            "timestamp": 52526450377,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618416632",
+            "timestamp": 52526450379,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618417140",
+            "timestamp": 52526450381,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618676616",
+            "timestamp": 52526539562,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618675816",
+            "timestamp": 52526539571,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618675712",
+            "timestamp": 52526539577,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618685208",
+            "timestamp": 52526539582,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540620076172",
+            "timestamp": 52526539588,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 27
+        },
+        {
+            "pc": "540618668160",
+            "timestamp": 52526539593,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 24
+        },
+        {
+            "pc": "540618698696",
+            "timestamp": 52526539598,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 19
+        },
+        {
+            "pc": "540618670816",
+            "timestamp": 52526539622,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540619837888",
+            "timestamp": 52526539627,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540619838152",
+            "timestamp": 52526539631,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540619810308",
+            "timestamp": 52526539636,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540619809096",
+            "timestamp": 52526539641,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540619807300",
+            "timestamp": 52526539646,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540619807240",
+            "timestamp": 52526539651,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540620176500",
+            "timestamp": 52526539656,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540620175872",
+            "timestamp": 52526539660,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618550928",
+            "timestamp": 52526539665,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618550592",
+            "timestamp": 52526539670,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618396668",
+            "timestamp": 52526539675,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618417680",
+            "timestamp": 52526539680,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618417612",
+            "timestamp": 52526539685,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540618417728",
+            "timestamp": 52526539690,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 4
+        },
+        {
+            "pc": "540730064220",
+            "timestamp": 52526539700,
+            "baseAddress": "540721344512",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so",
+            "spent": 4
+        },
+        {
+            "pc": "540726013376",
+            "timestamp": 52526607684,
+            "baseAddress": "540721344512",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libflutter.so",
+            "spent": 1
+        },
+        {
+            "pc": "540620076444",
+            "timestamp": 52526623847,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618671832",
+            "timestamp": 52526623855,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618671224",
+            "timestamp": 52526623861,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618679472",
+            "timestamp": 52526623868,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618698220",
+            "timestamp": 52526623874,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 2
+        },
+        {
+            "pc": "540618667920",
+            "timestamp": 52526623926,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 3
+        },
+        {
+            "pc": "540618667664",
+            "timestamp": 52526623932,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 3
+        },
+        {
+            "pc": "540618672808",
+            "timestamp": 52526623955,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 3
+        },
+        {
+            "pc": "540618688480",
+            "timestamp": 52526623978,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 3
+        },
+        {
+            "pc": "540618685912",
+            "timestamp": 52526623984,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 3
+        },
+        {
+            "pc": "540618685704",
+            "timestamp": 52526623989,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 3
+        },
+        {
+            "pc": "540618684764",
+            "timestamp": 52526640517,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618682964",
+            "timestamp": 52526640540,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618679464",
+            "timestamp": 52526640553,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618650068",
+            "timestamp": 52526657001,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618703156",
+            "timestamp": 52526657024,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618702636",
+            "timestamp": 52526657030,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
+        },
+        {
+            "pc": "540618672084",
+            "timestamp": 52526657048,
+            "baseAddress": "540617580544",
+            "path": "/data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so",
+            "spent": 1
         }
     ]
 }

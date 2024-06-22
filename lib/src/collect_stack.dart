@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:isolate';
@@ -174,6 +175,12 @@ class NativeIrisEventBinding {
   // @Native<Int Function(Pointer<Void> addr, Pointer<DlInfo>)>(symbol: 'dladdr')
   // external int _dladdr(Pointer<Void> addr, Pointer<DlInfo> info);
 
+  /// Refer to the implementation of Flutter Engine, we should use the `Timeline.now` as the current timestamp.
+  /// https://github.com/flutter/engine/blob/5d97d2bcdffc8b21bc0b9742f1136583f4cc8e16/runtime/dart_timestamp_provider.cc#L24
+  int _nowInMicrosSinceEpoch() {
+    return Timeline.now;
+  }
+
   NativeStack captureStackOfTargetThread() {
     return using((arena) {
       // Invoke CollectStackTrace from helper library.
@@ -205,7 +212,7 @@ class NativeIrisEventBinding {
           return NativeFrame(
             pc: addr,
             timestamp:
-                TimestampNowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
+                _nowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
           );
         }
 
@@ -233,10 +240,9 @@ class NativeIrisEventBinding {
         return NativeFrame(
           module: module,
           pc: addr,
-          // Base on the implementation of Flutter Engine, we should use the `Timeline.now` as the current timestamp.
-          // https://github.com/flutter/engine/blob/5d97d2bcdffc8b21bc0b9742f1136583f4cc8e16/runtime/dart_timestamp_provider.cc#L24
+
           timestamp:
-              TimestampNowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
+              _nowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
         );
       }).toList(growable: false);
 
@@ -465,13 +471,13 @@ typedef SlowFunctionsDetectedCallback = void Function(
 
 class StackCollector {
   // With all default configurations, the length is approximately 641 of 2s
-  // based on the dart sdk implementation.
+  // refer to the dart sdk implementation.
   // https://github.com/dart-lang/sdk/blob/bcaf745a9be6c4af0c338c43e6304c9e1c4c5535/runtime/vm/profiler.cc#L642
   static const _bufferCount = 641;
-  // static const _bufferCount = 1281;
+  // static const _bufferCount = 2561;
   static const _sampleRateInMilliseconds = 1;
 
-  CircularBuffer<NativeFrame>? _circularBuffer;
+  CircularBuffer<NativeStack>? _circularBuffer;
 
   LinkedHashMap<int, NativeFrameTimeSpent>? _frameTimeSpentMap;
 
@@ -494,10 +500,10 @@ class StackCollector {
     return ffi.DynamicLibrary.process();
   }
 
-  List<NativeFrame> getStacktrace() {
-    // assert(circularBuffer != null);
-    // return List.unmodifiable(circularBuffer!.readAll().where((e) => e != null));
-    return [];
+  List<NativeFrameTimeSpent> getStacktrace() {
+    assert(_circularBuffer != null);
+    return List.unmodifiable(aggregateStacks(_circularBuffer!));
+    // return [];
   }
 
   void setCurrentThreadAsTarget() {
@@ -535,7 +541,8 @@ class StackCollector {
         final collect_stack = NativeIrisEventBinding(_loadLib());
         final stack = collect_stack.captureStackOfTargetThread();
 
-        final circularBuffer = CircularBuffer<NativeFrame>(_bufferCount);
+        _circularBuffer ??= CircularBuffer<NativeStack>(_bufferCount);
+        _circularBuffer!.write(stack);
 
         final jsonMapList = stack.frames.map((frame) {
           List<String> pathFilters = <String>[
@@ -547,7 +554,7 @@ class StackCollector {
               pathFilters.any((pathFilter) {
                 return frame.module?.path.contains(pathFilter) == true;
               })) {
-            circularBuffer?.write(frame);
+            // _circularBuffer?.write(frame);
           }
 
           if (frame.module != null) {
@@ -575,22 +582,23 @@ class StackCollector {
 
         // print("");
 
-        aggregateStacks(circularBuffer);
+        // aggregateStacks(circularBuffer);
       }
     } catch (e, st) {
       print('$e\n$st');
     }
   }
 
-  void aggregateStacks(CircularBuffer<NativeFrame> buffer) {
+  List<NativeFrameTimeSpent> aggregateStacks(
+      CircularBuffer<NativeStack> buffer) {
     // final maps = LinkedHashMap<int, NativeFrameTimeSpent>();
-    _frameTimeSpentMap ??= LinkedHashMap<int, NativeFrameTimeSpent>();
-    final allFrames = buffer.readAll();
+    final frameTimeSpentMap = LinkedHashMap<int, NativeFrameTimeSpent>();
+    final allFrames = buffer.readAll().expand((e) => e!.frames);
     bool needReport = false;
     for (final frame in allFrames) {
       final pc = frame!.pc;
-      if (_frameTimeSpentMap!.containsKey(pc)) {
-        final timeSpent = _frameTimeSpentMap![pc]!;
+      if (frameTimeSpentMap!.containsKey(pc)) {
+        final timeSpent = frameTimeSpentMap![pc]!;
         final timestampInMacros =
             timeSpent.timestampInMacros + _sampleRateInMilliseconds;
         timeSpent.timestampInMacros = timestampInMacros;
@@ -600,17 +608,19 @@ class StackCollector {
       } else {
         final timeSpent = NativeFrameTimeSpent(frame);
         timeSpent.timestampInMacros = _sampleRateInMilliseconds;
-        _frameTimeSpentMap![pc] = timeSpent;
+        frameTimeSpentMap![pc] = timeSpent;
       }
     }
 
+    return frameTimeSpentMap!.values.toList();
+
     // print('needReport: $needReport');
-    if (needReport) {
-      _slowFunctionsDetectedCallback?.call(SlowFunctionsInformation(
-          stackTraces: List.from(_frameTimeSpentMap!.values),
-          jankDuration: Duration()));
-      _frameTimeSpentMap!.clear();
-    }
+    // if (needReport) {
+    //   _slowFunctionsDetectedCallback?.call(SlowFunctionsInformation(
+    //       stackTraces: List.from(frameTimeSpentMap!.values),
+    //       jankDuration: Duration()));
+    //   // _frameTimeSpentMap!.clear();
+    // }
   }
 }
 
@@ -629,7 +639,7 @@ class _GetSamplesRequest implements _Request {
 class _GetSamplesResponse implements _Response {
   const _GetSamplesResponse(this.id, this.data);
   final int id;
-  final List<NativeFrame> data;
+  final List<NativeFrameTimeSpent> data;
 }
 
 class _SlowFunctionsDetectedResponse implements _Response {
@@ -648,7 +658,8 @@ class SampleThread {
   List<SlowFunctionsDetectedCallback> _slowFunctionsDetectedCallbackCallbacks =
       [];
 
-  Future<List<NativeFrame>> getSamples(List<int> timestampRange) async {
+  Future<List<NativeFrameTimeSpent>> getSamples(
+      List<int> timestampRange) async {
     if (_closed) throw StateError('Closed');
     final completer = Completer<Object?>.sync();
     final id = _idCounter++;
@@ -735,10 +746,10 @@ class SampleThread {
     SendPort sendPort,
   ) {
     final StackCollector collector = StackCollector();
-    collector.setSlowFunctionsDetectedCallback((info) {
-      // print('setSlowFunctionsDetectedCallback');
-      sendPort.send(_SlowFunctionsDetectedResponse(0, info));
-    });
+    // collector.setSlowFunctionsDetectedCallback((info) {
+    //   // print('setSlowFunctionsDetectedCallback');
+    //   sendPort.send(_SlowFunctionsDetectedResponse(0, info));
+    // });
     collector.loop();
 
     receivePort.listen((message) {
@@ -757,10 +768,14 @@ class SampleThread {
           'libapp.so',
         ];
         final stacktrace = collector.getStacktrace().where((e) {
+          final frame = e.frame;
+
           // return e.timestamp >=start  && e.timestamp <= end;
-          return e.module != null &&
+          return frame.module != null &&
+              // frame.timestamp >= start &&
+              // frame.timestamp <= end &&
               pathFilters.any((pathFilter) {
-                return e.module?.path.contains(pathFilter) == true;
+                return frame.module?.path.contains(pathFilter) == true;
               });
         }).toList();
 

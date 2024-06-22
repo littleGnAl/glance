@@ -22,30 +22,6 @@ Future<void> _startGlance() async {
   await Permission.storage.request();
 
   Glance.instance.addJankCallback((info) async {
-    // debugPrint('stacktrace: ${stacktrace.toString()}', wrapWidth: 2048);
-    // print('stacktrace: ${info.toJson()}');
-
-    // compute((msg) async {
-    //   final (token, info) = msg;
-    //   BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
-
-    //   final docDir = await getExternalStorageDirectory();
-    //   final stacktraceFilePath = path.join(
-    //     docDir!.absolute.path,
-    //     'jank_trace',
-    //     'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
-    //   );
-    //   print('stacktraceFilePath: ${stacktraceFilePath}');
-    //   final file = File(stacktraceFilePath);
-    //   file.createSync(recursive: true);
-    //   File(stacktraceFilePath).writeAsStringSync(
-    //     jsonEncode(info.toJson()),
-    //     flush: true,
-    //   );
-    // }, (RootIsolateToken.instance, info));
-  });
-
-  Glance.instance.addSlowFunctionsDetectedCallback((info) {
     compute((msg) async {
       final (token, info) = msg;
       BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
@@ -56,8 +32,7 @@ Future<void> _startGlance() async {
         'jank_trace',
         'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
       );
-      print(
-          'SlowFunctionsDetectedCallback stacktraceFilePath: ${stacktraceFilePath}');
+      print('addJankCallback stacktraceFilePath: ${stacktraceFilePath}');
       final file = File(stacktraceFilePath);
       file.createSync(recursive: true);
       File(stacktraceFilePath).writeAsStringSync(
@@ -66,6 +41,28 @@ Future<void> _startGlance() async {
       );
     }, (RootIsolateToken.instance, info));
   });
+
+  // Glance.instance.addSlowFunctionsDetectedCallback((info) {
+  //   compute((msg) async {
+  //     final (token, info) = msg;
+  //     BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
+
+  //     final docDir = await getExternalStorageDirectory();
+  //     final stacktraceFilePath = path.join(
+  //       docDir!.absolute.path,
+  //       'jank_trace',
+  //       'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
+  //     );
+  //     print(
+  //         'SlowFunctionsDetectedCallback stacktraceFilePath: ${stacktraceFilePath}');
+  //     final file = File(stacktraceFilePath);
+  //     file.createSync(recursive: true);
+  //     File(stacktraceFilePath).writeAsStringSync(
+  //       jsonEncode(info.toJson()),
+  //       flush: true,
+  //     );
+  //   }, (RootIsolateToken.instance, info));
+  // });
   // Glance.instance.start();
 }
 

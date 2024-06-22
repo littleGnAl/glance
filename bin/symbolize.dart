@@ -52,7 +52,7 @@ void _symbolize(
     final path = e['path'];
     final pc = e['pc'];
     final ts = e['timestamp'];
-    final spent = e['spent'];
+    final spent = e['spent'] ?? 0;
     NativeModule? module;
     if (baseAddress != null && path != null) {
       module = NativeModule(
@@ -85,6 +85,7 @@ void _symbolize(
       String outString = result.stdout;
       outString = outString.split('\n').join('##');
       stdout.writeln(outString);
+      stdout.writeln();
     }
   }
 }
