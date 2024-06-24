@@ -11,7 +11,10 @@ frame.module!.baseAddress: 540617580544 frame.pc: 540618400652, frame.module!.pa
 _LinkedHashMapMixin._set##third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9####
 
 frame.module!.baseAddress: 540617580544 frame.pc: 540618918552, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 59
-jsonEncode##third_party/dart/sdk/lib/convert/json.dart:114:10##_MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:120:7####
+jsonEncode##
+third_party/dart/sdk/lib/convert/json.dart:114:10##
+_MyHomePageState._incrementCounter##
+/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:120:7####
 
 frame.module!.baseAddress: 540617580544 frame.pc: 540618918296, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 72
 _MyHomePageState._incrementCounter##/Users/littlegnal/codes/personal-project/glance_plugin/glance/example/lib/main.dart:116:3####
@@ -399,4 +402,7 @@ RenderFlex.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/renderi
 
 frame.module!.baseAddress: 540617580544 frame.pc: 540618672084, frame.module!.path: /data/app/com.littlegnal.glance_example-A2umWaHCD1XSKpBy5NdKiQ==/lib/arm64/libapp.so, spent: 1
 RenderShiftedBox.paint##/Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/shifted_box.dart:71:3####
+
+
+base_addr pc functions times
 

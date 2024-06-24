@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:args/args.dart';
 import 'package:file/file.dart' as file;
@@ -67,6 +68,25 @@ void _symbolize(
     return NativeFrameTimeSpent(nativeFrame)..timestampInMacros = spent;
   });
 
+  // base_addr pc functions uri times
+
+  int maxBaseAddrLen = 0;
+  int maxPCLen = 0;
+  int maxFunctionNameLen = 0;
+  int maxUriLen = 0;
+  int maxTimesLen = 0;
+
+  for (final f in frames) {
+    final frame = f.frame;
+    if (frame.module != null) {
+      maxBaseAddrLen =
+          max(maxTimesLen, frame.module!.baseAddress.toString().length);
+      maxPCLen = max(maxPCLen, frame.pc.toString().length);
+      // maxFunctionNameLen = max(frame.);
+    }
+  }
+
+  final List<_Holder> holders = [];
   for (final f in frames) {
     final frame = f.frame;
     if (frame.module != null) {
@@ -83,9 +103,72 @@ void _symbolize(
       stdout.writeln(
           'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}, spent: ${f.timestampInMacros}');
       String outString = result.stdout;
-      outString = outString.split('\n').join('##');
-      stdout.writeln(outString);
+      // outString = outString.split('\n').where((e) => e.isNotEmpty); //.join('##');
+      // stdout.writeln(outString);
+
+      // third_party/dart/sdk/lib/convert/json.dart:114:10##
+      final uriRegx = RegExp(r'(.+)*\/\.dart\:\d+\:\d+');
+
+      final baseAddress = frame.module!.baseAddress.toString();
+      final pc = frame.pc.toString();
+      String funcName = '';
+      String uri = '';
+      String spent = f.timestampInMacros.toString();
+
+      maxBaseAddrLen = max(maxTimesLen, baseAddress.length);
+      maxPCLen = max(maxPCLen, pc.length);
+      maxTimesLen = max(maxTimesLen, spent.length);
+
+      final outStringList =
+          outString.split('\n').where((e) => e.isNotEmpty).toList();
+      if (outStringList.length > 2) {
+        for (int i = 0; i < outStringList.length; i += 2) {
+          funcName = outStringList[0];
+          assert(uriRegx.hasMatch(uri));
+          uri = outStringList[1];
+          holders.add(_Holder(
+            baseAddr: baseAddress,
+            pc: pc,
+            funcName: funcName,
+            uri: uri,
+            times: spent,
+          ));
+
+          maxFunctionNameLen = max(maxFunctionNameLen, funcName.length);
+          maxUriLen = max(maxUriLen, uri.length);
+        }
+      } else {
+        funcName = outStringList[0];
+        assert(uriRegx.hasMatch(uri));
+        uri = outStringList[1];
+        holders.add(_Holder(
+          baseAddr: baseAddress,
+          pc: pc,
+          funcName: funcName,
+          uri: uri,
+          times: spent,
+        ));
+
+        maxFunctionNameLen = max(maxFunctionNameLen, funcName.length);
+        maxUriLen = max(maxUriLen, uri.length);
+      }
+
       stdout.writeln();
     }
   }
+}
+
+class _Holder {
+  _Holder({
+    required this.baseAddr,
+    required this.pc,
+    required this.funcName,
+    required this.uri,
+    required this.times,
+  });
+  final String baseAddr;
+  final String pc;
+  final String funcName;
+  final String uri;
+  final String times;
 }

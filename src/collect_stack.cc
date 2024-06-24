@@ -147,6 +147,7 @@ void DumpHandler(int signal, siginfo_t *info, void *context) {
   uword pc = GetProgramCounter(mcontext);
   uword fp = GetFramePointer(mcontext);
   // TODO(littlegnal): In my device the fp becomes null in some frames, need investigate why?
+  // it most likely in debug mode.
   if (!fp) {
     return;
   }
