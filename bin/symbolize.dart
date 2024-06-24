@@ -76,15 +76,15 @@ void _symbolize(
   int maxUriLen = 0;
   int maxTimesLen = 0;
 
-  for (final f in frames) {
-    final frame = f.frame;
-    if (frame.module != null) {
-      maxBaseAddrLen =
-          max(maxTimesLen, frame.module!.baseAddress.toString().length);
-      maxPCLen = max(maxPCLen, frame.pc.toString().length);
-      // maxFunctionNameLen = max(frame.);
-    }
-  }
+  // for (final f in frames) {
+  //   final frame = f.frame;
+  //   if (frame.module != null) {
+  //     maxBaseAddrLen =
+  //         max(maxTimesLen, frame.module!.baseAddress.toString().length);
+  //     maxPCLen = max(maxPCLen, frame.pc.toString().length);
+  //     // maxFunctionNameLen = max(frame.);
+  //   }
+  // }
 
   final List<_Holder> holders = [];
   for (final f in frames) {
@@ -100,8 +100,8 @@ void _symbolize(
         frame.pc,
       ];
       final result = processManager.runSync(cmd);
-      stdout.writeln(
-          'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}, spent: ${f.timestampInMacros}');
+      // stdout.writeln(
+      //     'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}, spent: ${f.timestampInMacros}');
       String outString = result.stdout;
       // outString = outString.split('\n').where((e) => e.isNotEmpty); //.join('##');
       // stdout.writeln(outString);
@@ -153,9 +153,28 @@ void _symbolize(
         maxUriLen = max(maxUriLen, uri.length);
       }
 
-      stdout.writeln();
+      // stdout.writeln();
     }
   }
+
+  final sb = StringBuffer();
+  // // base_addr pc functions uri times
+  sb.write('base_addr'.padRight(_adjustLen(maxBaseAddrLen)));
+  sb.write('pc'.padRight(_adjustLen(maxPCLen)));
+  sb.write('functions'.padRight(_adjustLen(maxFunctionNameLen)));
+  sb.write('uri'.padRight(_adjustLen(maxUriLen)));
+  sb.write('times'.padRight(_adjustLen(maxTimesLen)));
+  sb.writeln(); // new line
+  for (final holder in holders) {
+    sb.write(holder.baseAddr.padRight(_adjustLen(maxBaseAddrLen)));
+    sb.write(holder.pc.padRight(_adjustLen(maxPCLen)));
+    sb.write(holder.funcName.padRight(_adjustLen(maxFunctionNameLen)));
+    sb.write(holder.uri.padRight(_adjustLen(maxUriLen)));
+    sb.write(holder.times.padRight(_adjustLen(maxTimesLen)));
+    sb.writeln(); // new line
+  }
+
+  stdout.writeln(sb.toString());
 }
 
 class _Holder {
@@ -171,4 +190,9 @@ class _Holder {
   final String funcName;
   final String uri;
   final String times;
+}
+
+/// Add extra 4 padding to make the string pretty
+int _adjustLen(int len) {
+  return len + 4;
 }
