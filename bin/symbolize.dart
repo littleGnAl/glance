@@ -159,15 +159,15 @@ void _symbolize(
 
   final sb = StringBuffer();
   // // base_addr pc functions uri times
-  sb.write('base_addr'.padRight(_adjustLen(maxBaseAddrLen)));
-  sb.write('pc'.padRight(_adjustLen(maxPCLen)));
+  // sb.write('base_addr'.padRight(_adjustLen(maxBaseAddrLen)));
+  // sb.write('pc'.padRight(_adjustLen(maxPCLen)));
   sb.write('functions'.padRight(_adjustLen(maxFunctionNameLen)));
   sb.write('uri'.padRight(_adjustLen(maxUriLen)));
   sb.write('times'.padRight(_adjustLen(maxTimesLen)));
   sb.writeln(); // new line
   for (final holder in holders) {
-    sb.write(holder.baseAddr.padRight(_adjustLen(maxBaseAddrLen)));
-    sb.write(holder.pc.padRight(_adjustLen(maxPCLen)));
+    // sb.write(holder.baseAddr.padRight(_adjustLen(maxBaseAddrLen)));
+    // sb.write(holder.pc.padRight(_adjustLen(maxPCLen)));
     sb.write(holder.funcName.padRight(_adjustLen(maxFunctionNameLen)));
     sb.write(holder.uri.padRight(_adjustLen(maxUriLen)));
     sb.write(holder.times.padRight(_adjustLen(maxTimesLen)));

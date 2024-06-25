@@ -237,13 +237,13 @@ class Glance {
     int preIndex = index - 1;
     int nextIndex = index + 1;
     List<FrameTiming> reportTimings = [];
-    if (preIndex >= 0) {
-      reportTimings.add(timings[preIndex]);
-    }
+    // if (preIndex >= 0) {
+    //   reportTimings.add(timings[preIndex]);
+    // }
     reportTimings.add(timings[index]);
-    if (nextIndex < timings.length) {
-      reportTimings.add(timings[nextIndex]);
-    }
+    // if (nextIndex < timings.length) {
+    //   reportTimings.add(timings[nextIndex]);
+    // }
     assert(reportTimings.isNotEmpty);
 
     // Request stacktraces

@@ -375,13 +375,13 @@ class NativeIrisEventBinding {
 //   });
 // }
 
-class CircularBuffer<T> {
+class RingBuffer<T> {
   final List<T?> _buffer;
   int _head = 0;
   int _tail = 0;
   bool _isFull = false;
 
-  CircularBuffer(int size) : _buffer = List<T?>.filled(size, null);
+  RingBuffer(int size) : _buffer = List<T?>.filled(size, null);
 
   bool get isEmpty => !_isFull && _head == _tail;
   bool get isFull => _isFull;
@@ -470,14 +470,34 @@ typedef SlowFunctionsDetectedCallback = void Function(
     SlowFunctionsInformation info);
 
 class StackCollector {
-  // With all default configurations, the length is approximately 641 of 2s
+  // max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
+
+  // intptr_t Profiler::CalculateSampleBufferCapacity() {
+  //   if (FLAG_sample_buffer_duration <= 0) {
+  //     return SampleBlockBuffer::kDefaultBlockCount;
+  //   }
+  //   // Deeper stacks require more than a single Sample object to be represented
+  //   // correctly. These samples are chained, so we need to determine the worst
+  //   // case sample chain length for a single stack.
+  //   // Sample::kPCArraySizeInWords* kMaxSamplesPerTick / 4
+  //   // 32 * 4 / 4
+  //   const intptr_t max_sample_chain_length =
+  //       FLAG_max_profile_depth / kMaxSamplesPerTick;
+  //       // 2 * 1000 * （32 * 4 / 4）
+  //   const intptr_t sample_count = FLAG_sample_buffer_duration *
+  //                                 SamplesPerSecond() * max_sample_chain_length;
+  //       // （2 * 1000 * （32 * 4 / 4））/ 100 + 1
+  //   return (sample_count / SampleBlock::kSamplesPerBlock) + 1;
+  // }
+  //
+  // With all default configurations, the length is approximately 641 (320 * 2 + 1) of 2s
   // refer to the dart sdk implementation.
   // https://github.com/dart-lang/sdk/blob/bcaf745a9be6c4af0c338c43e6304c9e1c4c5535/runtime/vm/profiler.cc#L642
   static const _bufferCount = 641;
   // static const _bufferCount = 2561;
   static const _sampleRateInMilliseconds = 1;
 
-  CircularBuffer<NativeStack>? _circularBuffer;
+  RingBuffer<NativeStack>? _circularBuffer;
 
   LinkedHashMap<int, NativeFrameTimeSpent>? _frameTimeSpentMap;
 
@@ -500,9 +520,9 @@ class StackCollector {
     return ffi.DynamicLibrary.process();
   }
 
-  List<NativeFrameTimeSpent> getStacktrace() {
+  List<NativeFrameTimeSpent> getStacktrace(List<int> timestampRange) {
     assert(_circularBuffer != null);
-    return List.unmodifiable(aggregateStacks(_circularBuffer!));
+    return List.unmodifiable(aggregateStacks(timestampRange, _circularBuffer!));
     // return [];
   }
 
@@ -512,26 +532,6 @@ class StackCollector {
   }
 
   Future<void> loop() async {
-// max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
-
-// intptr_t Profiler::CalculateSampleBufferCapacity() {
-//   if (FLAG_sample_buffer_duration <= 0) {
-//     return SampleBlockBuffer::kDefaultBlockCount;
-//   }
-//   // Deeper stacks require more than a single Sample object to be represented
-//   // correctly. These samples are chained, so we need to determine the worst
-//   // case sample chain length for a single stack.
-//   // Sample::kPCArraySizeInWords* kMaxSamplesPerTick / 4
-//   // 32 * 4 / 4
-//   const intptr_t max_sample_chain_length =
-//       FLAG_max_profile_depth / kMaxSamplesPerTick;
-//       // 2 * 1000 * （32 * 4 / 4）
-//   const intptr_t sample_count = FLAG_sample_buffer_duration *
-//                                 SamplesPerSecond() * max_sample_chain_length;
-//       // （2 * 1000 * （32 * 4 / 4））/ 100 + 1
-//   return (sample_count / SampleBlock::kSamplesPerBlock) + 1;
-// }
-
     //
 
     try {
@@ -541,7 +541,7 @@ class StackCollector {
         final collect_stack = NativeIrisEventBinding(_loadLib());
         final stack = collect_stack.captureStackOfTargetThread();
 
-        _circularBuffer ??= CircularBuffer<NativeStack>(_bufferCount);
+        _circularBuffer ??= RingBuffer<NativeStack>(_bufferCount);
         _circularBuffer!.write(stack);
 
         final jsonMapList = stack.frames.map((frame) {
@@ -590,10 +590,28 @@ class StackCollector {
   }
 
   List<NativeFrameTimeSpent> aggregateStacks(
-      CircularBuffer<NativeStack> buffer) {
+      List<int> timestampRange, RingBuffer<NativeStack> buffer) {
+    List<String> pathFilters = <String>[
+      'libflutter.so',
+      'libapp.so',
+    ];
+
+    int start = timestampRange[0];
+    int end = timestampRange[1];
     // final maps = LinkedHashMap<int, NativeFrameTimeSpent>();
     final frameTimeSpentMap = LinkedHashMap<int, NativeFrameTimeSpent>();
-    final allFrames = buffer.readAll().expand((e) => e!.frames);
+    final allFrames = buffer.readAll().expand((e) => e!.frames).where((frame) {
+      // final frame = e.frame;
+
+      // return e.timestamp >=start  && e.timestamp <= end;
+      return frame.module != null &&
+          frame.timestamp >= start &&
+          frame.timestamp <= end &&
+          pathFilters.any((pathFilter) {
+            return frame.module?.path.contains(pathFilter) == true;
+          });
+    });
+
     bool needReport = false;
     for (final frame in allFrames) {
       final pc = frame!.pc;
@@ -612,7 +630,7 @@ class StackCollector {
       }
     }
 
-    return frameTimeSpentMap!.values.toList();
+    return frameTimeSpentMap!.values.toList().reversed.toList();
 
     // print('needReport: $needReport');
     // if (needReport) {
@@ -767,7 +785,8 @@ class SampleThread {
           'libflutter.so',
           'libapp.so',
         ];
-        final stacktrace = collector.getStacktrace().where((e) {
+        final stacktrace =
+            collector.getStacktrace(message.timestampRange).where((e) {
           final frame = e.frame;
 
           // return e.timestamp >=start  && e.timestamp <= end;
