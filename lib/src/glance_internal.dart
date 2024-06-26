@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:glance/src/collect_stack.dart';
+import 'package:glance/src/sampler.dart';
 
 typedef HandleDrawFrameEndCallback = void Function(
     int beginFrameTimeInMillis, int drawFrameTimeInMillis);
@@ -141,7 +142,7 @@ class Glance {
     return _instance!;
   }
 
-  SampleThread? _sampleThread;
+  Sampler? _sampleThread;
 
   final List<JankCallback> _jankCallbacks = [];
   final List<SlowFunctionsDetectedCallback>
@@ -162,7 +163,7 @@ class Glance {
     //   _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
     // });
 
-    _sampleThread ??= await SampleThread.spawn();
+    _sampleThread ??= await Sampler.create();
     // _sampleThread?.addSlowFunctionsDetectedCallback((info) {
     //   for (final callback
     //       in List.from(_slowFunctionsDetectedCallbackCallbacks)) {

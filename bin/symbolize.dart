@@ -31,6 +31,13 @@ void main(List<String> arguments) {
 ///  #02  pc 0000000000065a3b  /system/lib/libc.so (__pthread_start(void*))
 ///  #03  pc 000000000001e4fd  /system/lib/libc.so (__start_thread)
 ///
+///
+/// base_addr: 0000000000000640
+///   #00  pc 0000000000042f89  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)
+///   #01  pc 0000000000000640  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::runCrashThread())
+///   #02  pc 0000000000065a3b  /system/lib/libc.so (__pthread_start(void*))
+///   #03  pc 000000000001e4fd  /system/lib/libc.so (__start_thread)
+///
 /// [
 ///   {
 ///     "pc": "0000000000042f89",
