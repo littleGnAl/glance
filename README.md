@@ -16,3 +16,11 @@ samples, guidance on mobile development, and a full API reference.
 
 https://github.com/mraleph/thread_collect_stack_example
 
+
+## License
+
+Some files in this project are licensed under the BSD 3-Clause "New" or "Revised" License from [thread_collect_stack_example](https://github.com/mraleph/thread_collect_stack_example). See the `LICENSE-original` file for details.
+
+The rest of the project is licensed under the MIT License. See the `LICENSE` file for details.
+
+
