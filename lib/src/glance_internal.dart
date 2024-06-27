@@ -64,7 +64,7 @@ class GlanceWidgetBinding extends WidgetsFlutterBinding {
 /// 16ms
 const int _kDefaultJankThreshold = 16;
 
-typedef JankCallback = void Function(JankInformation info);
+typedef JankCallback = void Function(JankReport info);
 
 // class StackTrace {
 //   const StackTrace._(this.frames);
@@ -88,8 +88,32 @@ typedef JankCallback = void Function(JankInformation info);
 //   }
 // }
 
-class JankInformation {
-  const JankInformation._({
+abstract class GlanceReporter<T> {
+  void report(T info);
+}
+
+abstract class JankDetectedReporter extends GlanceReporter<JankReport> {}
+
+abstract class GlanceStackTrace {
+  Map<String, Object?> toJson();
+}
+
+class _GlanceStackTraceImpl implements GlanceStackTrace {
+  @override
+  Map<String, Object?> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return super.toString();
+  }
+}
+
+class JankReport {
+  const JankReport._({
     required this.stackTraces,
     required this.jankDuration,
   });
@@ -101,7 +125,7 @@ class JankInformation {
     return jsonEncode(toJson());
   }
 
-  // JankInformation fromJson(Map<String, Object?> json) {
+  // JankReport fromJson(Map<String, Object?> json) {
 
   // }
 
@@ -222,7 +246,7 @@ class Glance {
 
   //   assert(_sampleThread != null);
   //   final frames = await _sampleThread!.getSamples(timestampRange);
-  //   final stacktrace = JankInformation._(
+  //   final stacktrace = JankReport._(
   //     stackTraces: frames,
   //     jankDuration: Duration(milliseconds: endTimestamp - startTimestamp),
   //   );
@@ -255,7 +279,7 @@ class Glance {
 
     assert(_sampleThread != null);
     final frames = await _sampleThread!.getSamples(timestampRange);
-    final stacktrace = JankInformation._(
+    final stacktrace = JankReport._(
       stackTraces: frames,
       jankDuration: Duration(microseconds: 0),
     );
