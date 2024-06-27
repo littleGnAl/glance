@@ -125,7 +125,7 @@ class Sampler {
     ReceivePort receivePort,
     SendPort sendPort,
   ) {
-    final _SamplerImpl collector = _SamplerImpl();
+    final _SamplerProcessor collector = _SamplerProcessor();
     // collector.setSlowFunctionsDetectedCallback((info) {
     //   // print('setSlowFunctionsDetectedCallback');
     //   sendPort.send(_SlowFunctionsDetectedResponse(0, info));
@@ -194,7 +194,7 @@ class Sampler {
   }
 }
 
-class _SamplerImpl {
+class _SamplerProcessor {
   // max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
 
   // intptr_t Profiler::CalculateSampleBufferCapacity() {
