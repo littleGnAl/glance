@@ -152,9 +152,11 @@ class GlanceConfiguration {
   const GlanceConfiguration({
     this.jankThreshold = _kDefaultJankThreshold,
     this.jankCallback,
+    this.reporters = const [],
   });
   final int jankThreshold;
   final JankCallback? jankCallback;
+  final List<GlanceReporter> reporters;
 }
 
 class Glance {
@@ -299,20 +301,3 @@ class Glance {
     _slowFunctionsDetectedCallbackCallbacks.add(callback);
   }
 }
-
-
-
-// import 'dart:async';
-// import 'dart:convert';
-// import 'dart:isolate';
-
-// void main() async {
-//   final _SampleThread = await _SampleThread.spawn();
-//   print(await _SampleThread.parseJson('{"key":"value"}'));
-//   print(await _SampleThread.parseJson('"banana"'));
-//   print(await _SampleThread.parseJson('[true, false, null, 1, "string"]'));
-//   print(
-//       await Future.wait([_SampleThread.parseJson('"yes"'), _SampleThread.parseJson('"no"')]));
-//   _SampleThread.close();
-// }
-
