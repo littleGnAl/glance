@@ -9,62 +9,62 @@ import 'package:flutter/widgets.dart';
 import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/sampler.dart';
 
-typedef HandleDrawFrameEndCallback = void Function(
-    int beginFrameTimeInMillis, int drawFrameTimeInMillis);
+// typedef HandleDrawFrameEndCallback = void Function(
+//     int beginFrameTimeInMillis, int drawFrameTimeInMillis);
 
-class GlanceWidgetBinding extends WidgetsFlutterBinding {
-  GlanceWidgetBinding._();
+// class GlanceWidgetBinding extends WidgetsFlutterBinding {
+//   GlanceWidgetBinding._();
 
-  static GlanceWidgetBinding get instance =>
-      BindingBase.checkInstance(_instance);
-  static GlanceWidgetBinding? _instance;
+//   static GlanceWidgetBinding get instance =>
+//       BindingBase.checkInstance(_instance);
+//   static GlanceWidgetBinding? _instance;
 
-  int beginFrameTimeInMillis_ = 0;
-  HandleDrawFrameEndCallback? onHandleDrawFrameEndCallback_;
+//   int beginFrameTimeInMillis_ = 0;
+//   HandleDrawFrameEndCallback? onHandleDrawFrameEndCallback_;
 
-  static GlanceWidgetBinding ensureInitialized() {
-    if (GlanceWidgetBinding._instance == null) {
-      GlanceWidgetBinding._();
-    }
-    return GlanceWidgetBinding.instance;
-  }
+//   static GlanceWidgetBinding ensureInitialized() {
+//     if (GlanceWidgetBinding._instance == null) {
+//       GlanceWidgetBinding._();
+//     }
+//     return GlanceWidgetBinding.instance;
+//   }
 
-  @override
-  void initInstances() {
-    super.initInstances();
-    _instance = this;
-  }
+//   @override
+//   void initInstances() {
+//     super.initInstances();
+//     _instance = this;
+//   }
 
-  void setOnHandleDrawFrameEndCallback(HandleDrawFrameEndCallback? callback) {
-    onHandleDrawFrameEndCallback_ = callback;
-  }
+//   void setOnHandleDrawFrameEndCallback(HandleDrawFrameEndCallback? callback) {
+//     onHandleDrawFrameEndCallback_ = callback;
+//   }
 
-  @override
-  void handleBeginFrame(Duration? rawTimeStamp) {
-    // onHandleDrawFrameEndCallback_?.call(
-    //   beginFrameTimeInMillis_,
-    //   DateTime.now().millisecondsSinceEpoch,
-    // );
+//   @override
+//   void handleBeginFrame(Duration? rawTimeStamp) {
+//     // onHandleDrawFrameEndCallback_?.call(
+//     //   beginFrameTimeInMillis_,
+//     //   DateTime.now().millisecondsSinceEpoch,
+//     // );
 
-    beginFrameTimeInMillis_ = DateTime.now().millisecondsSinceEpoch;
-    super.handleBeginFrame(rawTimeStamp);
-  }
+//     beginFrameTimeInMillis_ = DateTime.now().millisecondsSinceEpoch;
+//     super.handleBeginFrame(rawTimeStamp);
+//   }
 
-  @override
-  void handleDrawFrame() {
-    super.handleDrawFrame();
+//   @override
+//   void handleDrawFrame() {
+//     super.handleDrawFrame();
 
-    onHandleDrawFrameEndCallback_?.call(
-      beginFrameTimeInMillis_,
-      DateTime.now().millisecondsSinceEpoch,
-    );
-  }
-}
+//     onHandleDrawFrameEndCallback_?.call(
+//       beginFrameTimeInMillis_,
+//       DateTime.now().millisecondsSinceEpoch,
+//     );
+//   }
+// }
 
 /// 16ms
 const int _kDefaultJankThreshold = 16;
 
-typedef JankCallback = void Function(JankReport info);
+// typedef JankCallback = void Function(JankReport info);
 
 // class StackTrace {
 //   const StackTrace._(this.frames);
@@ -95,67 +95,115 @@ abstract class GlanceReporter<T> {
 abstract class JankDetectedReporter extends GlanceReporter<JankReport> {}
 
 abstract class GlanceStackTrace {
-  Map<String, Object?> toJson();
+  // Map<String, Object?> toJson();
 }
 
-class _GlanceStackTraceImpl implements GlanceStackTrace {
-  @override
-  Map<String, Object?> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
-  }
+const glaceStackTraceHeaderLine =
+    '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***';
 
+const glaceStackTraceLineSpilt = ' ';
+
+class _GlanceStackTraceImpl implements GlanceStackTrace {
+  _GlanceStackTraceImpl(this.stackTraces);
+  final List<NativeFrameTimeSpent> stackTraces;
+
+  // static const _headerLine =
+  //     '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***';
+  static const _spilt = ' ';
+  static const _baseAddrKey = 'base_addr';
+  static const _pcKey = 'pc';
+
+  /// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+  /// #00  0000000000000640 0000000000042f89 30  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)   exec_time 30
+  /// #00  0000000000000640 0000000000042f89 30  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)   exec_time 30
+  /// #00  0000000000000640 0000000000042f89 30  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)   exec_time 30
+  /// #00  0000000000000640 0000000000042f89 30  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)   exec_time 30
+  /// #01  base_addr 0000000000000640  pc 0000000000000640  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::runCrashThread())         ~30
+  /// #02  base_addr 0000000000000640  pc 0000000000065a3b  /system/lib/libc.so (__pthread_start(void*))                                                   ~30
+  /// #03  base_addr 0000000000000640  pc 000000000001e4fd  /system/lib/libc.so (__start_thread)
+  /// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
   @override
   String toString() {
-    // TODO: implement toString
-    return super.toString();
+    final stringBuffer = StringBuffer();
+    stringBuffer.writeln(glaceStackTraceHeaderLine);
+    for (int i = 0; i < stackTraces.length; ++i) {
+      final stackTrace = stackTraces[i];
+      final frame = stackTrace.frame;
+      final spent = stackTrace.timestampInMacros;
+      stringBuffer.write('#${i.toString().padLeft(3, '0')}');
+      stringBuffer.write(glaceStackTraceLineSpilt);
+      stringBuffer.write(frame.module!.baseAddress);
+      stringBuffer.write(glaceStackTraceLineSpilt);
+      stringBuffer.write(frame.pc);
+      stringBuffer.write(glaceStackTraceLineSpilt);
+      stringBuffer.write(spent);
+      stringBuffer.write(glaceStackTraceLineSpilt);
+      stringBuffer.write(frame.module!.path); // Is it necessary?
+      stringBuffer.writeln();
+    }
+
+    // stackTraces.map((e) {
+    //     final frame = e.frame;
+    //     final spent = e.timestampInMacros;
+    //     return {
+    //       "pc": frame.pc.toString(),
+    //       "timestamp": frame.timestamp,
+    //       if (frame.module != null)
+    //         "baseAddress": frame.module!.baseAddress.toString(),
+    //       if (frame.module != null) "path": frame.module!.path,
+    //       'spent': spent,
+    //     };
+    //   }).toList()
+
+    return stringBuffer.toString();
   }
 }
 
 class JankReport {
   const JankReport._({
-    required this.stackTraces,
-    required this.jankDuration,
+    required this.stackTrace,
+    required this.frameTiming,
   });
-  final List<NativeFrameTimeSpent> stackTraces;
-  final Duration jankDuration;
+  // final List<NativeFrameTimeSpent> stackTraces;
+  final GlanceStackTrace stackTrace;
+  final FrameTiming frameTiming;
 
-  @override
-  String toString() {
-    return jsonEncode(toJson());
-  }
+  // @override
+  // String toString() {
+  //   return jsonEncode(toJson());
+  // }
 
   // JankReport fromJson(Map<String, Object?> json) {
 
   // }
 
-  Map<String, Object?> toJson() {
-    return {
-      'jankDuration': jankDuration.inMilliseconds,
-      'stackTraces': stackTraces.map((e) {
-        final frame = e.frame;
-        final spent = e.timestampInMacros;
-        return {
-          "pc": frame.pc.toString(),
-          "timestamp": frame.timestamp,
-          if (frame.module != null)
-            "baseAddress": frame.module!.baseAddress.toString(),
-          if (frame.module != null) "path": frame.module!.path,
-          'spent': spent,
-        };
-      }).toList()
-    };
-  }
+  // Map<String, Object?> toJson() {
+  //   return {
+  //     'jankDuration': jankDuration.inMilliseconds,
+  //     'stackTraces': stackTraces.map((e) {
+  //       final frame = e.frame;
+  //       final spent = e.timestampInMacros;
+  //       return {
+  //         "pc": frame.pc.toString(),
+  //         "timestamp": frame.timestamp,
+  //         if (frame.module != null)
+  //           "baseAddress": frame.module!.baseAddress.toString(),
+  //         if (frame.module != null) "path": frame.module!.path,
+  //         'spent': spent,
+  //       };
+  //     }).toList()
+  //   };
+  // }
 }
 
 class GlanceConfiguration {
   const GlanceConfiguration({
     this.jankThreshold = _kDefaultJankThreshold,
-    this.jankCallback,
+    // this.jankCallback,
     this.reporters = const [],
   });
   final int jankThreshold;
-  final JankCallback? jankCallback;
+  // final JankCallback? jankCallback;
   final List<GlanceReporter> reporters;
 }
 
@@ -170,14 +218,17 @@ class Glance {
 
   Sampler? _sampleThread;
 
-  final List<JankCallback> _jankCallbacks = [];
-  final List<SlowFunctionsDetectedCallback>
-      _slowFunctionsDetectedCallbackCallbacks = [];
+  // final List<JankCallback> _jankCallbacks = [];
+  // final List<SlowFunctionsDetectedCallback>
+  //     _slowFunctionsDetectedCallbackCallbacks = [];
+
+  late List<GlanceReporter> reporters;
 
   Future<void> start({GlanceConfiguration? config}) async {
     final jankThreshold = config?.jankThreshold ?? _kDefaultJankThreshold;
+    reporters = List.from(config?.reporters ?? []);
 
-    final binding = GlanceWidgetBinding.ensureInitialized();
+    // final binding = GlanceWidgetBinding.ensureInitialized();
     // binding.setOnHandleDrawFrameEndCallback(
     //     (int beginFrameTimeInMillis, int drawFrameTimeInMillis) {
     //   final diff = drawFrameTimeInMillis - beginFrameTimeInMillis;
@@ -281,23 +332,27 @@ class Glance {
 
     assert(_sampleThread != null);
     final frames = await _sampleThread!.getSamples(timestampRange);
-    final stacktrace = JankReport._(
-      stackTraces: frames,
-      jankDuration: Duration(microseconds: 0),
+    final report = JankReport._(
+      stackTrace: _GlanceStackTraceImpl(frames),
+      frameTiming: timings[index],
     );
 
-    final callbacks = List.from(_jankCallbacks);
-    for (final callback in callbacks) {
-      callback(stacktrace);
+    // final callbacks = List.from(_jankCallbacks);
+    // for (final callback in callbacks) {
+    //   callback(stacktrace);
+    // }
+
+    for (final reporter in reporters) {
+      reporter.report(report);
     }
   }
 
-  void addJankCallback(JankCallback callback) {
-    _jankCallbacks.add(callback);
-  }
+  // void addJankCallback(JankCallback callback) {
+  //   _jankCallbacks.add(callback);
+  // }
 
-  void addSlowFunctionsDetectedCallback(
-      SlowFunctionsDetectedCallback callback) {
-    _slowFunctionsDetectedCallbackCallbacks.add(callback);
-  }
+  // void addSlowFunctionsDetectedCallback(
+  //     SlowFunctionsDetectedCallback callback) {
+  //   _slowFunctionsDetectedCallbackCallbacks.add(callback);
+  // }
 }

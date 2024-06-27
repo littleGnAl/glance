@@ -6,6 +6,7 @@ import 'package:args/args.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
 import 'package:glance/src/collect_stack.dart';
+import 'package:glance/src/glance_internal.dart';
 import 'package:path/path.dart' as path;
 import 'package:process/process.dart';
 
@@ -33,9 +34,9 @@ void main(List<String> arguments) {
 ///
 ///
 /// base_addr: 0000000000000640
-///   #00  pc 0000000000042f89  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)
-///   #01  pc 0000000000000640  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::runCrashThread())
-///   #02  pc 0000000000065a3b  /system/lib/libc.so (__pthread_start(void*))
+///   #00  pc 0000000000042f89  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)   ~30ms
+///   #01  pc 0000000000000640  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::runCrashThread())         ~30ms
+///   #02  pc 0000000000065a3b  /system/lib/libc.so (__pthread_start(void*))                                                   ~30ms
 ///   #03  pc 000000000001e4fd  /system/lib/libc.so (__start_thread)
 ///
 /// [
@@ -52,28 +53,60 @@ void _symbolize(
   String stackTraceFilePath,
 ) {
   final stackTrackFile = fileSystem.file(stackTraceFilePath);
-  final stackTrackFileContent = stackTrackFile.readAsStringSync();
-  final stackTraceJson = jsonDecode(stackTrackFileContent);
-
-  final frames = List.from(stackTraceJson['stackTraces']).map((e) {
-    final baseAddress = e['baseAddress'];
-    final path = e['path'];
-    final pc = e['pc'];
-    final ts = e['timestamp'];
-    final spent = e['spent'] ?? 0;
-    NativeModule? module;
-    if (baseAddress != null && path != null) {
-      module = NativeModule(
-        id: 0,
-        path: path,
-        baseAddress: int.parse(baseAddress),
-        symbolName: '',
-      );
+  // final stackTrackFileContent = stackTrackFile.readAsStringSync();
+  final lines = stackTrackFile.readAsLinesSync();
+  final List<String> processLines = [];
+  for (final line in lines) {
+    if (line != glaceStackTraceHeaderLine) {
+      continue;
     }
-    final nativeFrame =
-        NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
-    return NativeFrameTimeSpent(nativeFrame)..timestampInMacros = spent;
-  });
+    if (!line.startsWith('#')) {
+      break;
+    }
+
+    // final spilted = line.split(glaceStackTraceLineSpilt);
+    processLines.add(line);
+
+    // final baseAddress =  e['baseAddress'];
+    // final path = e['path'];
+    // final pc = e['pc'];
+    // final ts = e['timestamp'];
+    // final spent = e['spent'] ?? 0;
+    // NativeModule? module;
+    // if (baseAddress != null && path != null) {
+    //   module = NativeModule(
+    //     id: 0,
+    //     path: path,
+    //     baseAddress: int.parse(baseAddress),
+    //     symbolName: '',
+    //   );
+    // }
+    // final nativeFrame =
+    //     NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
+    // return NativeFrameTimeSpent(nativeFrame)..timestampInMacros = spent;
+  }
+
+  // final stackTraceJson = jsonDecode(stackTrackFileContent);
+
+  // final frames = List.from(stackTraceJson['stackTraces']).map((e) {
+  //   final baseAddress = e['baseAddress'];
+  //   final path = e['path'];
+  //   final pc = e['pc'];
+  //   final ts = e['timestamp'];
+  //   final spent = e['spent'] ?? 0;
+  //   NativeModule? module;
+  //   if (baseAddress != null && path != null) {
+  //     module = NativeModule(
+  //       id: 0,
+  //       path: path,
+  //       baseAddress: int.parse(baseAddress),
+  //       symbolName: '',
+  //     );
+  //   }
+  //   final nativeFrame =
+  //       NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
+  //   return NativeFrameTimeSpent(nativeFrame)..timestampInMacros = spent;
+  // });
 
   // base_addr pc functions uri times
 
@@ -94,57 +127,55 @@ void _symbolize(
   // }
 
   final List<_Holder> holders = [];
-  for (final f in frames) {
-    final frame = f.frame;
-    if (frame.module != null) {
-      // $ llvm-symbolizer --exe debug-info/app.android-arm.symbols --adjust-vma 3396415488 3396957692 3396957536 3397044152 3397056056 3397112352 3396903540 3397112352 3397057696 3397111684 3396845236 3396662844
-      final cmd = [
-        'llvm-symbolizer',
-        '--exe',
-        symbolFilePath,
-        '--adjust-vma',
-        frame.module!.baseAddress,
-        frame.pc,
-      ];
-      final result = processManager.runSync(cmd);
-      // stdout.writeln(
-      //     'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}, spent: ${f.timestampInMacros}');
-      String outString = result.stdout;
-      // outString = outString.split('\n').where((e) => e.isNotEmpty); //.join('##');
-      // stdout.writeln(outString);
+  for (final line in processLines) {
+    final splited = line.split(glaceStackTraceLineSpilt);
+    assert(splited.length == 5);
+    final baseAddress = splited[1];
+    final pc = splited[2];
+    final spent = splited[3];
+    final path = splited[4];
 
-      // third_party/dart/sdk/lib/convert/json.dart:114:10##
-      final uriRegx = RegExp(r'(.+)*\/\.dart\:\d+\:\d+');
+    // final frame = f.frame;
+    // if (frame.module != null) {
 
-      final baseAddress = frame.module!.baseAddress.toString();
-      final pc = frame.pc.toString();
-      String funcName = '';
-      String uri = '';
-      String spent = f.timestampInMacros.toString();
+    //   // stdout.writeln();
+    // }
 
-      maxBaseAddrLen = max(maxTimesLen, baseAddress.length);
-      maxPCLen = max(maxPCLen, pc.length);
-      maxTimesLen = max(maxTimesLen, spent.length);
+    // $ llvm-symbolizer --exe debug-info/app.android-arm.symbols --adjust-vma 3396415488 3396957692 3396957536 3397044152 3397056056 3397112352 3396903540 3397112352 3397057696 3397111684 3396845236 3396662844
+    final cmd = [
+      'llvm-symbolizer',
+      '--exe',
+      symbolFilePath,
+      '--adjust-vma',
+      // frame.module!.
+      baseAddress,
+      // frame.
+      pc,
+    ];
+    final result = processManager.runSync(cmd);
+    // stdout.writeln(
+    //     'frame.module!.baseAddress: ${frame.module!.baseAddress} frame.pc: ${frame.pc}, frame.module!.path: ${frame.module!.path}, spent: ${f.timestampInMacros}');
+    String outString = result.stdout;
+    // outString = outString.split('\n').where((e) => e.isNotEmpty); //.join('##');
+    // stdout.writeln(outString);
 
-      final outStringList =
-          outString.split('\n').where((e) => e.isNotEmpty).toList();
-      if (outStringList.length > 2) {
-        for (int i = 0; i < outStringList.length; i += 2) {
-          funcName = outStringList[0];
-          assert(uriRegx.hasMatch(uri));
-          uri = outStringList[1];
-          holders.add(_Holder(
-            baseAddr: baseAddress,
-            pc: pc,
-            funcName: funcName,
-            uri: uri,
-            times: spent,
-          ));
+    // third_party/dart/sdk/lib/convert/json.dart:114:10##
+    final uriRegx = RegExp(r'(.+)*\/\.dart\:\d+\:\d+');
 
-          maxFunctionNameLen = max(maxFunctionNameLen, funcName.length);
-          maxUriLen = max(maxUriLen, uri.length);
-        }
-      } else {
+    // final baseAddress = frame.module!.baseAddress.toString();
+    // final pc = frame.pc.toString();
+    String funcName = '';
+    String uri = '';
+    // String spent = f.timestampInMacros.toString();
+
+    maxBaseAddrLen = max(maxTimesLen, baseAddress.length);
+    maxPCLen = max(maxPCLen, pc.length);
+    maxTimesLen = max(maxTimesLen, spent.length);
+
+    final outStringList =
+        outString.split('\n').where((e) => e.isNotEmpty).toList();
+    if (outStringList.length > 2) {
+      for (int i = 0; i < outStringList.length; i += 2) {
         funcName = outStringList[0];
         assert(uriRegx.hasMatch(uri));
         uri = outStringList[1];
@@ -159,8 +190,20 @@ void _symbolize(
         maxFunctionNameLen = max(maxFunctionNameLen, funcName.length);
         maxUriLen = max(maxUriLen, uri.length);
       }
+    } else {
+      funcName = outStringList[0];
+      assert(uriRegx.hasMatch(uri));
+      uri = outStringList[1];
+      holders.add(_Holder(
+        baseAddr: baseAddress,
+        pc: pc,
+        funcName: funcName,
+        uri: uri,
+        times: spent,
+      ));
 
-      // stdout.writeln();
+      maxFunctionNameLen = max(maxFunctionNameLen, funcName.length);
+      maxUriLen = max(maxUriLen, uri.length);
     }
   }
 
