@@ -168,10 +168,10 @@ class JankReport {
   final GlanceStackTrace stackTrace;
   final FrameTiming frameTiming;
 
-  // @override
-  // String toString() {
-  //   return jsonEncode(toJson());
-  // }
+  @override
+  String toString() {
+    return stackTrace.toString();
+  }
 
   // JankReport fromJson(Map<String, Object?> json) {
 
@@ -253,8 +253,7 @@ class Glance {
         return;
       }
       int now = DateTime.now().microsecondsSinceEpoch;
-      print('DateTime.now(): $now');
-      print('Timeline.now: ${Timeline.now}');
+      final jankTimings = <FrameTiming>[];
       for (int i = 0; i < timings.length; ++i) {
         final FrameTiming timing = timings[i];
         print(
@@ -270,9 +269,15 @@ class Glance {
         final totalSpan = timing.totalSpan.inMilliseconds;
         if (totalSpan > jankThreshold) {
           // report jank
-          _report(timings, i);
-          break;
+          // _report(timings, i);
+          // break;
+
+          jankTimings.add(timing);
         }
+      }
+
+      if (jankTimings.isNotEmpty) {
+        _report(timings, 0);
       }
     });
   }
@@ -314,11 +319,11 @@ class Glance {
     // Report the nearest 3 timings if possiable.
     int preIndex = index - 1;
     int nextIndex = index + 1;
-    List<FrameTiming> reportTimings = [];
+    List<FrameTiming> reportTimings = timings;
     // if (preIndex >= 0) {
     //   reportTimings.add(timings[preIndex]);
     // }
-    reportTimings.add(timings[index]);
+    // reportTimings.add(timings[index]);
     // if (nextIndex < timings.length) {
     //   reportTimings.add(timings[nextIndex]);
     // }
@@ -332,6 +337,9 @@ class Glance {
 
     assert(_sampleThread != null);
     final frames = await _sampleThread!.getSamples(timestampRange);
+    if (frames.isEmpty) {
+      return;
+    }
     final report = JankReport._(
       stackTrace: _GlanceStackTraceImpl(frames),
       frameTiming: timings[index],
