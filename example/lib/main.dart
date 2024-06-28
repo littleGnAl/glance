@@ -21,13 +21,13 @@ class MyJankDetectedReporter extends JankDetectedReporter {
       final stacktraceFilePath = path.join(
         docDir!.absolute.path,
         'jank_trace',
-        'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
+        'jank_trace_${DateTime.now().microsecondsSinceEpoch}.txt',
       );
       print('addJankCallback stacktraceFilePath: ${stacktraceFilePath}');
       final file = File(stacktraceFilePath);
       file.createSync(recursive: true);
       File(stacktraceFilePath).writeAsStringSync(
-        jsonEncode(info.toString()),
+        info.stackTrace.toString(),
         flush: true,
       );
     }, (RootIsolateToken.instance, info));
@@ -35,6 +35,7 @@ class MyJankDetectedReporter extends JankDetectedReporter {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   _startGlance();
   runApp(const MyApp());
 }

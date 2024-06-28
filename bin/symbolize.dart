@@ -5,9 +5,7 @@ import 'dart:math';
 import 'package:args/args.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
-import 'package:glance/src/collect_stack.dart';
-import 'package:glance/src/glance_internal.dart';
-import 'package:path/path.dart' as path;
+import 'package:glance/src/glance_stack_trace.dart';
 import 'package:process/process.dart';
 
 void main(List<String> arguments) {
@@ -21,7 +19,7 @@ void main(List<String> arguments) {
 
   const file.FileSystem fileSystem = LocalFileSystem();
   const processManager = LocalProcessManager();
-  _symbolize(fileSystem, processManager, symbolFile!, stackTraceFile!);
+  symbolize(fileSystem, processManager, symbolFile!, stackTraceFile!);
 }
 
 /// pc: 0xab333
@@ -46,7 +44,7 @@ void main(List<String> arguments) {
 ///     "path": "/data/app/com.example.thread_collect_stack_example-TBzzwMgiQJ7BUep7husHbA==/lib/arm/libapp.so"
 ///   }
 /// ]
-void _symbolize(
+String symbolize(
   file.FileSystem fileSystem,
   ProcessManager processManager,
   String symbolFilePath,
@@ -56,12 +54,13 @@ void _symbolize(
   // final stackTrackFileContent = stackTrackFile.readAsStringSync();
   final lines = stackTrackFile.readAsLinesSync();
   final List<String> processLines = [];
+  bool isFoundHeaderLine = false;
   for (final line in lines) {
-    if (line != glaceStackTraceHeaderLine) {
+    if (line == glaceStackTraceHeaderLine) {
       continue;
     }
     if (!line.startsWith('#')) {
-      break;
+      continue;
     }
 
     // final spilted = line.split(glaceStackTraceLineSpilt);
@@ -224,7 +223,11 @@ void _symbolize(
     sb.writeln(); // new line
   }
 
-  stdout.writeln(sb.toString());
+  final out = sb.toString();
+
+  stdout.writeln(out);
+
+  return out;
 }
 
 class _Holder {

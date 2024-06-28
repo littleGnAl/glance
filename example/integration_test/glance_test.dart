@@ -15,6 +15,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
+import 'binding.dart';
+
 class TestJankDetectedReporter extends JankDetectedReporter {
   TestJankDetectedReporter(this.onReport);
   final void Function(JankReport info) onReport;
@@ -123,7 +125,9 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
 }
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding =
+      GlanceIntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets("vsync phase jank", (WidgetTester tester) async {
     final Completer<String> stackTraceCompleter = Completer();
@@ -151,6 +155,8 @@ void main() {
     print('bbbb');
 
     // final stackTrace = await stackTraceCompleter.future;
+
+    await binding.checkStackTrace('vsync_phase_jank', stackTraces.join('\n'));
     print('aaaa:\n ${stackTraces}');
   });
 
