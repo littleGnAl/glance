@@ -24,6 +24,6 @@ export SAVE_DEBUG_GOLDEN="true"
 
 # flutter drive --driver=test_driver/integration_test.dart --target=integration_test/glance_test.dart --profile
 
-dart run integration_test/glance_integration_test.dart
+dart run integration_test/glance_integration_test_runner.dart
 
 popd
