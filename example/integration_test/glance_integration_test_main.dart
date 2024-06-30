@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -58,6 +60,19 @@ Future<void> _startGlance() async {
   // await Permission.storage.request();
 }
 
+void _expensiveFunction() {
+  print('kjkjkjjkjkjk');
+  final watch = Stopwatch();
+  watch.start();
+  for (int i = 0; i < 1000; ++i) {
+    jsonEncode({
+      for (int i = 0; i < 10000; ++i) 'aaa': 0,
+    });
+  }
+  watch.stop();
+  print('_expensiveFunction time spend: ${watch.elapsedMilliseconds}');
+}
+
 class JankApp extends StatelessWidget {
   const JankApp({Key? key, required this.builder}) : super(key: key);
 
@@ -84,18 +99,18 @@ class VsyncPhaseJankWidget extends StatefulWidget {
 class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
   int _counter = 0;
 
+  // final WidgetStatesController _statesController = WidgetStatesController();
+
+  GlobalKey _buttonKey = GlobalKey();
+
+  Offset _getElevatedButtonOffset() {
+    RenderBox box = _buttonKey.currentContext!.findRenderObject() as RenderBox;
+    Offset position = box.localToGlobal(Offset.zero); //this is global position
+    return position;
+  }
+
   void _incrementCounter() {
-    print('kjkjkjjkjkjk');
-    final watch = Stopwatch();
-    watch.start();
-    for (int i = 0; i < 1000; ++i) {
-      jsonEncode({
-        for (int i = 0; i < 10000; ++i) 'aaa': 0,
-      });
-    }
-    Timeline.now;
-    watch.stop();
-    print('_incrementCounter time spend: ${watch.elapsedMilliseconds}');
+    _expensiveFunction();
     setState(() {
       _counter++;
     });
@@ -114,8 +129,9 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
           ),
           Text('$_counter'),
           ElevatedButton(
-            key: const ValueKey('increment'),
+            key: _buttonKey,
             onPressed: _incrementCounter,
+            // statesController: _statesController,
             child: const Text('increment'),
           ),
         ],
@@ -124,9 +140,38 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
   }
 }
 
-void _vsyncPhaseJank() {
+class BuildPhaseJankWidget extends StatefulWidget {
+  const BuildPhaseJankWidget({super.key});
+
+  @override
+  State<BuildPhaseJankWidget> createState() => _BuildPhaseJankWidgetState();
+}
+
+class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
+  bool _isExpensiveBuild = false;
+
+  void triggerExpensiveBuild() {
+    setState(() {
+      _isExpensiveBuild = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isExpensiveBuild) {
+      _expensiveFunction();
+    }
+    return const SizedBox();
+  }
+}
+
+void _vsyncPhaseJank() async {
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  final globalKey = GlobalKey<VsyncPhaseJankWidgetState>();
   final Completer<String> stackTraceCompleter = Completer();
   final List<String> stackTraces = [];
+
+  bool finishNextTime = false;
   final reporter = TestJankDetectedReporter((info) {
     // if (!stackTraceCompleter.isCompleted) {
     //   stackTraceCompleter.complete(info.stackTrace.toString());
@@ -139,15 +184,100 @@ void _vsyncPhaseJank() {
       print(e);
     });
     print('[glance_test] Collect stack traces end');
+
+    if (finishNextTime) {
+      print('[glance_test_finished]');
+    }
   });
   Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
   runApp(JankApp(
-    builder: (c) => VsyncPhaseJankWidget(),
+    builder: (c) => VsyncPhaseJankWidget(key: globalKey),
   ));
+
+  await binding.waitUntilFirstFrameRasterized;
+
+  await Future.delayed(Duration(milliseconds: 5000));
+
+  // globalKey.currentState?._statesController
+  //     .update(WidgetState.pressed, true); //_incrementCounter();
+  // await Future.delayed(Duration(milliseconds: 200));
+  // globalKey.currentState?._statesController.update(WidgetState.pressed, false);
+
+  final offset = globalKey.currentState!._getElevatedButtonOffset();
+  print('offset: ${offset.dx}, ${offset.dy}');
+  // GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+  //   position: (offset + Offset(10, 10)),
+  // ));
+
+  GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+    position: (offset + Offset(10, 10)),
+  ));
+  await Future.delayed(const Duration(milliseconds: 500));
+  GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+    position: (offset + Offset(10, 10)),
+  ));
+
+  // [glance_test_finished]
+
+  finishNextTime = true;
+}
+
+void _buildPhaseJank() async {
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  final globalKey = GlobalKey<_BuildPhaseJankWidgetState>();
+  final Completer<String> stackTraceCompleter = Completer();
+  final List<String> stackTraces = [];
+
+  bool finishNextTime = false;
+  final reporter = TestJankDetectedReporter((info) {
+    // if (!stackTraceCompleter.isCompleted) {
+    //   stackTraceCompleter.complete(info.stackTrace.toString());
+    // }
+
+    // stackTraces.add(info.stackTrace.toString());
+
+    print('[glance_test] Collect stack traces start');
+    info.stackTrace.toString().split('\n').forEach((e) {
+      print(e);
+    });
+    print('[glance_test] Collect stack traces end');
+
+    if (finishNextTime) {
+      print('[glance_test_finished]');
+    }
+  });
+  Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
+  runApp(JankApp(
+    builder: (c) => BuildPhaseJankWidget(key: globalKey),
+  ));
+
+  await binding.waitUntilFirstFrameRasterized;
+
+  await Future.delayed(Duration(milliseconds: 5000));
+
+  // globalKey.currentState?._statesController
+  //     .update(WidgetState.pressed, true); //_incrementCounter();
+  // await Future.delayed(Duration(milliseconds: 200));
+  // globalKey.currentState?._statesController.update(WidgetState.pressed, false);
+
+  final offset = globalKey.currentState!.triggerExpensiveBuild();
+
+  // GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+  //   position: (offset + Offset(10, 10)),
+  // ));
+  // await Future.delayed(const Duration(milliseconds: 500));
+  // GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+  //   position: (offset + Offset(10, 10)),
+  // ));
+
+  // [glance_test_finished]
+
+  finishNextTime = true;
 }
 
 Map<String, void Function()> _testCases = {
   'vsync_phase_jank': _vsyncPhaseJank,
+  'build_phase_jank': _buildPhaseJank,
 };
 
 void main() {

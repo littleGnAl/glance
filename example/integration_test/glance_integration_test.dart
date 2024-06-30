@@ -73,8 +73,9 @@ Future<void> _run(
   process.stdout
       .transform(utf8.decoder)
       .transform(const LineSplitter())
-      .listen((line) async {
-    print(line);
+      .listen((l) async {
+    final line = l.replaceAll(RegExp(r'I\/flutter \(\d+\): '), '');
+    // print('line.trim(): ${line.trim()}');
     if (line.trim() == '[glance_test_finished]') {
       const file.FileSystem fileSystem = LocalFileSystem();
       const processManager = LocalProcessManager();
@@ -82,7 +83,20 @@ Future<void> _run(
           fileSystem, processManager, '', collectedStackTraces.join('\n'));
       print('result: ');
       print(result);
+
+      // VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/integration_test/glance_integration_test_main.dart:99:3     76
+      // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 65
+      // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10
+      if (result.contains('VsyncPhaseJankWidgetState._incrementCounter') &&
+          result.contains('jsonEncode')) {
+        // success
+        print('Test passed!');
+      } else {
+        print('Test failed!');
+      }
+
       process.kill();
+
       return;
     }
 

@@ -168,7 +168,6 @@ class StackCollector {
 
   final CollectStackNativeBindings _nativeBindings;
 
-
   void setCurrentThreadAsTarget() {
     // final binding = CollectStackNativeBindings(_loadLib());
     _nativeBindings.SetCurrentThreadAsTarget();
@@ -250,7 +249,4 @@ class StackCollector {
           frames: frames, modules: modules.values.toList(growable: false));
     });
   }
-
-
 }
-
