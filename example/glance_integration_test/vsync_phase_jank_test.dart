@@ -61,7 +61,7 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
 void _vsyncPhaseJank() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   final globalKey = GlobalKey<VsyncPhaseJankWidgetState>();
-  final Completer<String> stackTraceCompleter = Completer();
+  Completer<String>? stackTraceCompleter;
   final List<String> stackTraces = [];
 
   bool finishNextTime = false;
@@ -72,14 +72,19 @@ void _vsyncPhaseJank() async {
 
     // stackTraces.add(info.stackTrace.toString());
 
-    print('[glance_test] Collect stack traces start');
-    info.stackTrace.toString().split('\n').forEach((e) {
-      print(e);
-    });
-    print('[glance_test] Collect stack traces end');
+    // print('[glance_test] Collect stack traces start');
+    // info.stackTrace.toString().split('\n').forEach((e) {
+    //   print(e);
+    // });
+    // print('[glance_test] Collect stack traces end');
 
-    if (finishNextTime) {
-      print('[glance_test_finished]');
+    // if (finishNextTime) {
+    //   print('[glance_test_finished]');
+    // }
+
+    if (stackTraceCompleter != null && !stackTraceCompleter!.isCompleted) {
+      stackTraces.add(info.stackTrace.toString());
+      stackTraceCompleter!.complete(stackTraces.join('\n'));
     }
   });
   Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
@@ -113,6 +118,24 @@ void _vsyncPhaseJank() async {
   // [glance_test_finished]
 
   finishNextTime = true;
+
+  stackTraceCompleter = Completer();
+  await stackTraceCompleter.future;
+
+  print('[glance_test] Collect stack traces start');
+  StringBuffer sb = StringBuffer();
+  stackTraces.forEach((e) {
+    sb.writeln(e);
+  });
+  sb.toString().split('\n').forEach((e) {
+    print(e);
+  });
+  print('[glance_test] Collect stack traces end');
+  print('[glance_test_finished]');
+
+  // if (finishNextTime) {
+  //   print('[glance_test_finished]');
+  // }
 }
 
 void main() {
