@@ -1,303 +1,455 @@
-
 [glance_test] Collect stack traces end
 Collected stack traces
 [glance_test_finished]
 Desymboling ...
-functions                                                      uri                                                                                                 times
-??                                                             ??:0:0                                                                                              11
-stub InvokeDartCode                                            ??:0:0                                                                                              1
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              1
-PlatformDispatcher._localeClosure                              lib/ui/platform_dispatcher.dart:1004:3                                                              1
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              1
-_Image._width$Getter$FfiNative                                 lib/ui/painting.dart:0:0                                                                            1
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:116:16                                                  1
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:131:16                                                  1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2577:7                   1
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2584:7                   1
-assert type is _StreamControllerAddStreamState<X0>             third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         1
-assert type is Stream<X0>                                      third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         1
-stub _iso_stub_AllocateFloat64x2ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           1
-stub _iso_stub_AllocateInt32x4ArrayStub                        third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           1
-stub _iso_stub_AllocateFloat32x4ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-_LinkedHashMapMixin._init                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:0:0                              2
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:416:7                            1
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 2
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 2
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               1
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:413:7                            1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:413:7                            2
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 3
-_Utf8Encoder._fillBuffer                                       third_party/dart/sdk/lib/convert/utf.dart:213:27                                                    1
-_Utf8Encoder._fillBuffer                                       third_party/dart/sdk/lib/convert/utf.dart:213:27                                                    3
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               2
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:195:27                                                  1
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:2619:3                              3
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:2619:3                              3
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:416:7                            3
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:416:7                            3
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:0:0                                                                 2
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:195:27                                                  1
-_Utf8Encoder._fillBuffer                                       third_party/dart/sdk/lib/convert/utf.dart:213:27                                                    7
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:413:7                            1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:18:19                               1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 3
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 3
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 3
-stub TopTypeTypeTest                                           ??:0:0                                                                                              3
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:19:24                               2
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:182:58                                                              1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:0:0                                                                 2
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               30
-_LinkedHashMapMixin._init                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:0:0                              1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-??                                                             ??:0:0                                                                                              1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:0:0                                                                 2
-_RawReceivePort._portMap                                       third_party/dart/sdk/lib/_internal/vm/lib/isolate_patch.dart:219:49                                 68
-??                                                             ??:0:0                                                                                              68
-_Timer._queueFromTimeoutEvent                                  third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:330:33                                    68
-_TimerHeap.removeFirst                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:40:5                                      68
-_TimerHeap.removeFirst                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:40:5                                      68
-new PointerScaleEvent                                          /Users/fenglang/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:293:3                    68
-Future._completeError                                          third_party/dart/sdk/lib/async/future_impl.dart:658:34                                              68
-_LocalizationsState._textDirection                             /Users/fenglang/dev/flutter/packages/flutter/lib/src/widgets/localizations.dart:622:60              68
-_OperatorEqualsAndHashCode._equals                             third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                           68
-_OperatorEqualsAndHashCode._equals                             third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                           68
-Future._propagateToListeners                                   third_party/dart/sdk/lib/async/future_impl.dart:889:34                                              68
-_NativeSemanticsUpdateBuilder.__updateNode$Method$FfiNative    lib/ui/semantics.dart:0:0                                                                           68
-_NativeSemanticsUpdateBuilder.__updateNode$Method$FfiNative    lib/ui/semantics.dart:0:0                                                                           68
-_RootZone.runBinary                                            third_party/dart/sdk/lib/async/zone.dart:0:0                                                        68
-??                                                             ??:0:0                                                                                              68
-??                                                             ??:0:0                                                                                              68
-_FutureListener.handleError                                    third_party/dart/sdk/lib/async/future_impl.dart:177:23                                              68
-new _ZoomEnterTransitionPainter                                /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-new _ZoomEnterTransitionPainter                                /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:949:15    68
-??                                                             ??:0:0                                                                                              68
-_Uri._initializeText                                           third_party/dart/sdk/lib/core/uri.dart:3005:11                                                      68
-_ZoomEnterTransitionState._updateAnimations                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-_ZoomEnterTransitionState._updateAnimations                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-WidgetsBinding._handleBackGestureInvocation                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/widgets/binding.dart:931:59                    68
-_ZoomEnterTransitionState._updateAnimations                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-??                                                             ??:0:0                                                                                              68
-double._mulFromInteger                                         third_party/dart/sdk/lib/_internal/vm/lib/double.dart:151:16                                        68
-MapBase.entries.<anonymous closure>                            third_party/dart/sdk/lib/collection/maps.dart:76:62                                                 68
-_SuspendState._returnAsync                                     third_party/dart/sdk/lib/_internal/vm/lib/async_patch.dart:351:21                                   68
-MatrixUtils.matrixEquals                                       /Users/fenglang/dev/flutter/packages/flutter/lib/src/painting/matrix_utils.dart:67:3                68
-PlatformDispatcher._nativeSetNeedsReportTimings                lib/ui/platform_dispatcher.dart:599:52                                                              68
-PlatformDispatcher._nativeSetNeedsReportTimings                lib/ui/platform_dispatcher.dart:599:52                                                              68
-PlatformDispatcher._nativeSetNeedsReportTimings                lib/ui/platform_dispatcher.dart:599:52                                                              68
-??                                                             ??:0:0                                                                                              68
-SemanticsEvent.toMap                                           /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics_event.dart:0:0             68
-WhereTypeIterator.moveNext                                     third_party/dart/sdk/lib/internal/iterable.dart:883:19                                              68
-WhereTypeIterator.moveNext                                     third_party/dart/sdk/lib/internal/iterable.dart:883:19                                              68
-List.add                                                       third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:280:7                                 68
-List.add                                                       third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:280:7                                 68
-ListIterator.current                                           third_party/dart/sdk/lib/internal/iterable.dart:342:29                                              68
-ListIterator.current                                           third_party/dart/sdk/lib/internal/iterable.dart:342:29                                              68
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:195:27                                                  64
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               1
-RenderCustomMultiChildLayoutBox.performLayout                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_layout.dart:404:14            1
-RenderSemanticsAnnotations.describeSemanticsConfiguration      /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:4386:14               1
-SemanticsConfiguration.onDismiss=                              /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics.dart:3753:5                1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-assert type is Stream<X0>                                      third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         2
-stub _iso_stub_AllocateInt16ArrayStub                          third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           2
-stub _iso_stub_AllocateUint16ArrayStub                         third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           2
-SemanticsNode._redepthChild                                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics.dart:2067:3                2
-_ScaffoldLayout.performLayout                                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/scaffold.dart:1052:7                  1
-_ScaffoldLayout.performLayout                                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/scaffold.dart:1055:9                  1
-_ScaffoldLayout.performLayout                                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/scaffold.dart:1227:45                 1
-RenderCustomPaint._updateSemanticsChildren                     /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_paint.dart:800:7              1
-_RenderTheaterMixin.paint                                      /Users/fenglang/dev/flutter/packages/flutter/lib/src/widgets/overlay.dart:997:3                     1
-RenderCustomPaint.assembleSemanticsNode                        /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_paint.dart:690:33             1
-ShapeBorderClipper.shouldReclip                                /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:1352:3                1
-_ZoomEnterTransitionState.dispose                              /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:378:11    1
-GestureBinding.handleEvent                                     /Users/fenglang/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:493:3                    7
-??                                                             ??:0:0                                                                                              12
-SemanticsNode._isDifferentFromCurrentSemanticAnnotation        /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics.dart:2195:29               2
-RenderCustomPaint.assembleSemanticsNode                        /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_paint.dart:699:62             11
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              4
-??                                                             ??:0:0                                                                                              5
-stub InvokeDartCode                                            ??:0:0                                                                                              73
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              5
-PlatformDispatcher._localeClosure                              lib/ui/platform_dispatcher.dart:1004:3                                                              5
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              5
-_Image._width$Getter$FfiNative                                 lib/ui/painting.dart:0:0                                                                            5
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:116:16                                                  5
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:131:16                                                  5
-??                                                             ??:0:0                                                                                              5
-??                                                             ??:0:0                                                                                              5
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2577:7                   5
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2584:7                   5
-assert type is _StreamControllerAddStreamState<X0>             third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         5
-assert type is Stream<X0>                                      third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         3
-stub _iso_stub_AllocateFloat64x2ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           3
-stub _iso_stub_AllocateInt32x4ArrayStub                        third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           3
-stub _iso_stub_AllocateFloat32x4ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           3
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              97
+functions                                                     uri                                                                                                                               times
+WidgetsBinding.drawFrame                                      /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/binding.dart:1164:13                                               1
+List.iterator                                                 third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:507:16                                                              1
+List.iterator                                                 third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:507:16                                                              1
+MultiChildRenderObjectElement.update                          /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:6924:24                                             1
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              1
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              1
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              4
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              4
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              3
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              3
+StatefulElement.update                                        /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:5647:3                                              3
+StatefulElement.performRebuild                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:5638:3                                              4
+Element.widget                                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:0:0                                                 1
+Element.widget                                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:0:0                                                 1
+StatefulElement.build                                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:5592:3                                              1
+_MaterialInteriorState.build                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/material.dart:964:12                                              1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+String.==                                                     third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:1027:18                                                               1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+String.hashCode                                               third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:0:0                                                                   2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:518:3                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+String.hashCode                                               third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:0:0                                                                   1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+stub TopTypeTypeTest                                          ??:0:0                                                                                                                            1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+String.==                                                     third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:1027:18                                                               1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_LinkedHashMapMixin._findValueOrInsertPoint                   third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:486:3                                                          1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         2
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         2
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         30
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_InkResponseState.handleTap                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3                                              78
+VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/glance_integration_test/vsync_phase_jank_test.dart:30:3     78
+VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/glance_integration_test/vsync_phase_jank_test.dart:32:14    78
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 63
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 63
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_RawReceivePort._handleMessage                                third_party/dart/sdk/lib/_internal/vm/lib/isolate_patch.dart:185:5                                                                79
+_Closure.call                                                 third_party/dart/sdk/lib/_internal/vm/lib/function.dart:1:1                                                                       79
+_Timer._handleMessage                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:419:3                                                                   79
+_Timer._handleMessage                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:432:5                                                                   79
+_EventHandler._timerMillisecondClock                          third_party/dart/sdk/lib/_internal/vm/bin/eventhandler_patch.dart:13:3                                                            79
+_EventHandler._timerMillisecondClock                          third_party/dart/sdk/lib/_internal/vm/bin/eventhandler_patch.dart:13:3                                                            79
+_EventHandler._timerMillisecondClock                          third_party/dart/sdk/lib/_internal/vm/bin/eventhandler_patch.dart:13:3                                                            79
+Timer._createTimer.<anonymous closure>                        third_party/dart/sdk/lib/_internal/vm/lib/timer_patch.dart:17:34                                                                  79
+new Future.delayed.<anonymous closure>                        third_party/dart/sdk/lib/async/future.dart:425:25                                                                                 79
+Future._complete                                              third_party/dart/sdk/lib/async/future_impl.dart:646:3                                                                             79
+Future._propagateToListeners                                  third_party/dart/sdk/lib/async/future_impl.dart:894:13                                                                            79
+Future._propagateToListeners.handleValueCallback              third_party/dart/sdk/lib/async/future_impl.dart:863:40                                                                            79
+_FutureListener.handleValue                                   third_party/dart/sdk/lib/async/future_impl.dart:160:3                                                                             79
+_RootZone.runUnary                                            third_party/dart/sdk/lib/async/zone.dart:1662:12                                                                                  79
+_SuspendState._createAsyncStarCallback.<anonymous closure>    third_party/dart/sdk/lib/_internal/vm/lib/async_patch.dart:384:32                                                                 79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+GestureBinding.handlePointerEvent                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:371:3                                                79
+GestureBinding._handlePointerEventImmediately                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:386:3                                                79
+RendererBinding.dispatchEvent                                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:441:3                                               79
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            79
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            79
+GestureBinding.handleEvent                                    /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:497:32                                               79
+PointerRouter.route                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:133:5                                         79
+PointerRouter._dispatchEventToRoutes                          /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:136:3                                         79
+PointerRouter._dispatchEventToRoutes.<anonymous closure>      /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:141:26                                        79
+PointerRouter._dispatch                                       /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:113:18                                        79
+PrimaryPointerGestureRecognizer.handleEvent                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:679:3                                             79
+PrimaryPointerGestureRecognizer.handleEvent                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:699:5                                             79
+BaseTapGestureRecognizer.handlePrimaryPointer                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:244:7                                                    79
+BaseTapGestureRecognizer._checkUp                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:310:5                                                    79
+TapGestureRecognizer.handleTapUp                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:0:0                                                      79
+GestureRecognizer.invokeCallback                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:358:18                                            79
+_InkResponseState.handleTap                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3                                              79
+_InkResponseState.handleTap                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1170:21                                             1
+Feedback.forTap                                               /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/feedback.dart:94:3                                                 1
+SystemSound.play                                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/system_sound.dart:36:5                                            1
+OptionalMethodChannel.invokeMethod                            /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/platform_channel.dart:599:3                                       1
+MethodChannel._invokeMethod                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/platform_channel.dart:327:9                                       1
+_DefaultBinaryMessenger.send                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/binding.dart:576:3                                                1
+new Exception                                                 third_party/dart/sdk/lib/core/exceptions.dart:24:39                                                                               1
+new Exception                                                 third_party/dart/sdk/lib/core/exceptions.dart:24:39                                                                               1
+PlatformDispatcher.___sendPlatformMessage$Method$FfiNative    lib/ui/platform_dispatcher.dart:0:0                                                                                               1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+_beginFrame                                                   lib/ui/hooks.dart:270:1                                                                                                           1
+_beginFrame                                                   lib/ui/hooks.dart:273:31                                                                                                          1
+PlatformDispatcher._beginFrame                                lib/ui/platform_dispatcher.dart:396:3                                                                                             1
+_invoke1                                                      lib/ui/hooks.dart:330:10                                                                                                          1
+SchedulerBinding._handleBeginFrame                            /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1141:3                                              1
+SchedulerBinding._handleBeginFrame                            /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1141:3                                              1
+SchedulerBinding.handleBeginFrame                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1238:19                                             1
+_LinkedHashMapMixin.forEach                                   third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:635:15                                                         80
+SchedulerBinding.handleBeginFrame.<anonymous closure>         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1233:25                                             1
+Ticker._tick                                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/ticker.dart:252:3                                                1
+Ticker._tick                                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/ticker.dart:252:3                                                1
+Ticker.scheduleTick                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/ticker.dart:0:0                                                  1
+SchedulerBinding.scheduleFrameCallback                        /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:603:3                                               1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:513:23                                                         1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+RendererBinding.drawFrame                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:606:43                                              1
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            1
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            1
+PaintingContext.updateLayerProperties                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:191:62                                               1
+PaintingContext.updateLayerProperties                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:191:62                                               1
+PaintingContext._repaintCompositedChild                       /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:172:18                                               1
+RenderObject.layer=                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2814:18                                              1
+RenderObject.layer=                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2814:18                                              1
+PaintingContext.pushClipPath                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:613:3                                                1
+RenderPhysicalShape.paint.<anonymous closure>                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:2160:7                                            1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+RenderCustomMultiChildLayoutBox.paint                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/custom_layout.dart:407:3                                         1
+RenderBoxContainerDefaultsMixin.defaultPaint                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/box.dart:3155:3                                                  1
+RenderFlex.paint                                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/flex.dart:1095:9                                                 1
+RenderBoxContainerDefaultsMixin.defaultPaint                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/box.dart:3155:3                                                  1
+RenderShiftedBox.paint                                        /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/shifted_box.dart:71:3                                            2
+RenderProxyBoxMixin.paint                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:130:3                                             6
+PaintingContext.paintChild                                    /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:235:3                                                10
+RenderObject._paintWithContext                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:3243:7                                               11
+RenderPhysicalShape.paint                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:2158:21                                           1
+_NativeCanvas.__drawPath$Method$FfiNative                     lib/ui/painting.dart:0:0                                                                                                          1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            8
+stub InvokeDartCode                                           ??:0:0                                                                                                                            88
+_drawFrame                                                    lib/ui/hooks.dart:281:1                                                                                                           8
+_drawFrame                                                    lib/ui/hooks.dart:281:1                                                                                                           8
+PlatformDispatcher._drawFrame                                 lib/ui/platform_dispatcher.dart:418:3                                                                                             8
+_invoke                                                       lib/ui/hooks.dart:314:10                                                                                                          8
+SchedulerBinding._handleDrawFrame                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1153:3                                              8
+SchedulerBinding._handleDrawFrame                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1153:3                                              8
+new _GrowableList.of                                          third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:144:28                                                              8
+new _GrowableList.of                                          third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:144:28                                                              8
+new _GrowableList.of                                          third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:144:28                                                              8
+SchedulerBinding._invokeFrameCallback                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1398:18                                             9
+RendererBinding._handlePersistentFrameCallback                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:467:3                                               8
+RendererBinding._handlePersistentFrameCallback                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:469:5                                               8
+WidgetsBinding.drawFrame                                      /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/binding.dart:1169:19                                               7
+RendererBinding.drawFrame                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:609:25                                              6
+RenderView.compositeFrame                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/view.dart:0:0                                                    6
+FlutterView.render                                            lib/ui/window.dart:376:3                                                                                                          6
+FlutterView.__render$Method$FfiNative                         lib/ui/window.dart:0:0                                                                                                            6
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            110
 
 result:
-functions                                                      uri                                                                                                 times
-??                                                             ??:0:0                                                                                              11
-stub InvokeDartCode                                            ??:0:0                                                                                              1
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              1
-PlatformDispatcher._localeClosure                              lib/ui/platform_dispatcher.dart:1004:3                                                              1
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              1
-_Image._width$Getter$FfiNative                                 lib/ui/painting.dart:0:0                                                                            1
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:116:16                                                  1
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:131:16                                                  1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2577:7                   1
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2584:7                   1
-assert type is _StreamControllerAddStreamState<X0>             third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         1
-assert type is Stream<X0>                                      third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         1
-stub _iso_stub_AllocateFloat64x2ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           1
-stub _iso_stub_AllocateInt32x4ArrayStub                        third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           1
-stub _iso_stub_AllocateFloat32x4ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-_LinkedHashMapMixin._init                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:0:0                              2
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:416:7                            1
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 2
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 2
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               1
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:413:7                            1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:413:7                            2
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 3
-_Utf8Encoder._fillBuffer                                       third_party/dart/sdk/lib/convert/utf.dart:213:27                                                    1
-_Utf8Encoder._fillBuffer                                       third_party/dart/sdk/lib/convert/utf.dart:213:27                                                    3
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               2
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:195:27                                                  1
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:2619:3                              3
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:2619:3                              3
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:416:7                            3
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:416:7                            3
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:0:0                                                                 2
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:195:27                                                  1
-_Utf8Encoder._fillBuffer                                       third_party/dart/sdk/lib/convert/utf.dart:213:27                                                    7
-_LinkedHashMapMixin._rehash                                    third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:413:7                            1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:18:19                               1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 3
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 3
-new Uint32List                                                 third_party/dart/sdk/lib/_internal/vm/lib/typed_data_patch.dart:0:0                                 3
-stub TopTypeTypeTest                                           ??:0:0                                                                                              3
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:19:24                               2
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:182:58                                                              1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:0:0                                                                 2
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               30
-_LinkedHashMapMixin._init                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:0:0                              1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:175:53                                                              1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-??                                                             ??:0:0                                                                                              1
-new Map._fromLiteral                                           third_party/dart/sdk/lib/_internal/vm_shared/lib/map_patch.dart:0:0                                 1
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:0:0                                                                 2
-_RawReceivePort._portMap                                       third_party/dart/sdk/lib/_internal/vm/lib/isolate_patch.dart:219:49                                 68
-??                                                             ??:0:0                                                                                              68
-_Timer._queueFromTimeoutEvent                                  third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:330:33                                    68
-_TimerHeap.removeFirst                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:40:5                                      68
-_TimerHeap.removeFirst                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:40:5                                      68
-new PointerScaleEvent                                          /Users/fenglang/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:293:3                    68
-Future._completeError                                          third_party/dart/sdk/lib/async/future_impl.dart:658:34                                              68
-_LocalizationsState._textDirection                             /Users/fenglang/dev/flutter/packages/flutter/lib/src/widgets/localizations.dart:622:60              68
-_OperatorEqualsAndHashCode._equals                             third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                           68
-_OperatorEqualsAndHashCode._equals                             third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                           68
-Future._propagateToListeners                                   third_party/dart/sdk/lib/async/future_impl.dart:889:34                                              68
-_NativeSemanticsUpdateBuilder.__updateNode$Method$FfiNative    lib/ui/semantics.dart:0:0                                                                           68
-_NativeSemanticsUpdateBuilder.__updateNode$Method$FfiNative    lib/ui/semantics.dart:0:0                                                                           68
-_RootZone.runBinary                                            third_party/dart/sdk/lib/async/zone.dart:0:0                                                        68
-??                                                             ??:0:0                                                                                              68
-??                                                             ??:0:0                                                                                              68
-_FutureListener.handleError                                    third_party/dart/sdk/lib/async/future_impl.dart:177:23                                              68
-new _ZoomEnterTransitionPainter                                /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-new _ZoomEnterTransitionPainter                                /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:949:15    68
-??                                                             ??:0:0                                                                                              68
-_Uri._initializeText                                           third_party/dart/sdk/lib/core/uri.dart:3005:11                                                      68
-_ZoomEnterTransitionState._updateAnimations                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-_ZoomEnterTransitionState._updateAnimations                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-WidgetsBinding._handleBackGestureInvocation                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/widgets/binding.dart:931:59                    68
-_ZoomEnterTransitionState._updateAnimations                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:0:0       68
-??                                                             ??:0:0                                                                                              68
-double._mulFromInteger                                         third_party/dart/sdk/lib/_internal/vm/lib/double.dart:151:16                                        68
-MapBase.entries.<anonymous closure>                            third_party/dart/sdk/lib/collection/maps.dart:76:62                                                 68
-_SuspendState._returnAsync                                     third_party/dart/sdk/lib/_internal/vm/lib/async_patch.dart:351:21                                   68
-MatrixUtils.matrixEquals                                       /Users/fenglang/dev/flutter/packages/flutter/lib/src/painting/matrix_utils.dart:67:3                68
-PlatformDispatcher._nativeSetNeedsReportTimings                lib/ui/platform_dispatcher.dart:599:52                                                              68
-PlatformDispatcher._nativeSetNeedsReportTimings                lib/ui/platform_dispatcher.dart:599:52                                                              68
-PlatformDispatcher._nativeSetNeedsReportTimings                lib/ui/platform_dispatcher.dart:599:52                                                              68
-??                                                             ??:0:0                                                                                              68
-SemanticsEvent.toMap                                           /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics_event.dart:0:0             68
-WhereTypeIterator.moveNext                                     third_party/dart/sdk/lib/internal/iterable.dart:883:19                                              68
-WhereTypeIterator.moveNext                                     third_party/dart/sdk/lib/internal/iterable.dart:883:19                                              68
-List.add                                                       third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:280:7                                 68
-List.add                                                       third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:280:7                                 68
-ListIterator.current                                           third_party/dart/sdk/lib/internal/iterable.dart:342:29                                              68
-ListIterator.current                                           third_party/dart/sdk/lib/internal/iterable.dart:342:29                                              68
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:195:27                                                  64
-new PlatformDispatcher._                                       lib/ui/platform_dispatcher.dart:117:3                                                               1
-RenderCustomMultiChildLayoutBox.performLayout                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_layout.dart:404:14            1
-RenderSemanticsAnnotations.describeSemanticsConfiguration      /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:4386:14               1
-SemanticsConfiguration.onDismiss=                              /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics.dart:3753:5                1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-assert type is Stream<X0>                                      third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         2
-stub _iso_stub_AllocateInt16ArrayStub                          third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           2
-stub _iso_stub_AllocateUint16ArrayStub                         third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           2
-SemanticsNode._redepthChild                                    /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics.dart:2067:3                2
-_ScaffoldLayout.performLayout                                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/scaffold.dart:1052:7                  1
-_ScaffoldLayout.performLayout                                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/scaffold.dart:1055:9                  1
-_ScaffoldLayout.performLayout                                  /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/scaffold.dart:1227:45                 1
-RenderCustomPaint._updateSemanticsChildren                     /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_paint.dart:800:7              1
-_RenderTheaterMixin.paint                                      /Users/fenglang/dev/flutter/packages/flutter/lib/src/widgets/overlay.dart:997:3                     1
-RenderCustomPaint.assembleSemanticsNode                        /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_paint.dart:690:33             1
-ShapeBorderClipper.shouldReclip                                /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:1352:3                1
-_ZoomEnterTransitionState.dispose                              /Users/fenglang/dev/flutter/packages/flutter/lib/src/material/page_transitions_theme.dart:378:11    1
-GestureBinding.handleEvent                                     /Users/fenglang/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:493:3                    7
-??                                                             ??:0:0                                                                                              12
-SemanticsNode._isDifferentFromCurrentSemanticAnnotation        /Users/fenglang/dev/flutter/packages/flutter/lib/src/semantics/semantics.dart:2195:29               2
-RenderCustomPaint.assembleSemanticsNode                        /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/custom_paint.dart:699:62             11
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              4
-??                                                             ??:0:0                                                                                              5
-stub InvokeDartCode                                            ??:0:0                                                                                              73
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              5
-PlatformDispatcher._localeClosure                              lib/ui/platform_dispatcher.dart:1004:3                                                              5
-PlatformDispatcher.locale                                      lib/ui/platform_dispatcher.dart:907:32                                                              5
-_Image._width$Getter$FfiNative                                 lib/ui/painting.dart:0:0                                                                            5
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:116:16                                                  5
-Sort._dualPivotQuicksort                                       third_party/dart/sdk/lib/internal/sort.dart:131:16                                                  5
-??                                                             ??:0:0                                                                                              5
-??                                                             ??:0:0                                                                                              5
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2577:7                   5
-RenderObject.layout                                            /Users/fenglang/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2584:7                   5
-assert type is _StreamControllerAddStreamState<X0>             third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         5
-assert type is Stream<X0>                                      third_party/dart/sdk/lib/async/stream_controller.dart:604:3                                         3
-stub _iso_stub_AllocateFloat64x2ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           3
-stub _iso_stub_AllocateInt32x4ArrayStub                        third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           3
-stub _iso_stub_AllocateFloat32x4ArrayStub                      third_party/dart/sdk/lib/_internal/vm/lib/double.dart:0:0                                           3
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              1
-??                                                             ??:0:0                                                                                              97
+functions                                                     uri                                                                                                                               times
+WidgetsBinding.drawFrame                                      /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/binding.dart:1164:13                                               1
+List.iterator                                                 third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:507:16                                                              1
+List.iterator                                                 third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:507:16                                                              1
+MultiChildRenderObjectElement.update                          /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:6924:24                                             1
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              1
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              1
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              4
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              4
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              3
+Element.updateChild                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:3832:9                                              3
+StatefulElement.update                                        /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:5647:3                                              3
+StatefulElement.performRebuild                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:5638:3                                              4
+Element.widget                                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:0:0                                                 1
+Element.widget                                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:0:0                                                 1
+StatefulElement.build                                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/framework.dart:5592:3                                              1
+_MaterialInteriorState.build                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/material.dart:964:12                                              1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+String.==                                                     third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:1027:18                                                               1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+String.hashCode                                               third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:0:0                                                                   2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:518:3                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+String.hashCode                                               third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:0:0                                                                   1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+stub TopTypeTypeTest                                          ??:0:0                                                                                                                            1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+String.==                                                     third_party/dart/sdk/lib/_internal/vm/lib/string_patch.dart:1027:18                                                               1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:515:5                                                          1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:527:7                                                          1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         2
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         3
+_LinkedHashMapMixin._findValueOrInsertPoint                   third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:486:3                                                          1
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         2
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         2
+_OperatorEqualsAndHashCode._hashCode                          third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:254:33                                                         2
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:522:9                                                          1
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         30
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_OperatorEqualsAndHashCode._equals                            third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:255:46                                                         1
+_InkResponseState.handleTap                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3                                              78
+VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/glance_integration_test/vsync_phase_jank_test.dart:30:3     78
+VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/glance_integration_test/vsync_phase_jank_test.dart:32:14    78
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 63
+jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 63
+_LinkedHashMapMixin._set                                      third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:524:12                                                         1
+_RawReceivePort._handleMessage                                third_party/dart/sdk/lib/_internal/vm/lib/isolate_patch.dart:185:5                                                                79
+_Closure.call                                                 third_party/dart/sdk/lib/_internal/vm/lib/function.dart:1:1                                                                       79
+_Timer._handleMessage                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:419:3                                                                   79
+_Timer._handleMessage                                         third_party/dart/sdk/lib/_internal/vm/lib/timer_impl.dart:432:5                                                                   79
+_EventHandler._timerMillisecondClock                          third_party/dart/sdk/lib/_internal/vm/bin/eventhandler_patch.dart:13:3                                                            79
+_EventHandler._timerMillisecondClock                          third_party/dart/sdk/lib/_internal/vm/bin/eventhandler_patch.dart:13:3                                                            79
+_EventHandler._timerMillisecondClock                          third_party/dart/sdk/lib/_internal/vm/bin/eventhandler_patch.dart:13:3                                                            79
+Timer._createTimer.<anonymous closure>                        third_party/dart/sdk/lib/_internal/vm/lib/timer_patch.dart:17:34                                                                  79
+new Future.delayed.<anonymous closure>                        third_party/dart/sdk/lib/async/future.dart:425:25                                                                                 79
+Future._complete                                              third_party/dart/sdk/lib/async/future_impl.dart:646:3                                                                             79
+Future._propagateToListeners                                  third_party/dart/sdk/lib/async/future_impl.dart:894:13                                                                            79
+Future._propagateToListeners.handleValueCallback              third_party/dart/sdk/lib/async/future_impl.dart:863:40                                                                            79
+_FutureListener.handleValue                                   third_party/dart/sdk/lib/async/future_impl.dart:160:3                                                                             79
+_RootZone.runUnary                                            third_party/dart/sdk/lib/async/zone.dart:1662:12                                                                                  79
+_SuspendState._createAsyncStarCallback.<anonymous closure>    third_party/dart/sdk/lib/_internal/vm/lib/async_patch.dart:384:32                                                                 79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+new _Completer                                                third_party/dart/sdk/lib/async/future_impl.dart:10:33                                                                             79
+GestureBinding.handlePointerEvent                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:371:3                                                79
+GestureBinding._handlePointerEventImmediately                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:386:3                                                79
+RendererBinding.dispatchEvent                                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:441:3                                               79
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            79
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            79
+GestureBinding.handleEvent                                    /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/binding.dart:497:32                                               79
+PointerRouter.route                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:133:5                                         79
+PointerRouter._dispatchEventToRoutes                          /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:136:3                                         79
+PointerRouter._dispatchEventToRoutes.<anonymous closure>      /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:141:26                                        79
+PointerRouter._dispatch                                       /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/pointer_router.dart:113:18                                        79
+PrimaryPointerGestureRecognizer.handleEvent                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:679:3                                             79
+PrimaryPointerGestureRecognizer.handleEvent                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:699:5                                             79
+BaseTapGestureRecognizer.handlePrimaryPointer                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:244:7                                                    79
+BaseTapGestureRecognizer._checkUp                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:310:5                                                    79
+TapGestureRecognizer.handleTapUp                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/tap.dart:0:0                                                      79
+GestureRecognizer.invokeCallback                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/gestures/recognizer.dart:358:18                                            79
+_InkResponseState.handleTap                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1162:3                                              79
+_InkResponseState.handleTap                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/material/ink_well.dart:1170:21                                             1
+Feedback.forTap                                               /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/feedback.dart:94:3                                                 1
+SystemSound.play                                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/system_sound.dart:36:5                                            1
+OptionalMethodChannel.invokeMethod                            /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/platform_channel.dart:599:3                                       1
+MethodChannel._invokeMethod                                   /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/platform_channel.dart:327:9                                       1
+_DefaultBinaryMessenger.send                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/services/binding.dart:576:3                                                1
+new Exception                                                 third_party/dart/sdk/lib/core/exceptions.dart:24:39                                                                               1
+new Exception                                                 third_party/dart/sdk/lib/core/exceptions.dart:24:39                                                                               1
+PlatformDispatcher.___sendPlatformMessage$Method$FfiNative    lib/ui/platform_dispatcher.dart:0:0                                                                                               1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+_beginFrame                                                   lib/ui/hooks.dart:270:1                                                                                                           1
+_beginFrame                                                   lib/ui/hooks.dart:273:31                                                                                                          1
+PlatformDispatcher._beginFrame                                lib/ui/platform_dispatcher.dart:396:3                                                                                             1
+_invoke1                                                      lib/ui/hooks.dart:330:10                                                                                                          1
+SchedulerBinding._handleBeginFrame                            /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1141:3                                              1
+SchedulerBinding._handleBeginFrame                            /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1141:3                                              1
+SchedulerBinding.handleBeginFrame                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1238:19                                             1
+_LinkedHashMapMixin.forEach                                   third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:635:15                                                         80
+SchedulerBinding.handleBeginFrame.<anonymous closure>         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1233:25                                             1
+Ticker._tick                                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/ticker.dart:252:3                                                1
+Ticker._tick                                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/ticker.dart:252:3                                                1
+Ticker.scheduleTick                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/ticker.dart:0:0                                                  1
+SchedulerBinding.scheduleFrameCallback                        /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:603:3                                               1
+_LinkedHashMapMixin.[]=                                       third_party/dart/sdk/lib/_internal/vm_shared/lib/compact_hash.dart:513:23                                                         1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+RendererBinding.drawFrame                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:606:43                                              1
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            1
+ListIterator.moveNext                                         third_party/dart/sdk/lib/internal/iterable.dart:348:13                                                                            1
+PaintingContext.updateLayerProperties                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:191:62                                               1
+PaintingContext.updateLayerProperties                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:191:62                                               1
+PaintingContext._repaintCompositedChild                       /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:172:18                                               1
+RenderObject.layer=                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2814:18                                              1
+RenderObject.layer=                                           /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:2814:18                                              1
+PaintingContext.pushClipPath                                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:613:3                                                1
+RenderPhysicalShape.paint.<anonymous closure>                 /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:2160:7                                            1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+new Paint                                                     lib/ui/painting.dart:1127:26                                                                                                      1
+RenderCustomMultiChildLayoutBox.paint                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/custom_layout.dart:407:3                                         1
+RenderBoxContainerDefaultsMixin.defaultPaint                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/box.dart:3155:3                                                  1
+RenderFlex.paint                                              /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/flex.dart:1095:9                                                 1
+RenderBoxContainerDefaultsMixin.defaultPaint                  /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/box.dart:3155:3                                                  1
+RenderShiftedBox.paint                                        /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/shifted_box.dart:71:3                                            2
+RenderProxyBoxMixin.paint                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:130:3                                             6
+PaintingContext.paintChild                                    /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:235:3                                                10
+RenderObject._paintWithContext                                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/object.dart:3243:7                                               11
+RenderPhysicalShape.paint                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/proxy_box.dart:2158:21                                           1
+_NativeCanvas.__drawPath$Method$FfiNative                     lib/ui/painting.dart:0:0                                                                                                          1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            8
+stub InvokeDartCode                                           ??:0:0                                                                                                                            88
+_drawFrame                                                    lib/ui/hooks.dart:281:1                                                                                                           8
+_drawFrame                                                    lib/ui/hooks.dart:281:1                                                                                                           8
+PlatformDispatcher._drawFrame                                 lib/ui/platform_dispatcher.dart:418:3                                                                                             8
+_invoke                                                       lib/ui/hooks.dart:314:10                                                                                                          8
+SchedulerBinding._handleDrawFrame                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1153:3                                              8
+SchedulerBinding._handleDrawFrame                             /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1153:3                                              8
+new _GrowableList.of                                          third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:144:28                                                              8
+new _GrowableList.of                                          third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:144:28                                                              8
+new _GrowableList.of                                          third_party/dart/sdk/lib/_internal/vm/lib/growable_array.dart:144:28                                                              8
+SchedulerBinding._invokeFrameCallback                         /Users/littlegnal/dev/flutter/packages/flutter/lib/src/scheduler/binding.dart:1398:18                                             9
+RendererBinding._handlePersistentFrameCallback                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:467:3                                               8
+RendererBinding._handlePersistentFrameCallback                /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:469:5                                               8
+WidgetsBinding.drawFrame                                      /Users/littlegnal/dev/flutter/packages/flutter/lib/src/widgets/binding.dart:1169:19                                               7
+RendererBinding.drawFrame                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/binding.dart:609:25                                              6
+RenderView.compositeFrame                                     /Users/littlegnal/dev/flutter/packages/flutter/lib/src/rendering/view.dart:0:0                                                    6
+FlutterView.render                                            lib/ui/window.dart:376:3                                                                                                          6
+FlutterView.__render$Method$FfiNative                         lib/ui/window.dart:0:0                                                                                                            6
+??                                                            ??:0:0                                                                                                                            1
+??                                                            ??:0:0                                                                                                                            110
+
+Checking stack trace ...
+Test passed!
+Test passed!
+Application finished.
++ popd
+~/codes/personal-project/glance_plugin/glance

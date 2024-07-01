@@ -42,7 +42,7 @@ Future<String> _desymbols(
   return result;
 }
 
-Future<int> _runTestCase(ProcessManager processManager,
+Future<bool> _runTestCase(ProcessManager processManager,
     file.FileSystem fileSystem, TestCase testCase) async {
   print('Building ${testCase.testFilePath} ...');
   await fileSystem.directory('build').delete(recursive: true);
@@ -89,8 +89,6 @@ Future<int> _runTestCase(ProcessManager processManager,
       print('Desymboling ...');
       final result = await _desymbols(
           fileSystem, processManager, '', collectedStackTraces.join('\n'));
-      print('result: ');
-      print(result);
 
       print('Checking stack trace ...');
       bool success = await testCase.onCheckStackTrace(result);
@@ -105,9 +103,25 @@ Future<int> _runTestCase(ProcessManager processManager,
         print('Test failed!');
       }
 
+      // adb shell pm uninstall -k com.fedmich.pagexray
+      // Uninsntall package to restore a clean state
+      {
+        final processResult = await processManager.run([
+          'adb',
+          'shell',
+          'pm',
+          'uninstall',
+          '-k',
+          'com.littlegnal.glance_example',
+        ]);
+        if (processResult.exitCode != 0) {
+          stderr.writeln(processResult.stderr);
+        }
+      }
+
       process.kill();
 
-      // return;
+      return;
     }
 
     if (line.trim() == '[glance_test] Collect stack traces start') {
@@ -123,7 +137,8 @@ Future<int> _runTestCase(ProcessManager processManager,
       collectedStackTraces.add(line);
     }
   });
-  return await process.exitCode;
+  await process.exitCode;
+  return true;
 }
 
 Future<void> runTest(
@@ -133,6 +148,11 @@ Future<void> runTest(
 ) async {
   for (final testCase in testCases) {
     final success = await _runTestCase(processManager, fileSystem, testCase);
+    if (success) {
+      print('Test case success: ${testCase.testFilePath}');
+    } else {
+      print('Test case failed: ${testCase.testFilePath}');
+    }
   }
 
   // stdout.writeln('Building app...');

@@ -21,6 +21,9 @@ class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
     });
   }
 
+  // Wrap the `expensiveFunction()` without inline, so that we can find the stack
+  // more easier in the integration test.
+  @pragma("vm:never-inline")
   void _expensiveFunction() {
     expensiveFunction();
   }
@@ -37,7 +40,7 @@ class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
 void _buildPhaseJank() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   final globalKey = GlobalKey<_BuildPhaseJankWidgetState>();
-  final Completer<String> stackTraceCompleter = Completer();
+  Completer<String>? stackTraceCompleter;
   final List<String> stackTraces = [];
 
   bool finishNextTime = false;
@@ -48,14 +51,19 @@ void _buildPhaseJank() async {
 
     // stackTraces.add(info.stackTrace.toString());
 
-    print('[glance_test] Collect stack traces start');
-    info.stackTrace.toString().split('\n').forEach((e) {
-      print(e);
-    });
-    print('[glance_test] Collect stack traces end');
+    // print('[glance_test] Collect stack traces start');
+    // info.stackTrace.toString().split('\n').forEach((e) {
+    //   print(e);
+    // });
+    // print('[glance_test] Collect stack traces end');
 
-    if (finishNextTime) {
-      print('[glance_test_finished]');
+    // if (finishNextTime) {
+    //   print('[glance_test_finished]');
+    // }
+
+    if (stackTraceCompleter != null && !stackTraceCompleter!.isCompleted) {
+      stackTraces.add(info.stackTrace.toString());
+      stackTraceCompleter!.complete(stackTraces.join('\n'));
     }
   });
   Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
@@ -72,6 +80,8 @@ void _buildPhaseJank() async {
   // await Future.delayed(Duration(milliseconds: 200));
   // globalKey.currentState?._statesController.update(WidgetState.pressed, false);
 
+  stackTraceCompleter = Completer();
+
   final offset = globalKey.currentState!.triggerExpensiveBuild();
 
   // GestureBinding.instance.handlePointerEvent(PointerDownEvent(
@@ -85,6 +95,19 @@ void _buildPhaseJank() async {
   // [glance_test_finished]
 
   finishNextTime = true;
+
+  await stackTraceCompleter.future;
+
+  print('[glance_test] Collect stack traces start');
+  StringBuffer sb = StringBuffer();
+  stackTraces.forEach((e) {
+    sb.writeln(e);
+  });
+  sb.toString().split('\n').forEach((e) {
+    print(e);
+  });
+  print('[glance_test] Collect stack traces end');
+  print('[glance_test_finished]');
 }
 
 // Map<String, void Function()> _testCases = {

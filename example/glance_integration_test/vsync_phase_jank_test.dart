@@ -107,6 +107,7 @@ void _vsyncPhaseJank() async {
   //   position: (offset + Offset(10, 10)),
   // ));
 
+  stackTraceCompleter = Completer();
   GestureBinding.instance.handlePointerEvent(PointerDownEvent(
     position: (offset + Offset(10, 10)),
   ));
@@ -119,7 +120,6 @@ void _vsyncPhaseJank() async {
 
   finishNextTime = true;
 
-  stackTraceCompleter = Completer();
   await stackTraceCompleter.future;
 
   print('[glance_test] Collect stack traces start');

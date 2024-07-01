@@ -49,6 +49,7 @@ class TestJankDetectedReporter extends JankDetectedReporter {
 //   // await Permission.storage.request();
 // }
 
+@pragma("vm:never-inline")
 void expensiveFunction() {
   print('kjkjkjjkjkjk');
   final watch = Stopwatch();
