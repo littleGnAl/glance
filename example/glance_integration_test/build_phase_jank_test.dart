@@ -21,10 +21,14 @@ class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
     });
   }
 
+  void _expensiveFunction() {
+    expensiveFunction();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isExpensiveBuild) {
-      expensiveFunction();
+      _expensiveFunction();
     }
     return const SizedBox();
   }

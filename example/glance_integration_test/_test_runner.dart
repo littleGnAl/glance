@@ -8,6 +8,19 @@ import 'dart:io';
 
 import '../../bin/symbolize.dart';
 
+typedef CheckStackTraceCallback = Future<bool> Function(String stackTrace);
+
+class TestCase {
+  TestCase(
+      {required this.description,
+      required this.testFilePath,
+      required this.onCheckStackTrace});
+  final String description;
+
+  final String testFilePath;
+  final CheckStackTraceCallback onCheckStackTrace;
+}
+
 Future<String> _desymbols(
   file.FileSystem fileSystem,
   ProcessManager processManager,
@@ -29,24 +42,23 @@ Future<String> _desymbols(
   return result;
 }
 
-Future<void> runTest(
-  ProcessManager processManager,
-  file.FileSystem fileSystem,
-) async {
-  stdout.writeln('Building app...');
-  // example/integration_test/glance_integration_test_main.dart
-  // flutter build apk --profile --split-debug-info=debug-info-integration --target integration_test/glance_integration_test_main.dart
-  await processManager.run([
+Future<int> _runTestCase(ProcessManager processManager,
+    file.FileSystem fileSystem, TestCase testCase) async {
+  print('Building ${testCase.testFilePath} ...');
+  await fileSystem.directory('build').delete(recursive: true);
+  final processResult = await processManager.run([
     'flutter',
     'build',
     'apk',
     '--release',
     '--split-debug-info=debug-info-integration',
-    '--target=integration_test/glance_integration_test_main.dart',
+    '--target=${testCase.testFilePath}',
   ]);
-  stdout.writeln('Built app');
+  if (processResult.exitCode != 0) {
+    stderr.writeln(processResult.stderr);
+  }
+  stdout.writeln('Built ${testCase.testFilePath}.');
 
-  stdout.writeln('Running app...');
 // flutter run --no-build --use-application-binary=build/app/outputs/flutter-apk/app-profile.apk
   final process = await processManager.start([
     'flutter',
@@ -55,6 +67,7 @@ Future<void> runTest(
     '--no-build',
     '--use-application-binary=build/app/outputs/flutter-apk/app-release.apk',
   ]);
+  stdout.writeln('Running app...');
 
   process.stderr
       .transform(utf8.decoder)
@@ -68,21 +81,24 @@ Future<void> runTest(
       .transform(utf8.decoder)
       .transform(const LineSplitter())
       .listen((l) async {
-    final line = l.replaceAll(RegExp(r'I\/flutter \(\d+\): '), '');
-    // print('line.trim(): ${line.trim()}');
+    final line = l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '');
+    print(line);
     if (line.trim() == '[glance_test_finished]') {
       const file.FileSystem fileSystem = LocalFileSystem();
       const processManager = LocalProcessManager();
+      print('Desymboling ...');
       final result = await _desymbols(
           fileSystem, processManager, '', collectedStackTraces.join('\n'));
       print('result: ');
       print(result);
 
-      // VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/integration_test/glance_integration_test_main.dart:99:3     76
-      // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 65
-      // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10
-      if (result.contains('VsyncPhaseJankWidgetState._incrementCounter') &&
-          result.contains('jsonEncode')) {
+      print('Checking stack trace ...');
+      bool success = await testCase.onCheckStackTrace(result);
+
+      // // VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/integration_test/glance_integration_test_main.dart:99:3     76
+      // // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 65
+      // // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10
+      if (success) {
         // success
         print('Test passed!');
       } else {
@@ -91,7 +107,7 @@ Future<void> runTest(
 
       process.kill();
 
-      return;
+      // return;
     }
 
     if (line.trim() == '[glance_test] Collect stack traces start') {
@@ -107,5 +123,19 @@ Future<void> runTest(
       collectedStackTraces.add(line);
     }
   });
-  await process.exitCode;
+  return await process.exitCode;
+}
+
+Future<void> runTest(
+  ProcessManager processManager,
+  file.FileSystem fileSystem,
+  List<TestCase> testCases,
+) async {
+  for (final testCase in testCases) {
+    final success = await _runTestCase(processManager, fileSystem, testCase);
+  }
+
+  // stdout.writeln('Building app...');
+  // example/integration_test/glance_integration_test_main.dart
+  // flutter build apk --profile --split-debug-info=debug-info-integration --target integration_test/glance_integration_test_main.dart
 }
