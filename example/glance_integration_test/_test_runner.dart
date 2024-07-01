@@ -104,7 +104,7 @@ Future<bool> _runTestCase(ProcessManager processManager,
       }
 
       // adb shell pm uninstall -k com.fedmich.pagexray
-      // Uninsntall package to restore a clean state
+      // Uninsntall the package to restore a clean state
       {
         final processResult = await processManager.run([
           'adb',
