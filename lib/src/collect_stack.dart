@@ -235,9 +235,7 @@ class StackCapturer {
         return NativeFrame(
           module: module,
           pc: addr,
-
-          timestamp:
-              _nowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
+          timestamp: _nowInMicrosSinceEpoch(),
         );
       }).toList(growable: false);
 
