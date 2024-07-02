@@ -94,11 +94,11 @@ abstract class JankDetectedReporter extends GlanceReporter<JankReport> {}
 class JankReport {
   const JankReport._({
     required this.stackTrace,
-    required this.frameTiming,
+    required this.frameTimings,
   });
   // final List<NativeFrameTimeSpent> stackTraces;
   final GlanceStackTrace stackTrace;
-  final FrameTiming frameTiming;
+  final List<FrameTiming> frameTimings;
 
   @override
   String toString() {
@@ -150,6 +150,8 @@ class Glance {
 
   Sampler? _sampleThread;
 
+  TimingsCallback? _timingsCallback;
+
   // final List<JankCallback> _jankCallbacks = [];
   // final List<SlowFunctionsDetectedCallback>
   //     _slowFunctionsDetectedCallbackCallbacks = [];
@@ -180,7 +182,7 @@ class Glance {
     //   }
     // });
 
-    SchedulerBinding.instance.addTimingsCallback((List<FrameTiming> timings) {
+    _timingsCallback ??= (List<FrameTiming> timings) {
       if (_sampleThread == null) {
         return;
       }
@@ -209,9 +211,17 @@ class Glance {
       }
 
       if (jankTimings.isNotEmpty) {
-        _report(timings, 0);
+        _report(jankTimings, 0);
       }
-    });
+    };
+
+    SchedulerBinding.instance.addTimingsCallback(_timingsCallback!);
+  }
+
+  Future<void> end() async {
+    _sampleThread?.close();
+    SchedulerBinding.instance.removeTimingsCallback(_timingsCallback!);
+    _timingsCallback = null;
   }
 
   // Future<void> _report(int startTimestamp, int endTimestamp) async {
@@ -274,7 +284,7 @@ class Glance {
     }
     final report = JankReport._(
       stackTrace: GlanceStackTraceImpl(frames),
-      frameTiming: timings[index],
+      frameTimings: timings,
     );
 
     // final callbacks = List.from(_jankCallbacks);

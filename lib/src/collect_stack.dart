@@ -163,8 +163,8 @@ ffi.DynamicLibrary _loadLib() {
   return ffi.DynamicLibrary.process();
 }
 
-class StackCollector {
-  StackCollector() : _nativeBindings = CollectStackNativeBindings(_loadLib());
+class StackCapturer {
+  StackCapturer() : _nativeBindings = CollectStackNativeBindings(_loadLib());
 
   final CollectStackNativeBindings _nativeBindings;
 

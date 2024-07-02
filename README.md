@@ -16,6 +16,17 @@ samples, guidance on mobile development, and a full API reference.
 
 https://github.com/mraleph/thread_collect_stack_example
 
+## Profiling
+- without glance
+- with glance
+
+## TODO
+- Make the stack trace more accuracily
+references:
+  - https://github.com/kstenerud/KSCrash/tree/master
+  - https://github.com/dart-lang/sdk/blob/main/runtime/docs/awaiter_stack_traces.md
+
+
 
 ## License
 
