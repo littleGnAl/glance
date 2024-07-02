@@ -52,61 +52,6 @@ class NativeStack {
   NativeStack({required this.frames, required this.modules});
 }
 
-class RingBuffer<T> {
-  final List<T?> _buffer;
-  int _head = 0;
-  int _tail = 0;
-  bool _isFull = false;
-
-  RingBuffer(int size) : _buffer = List<T?>.filled(size, null);
-
-  bool get isEmpty => !_isFull && _head == _tail;
-  bool get isFull => _isFull;
-
-  void write(T value) {
-    if (_isFull) {
-      _head = (_head + 1) % _buffer.length;
-    }
-
-    _buffer[_tail] = value;
-    _tail = (_tail + 1) % _buffer.length;
-
-    if (_tail == _head) {
-      _isFull = true;
-    }
-  }
-
-  T? read() {
-    if (isEmpty) {
-      return null;
-    }
-
-    final value = _buffer[_head];
-    _buffer[_head] = null; // Clear the slot
-    _head = (_head + 1) % _buffer.length;
-    _isFull = false;
-
-    return value;
-  }
-
-  List<T?> readAll() {
-    List<T?> result = [];
-    int current = _head;
-
-    while (current != _tail || (_isFull && result.length < _buffer.length)) {
-      result.add(_buffer[current]);
-      current = (current + 1) % _buffer.length;
-    }
-
-    return result;
-  }
-
-  @override
-  String toString() {
-    return _buffer.toString();
-  }
-}
-
 // class SlowFunctionsInformation {
 //   const SlowFunctionsInformation({
 //     required this.stackTraces,
