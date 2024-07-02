@@ -19,7 +19,7 @@ class _GetSamplesRequest implements _Request {
 class _GetSamplesResponse implements _Response {
   const _GetSamplesResponse(this.id, this.data);
   final int id;
-  final List<NativeFrameTimeSpent> data;
+  final List<AggregatedNativeFrame> data;
 }
 
 // class _SlowFunctionsDetectedResponse implements _Response {
@@ -27,6 +27,21 @@ class _GetSamplesResponse implements _Response {
 //   final int id;
 //   final SlowFunctionsInformation data;
 // }
+
+/// 16ms
+const int kDefaultSampleRateInMilliseconds = 16;
+
+class SamplerConfig {
+  SamplerConfig({
+    this.sampleRateInMilliseconds = kDefaultSampleRateInMilliseconds,
+    required this.modulePathFilters,
+  });
+
+  /// e.g., libapp.so, libflutter.so
+  final List<String> modulePathFilters;
+
+  final int sampleRateInMilliseconds;
+}
 
 class Sampler {
   final SendPort _commands;
@@ -38,7 +53,7 @@ class Sampler {
   // List<SlowFunctionsDetectedCallback> _slowFunctionsDetectedCallbackCallbacks =
   //     [];
 
-  Future<List<NativeFrameTimeSpent>> getSamples(
+  Future<List<AggregatedNativeFrame>> getSamples(
       List<int> timestampRange) async {
     if (_closed) throw StateError('Closed');
     final completer = Completer<Object?>.sync();
@@ -62,30 +77,34 @@ class Sampler {
   //   return ffi.DynamicLibrary.process();
   // }
 
-  static Future<Sampler> create() async {
+  static Future<Sampler> create(SamplerConfig config) async {
     StackCapturer().setCurrentThreadAsTarget();
 
     // Create a receive port and add its initial message handler
     final initPort = RawReceivePort();
-    final connection = Completer<(ReceivePort, SendPort)>.sync();
+    // (ReceivePort, SendPort)
+    final connection = Completer<List<Object>>.sync();
     initPort.handler = (initialMessage) {
       final commandPort = initialMessage as SendPort;
-      connection.complete((
+      connection.complete([
         ReceivePort.fromRawReceivePort(initPort),
         commandPort,
-      ));
+      ]);
     };
 
     // Spawn the isolate.
     try {
-      await Isolate.spawn(_startRemoteIsolate, (initPort.sendPort));
+      await Isolate.spawn(_startRemoteIsolate, [initPort.sendPort, config]);
     } on Object {
       initPort.close();
       rethrow;
     }
 
-    final (ReceivePort receivePort, SendPort sendPort) =
-        await connection.future;
+    // final (ReceivePort receivePort, SendPort sendPort) =
+    //     await connection.future;
+    final List<Object> msg = await connection.future;
+    final receivePort = msg[0] as ReceivePort;
+    final sendPort = msg[1] as SendPort;
 
     return Sampler._(receivePort, sendPort);
   }
@@ -124,8 +143,9 @@ class Sampler {
   static void _handleCommandsToIsolate(
     ReceivePort receivePort,
     SendPort sendPort,
+    SamplerConfig config,
   ) {
-    final _SamplerProcessor collector = _SamplerProcessor();
+    final _SamplerProcessor collector = _SamplerProcessor(config);
     // collector.setSlowFunctionsDetectedCallback((info) {
     //   // print('setSlowFunctionsDetectedCallback');
     //   sendPort.send(_SlowFunctionsDetectedResponse(0, info));
@@ -139,26 +159,27 @@ class Sampler {
       }
 
       if (message is _GetSamplesRequest) {
-        int start = message.timestampRange[0];
-        int end = message.timestampRange[1];
-        print('start: $start, end: $end');
-        // /lib/arm64/libflutter.so
-        List<String> pathFilters = <String>[
-          'libflutter.so',
-          'libapp.so',
-        ];
+        // int start = message.timestampRange[0];
+        // int end = message.timestampRange[1];
+        // // print('start: $start, end: $end');
+        // // /lib/arm64/libflutter.so
+        // List<String> pathFilters = <String>[
+        //   'libflutter.so',
+        //   'libapp.so',
+        // ];
         final stacktrace =
-            collector.getStacktrace(message.timestampRange).where((e) {
-          final frame = e.frame;
+            collector.getStacktrace(message.timestampRange);
+        //     .where((e) {
+        //   final frame = e.frame;
 
-          // return e.timestamp >=start  && e.timestamp <= end;
-          return frame.module != null &&
-              // frame.timestamp >= start &&
-              // frame.timestamp <= end &&
-              pathFilters.any((pathFilter) {
-                return frame.module?.path.contains(pathFilter) == true;
-              });
-        }).toList();
+        //   // return e.timestamp >=start  && e.timestamp <= end;
+        //   return frame.module != null &&
+        //       // frame.timestamp >= start &&
+        //       // frame.timestamp <= end &&
+        //       pathFilters.any((pathFilter) {
+        //         return frame.module?.path.contains(pathFilter) == true;
+        //       });
+        // }).toList();
 
         sendPort.send(_GetSamplesResponse(message.id, stacktrace));
         return;
@@ -178,10 +199,12 @@ class Sampler {
     });
   }
 
-  static void _startRemoteIsolate(SendPort sendPort) {
+  static void _startRemoteIsolate(List<Object> args) {
+    SendPort sendPort = args[0] as SendPort;
+    SamplerConfig config = args[1] as SamplerConfig;
     final receivePort = ReceivePort();
     sendPort.send(receivePort.sendPort);
-    _handleCommandsToIsolate(receivePort, sendPort);
+    _handleCommandsToIsolate(receivePort, sendPort, config);
   }
 
   void close() {
@@ -195,6 +218,9 @@ class Sampler {
 }
 
 class _SamplerProcessor {
+  _SamplerProcessor(this.config);
+  final SamplerConfig config;
+
   // max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
 
   // intptr_t Profiler::CalculateSampleBufferCapacity() {
@@ -220,7 +246,7 @@ class _SamplerProcessor {
   // https://github.com/dart-lang/sdk/blob/bcaf745a9be6c4af0c338c43e6304c9e1c4c5535/runtime/vm/profiler.cc#L642
   static const _bufferCount = 641;
   // static const _bufferCount = 2561;
-  static const _sampleRateInMilliseconds = 1;
+  // static const _sampleRateInMilliseconds = 16;
 
   RingBuffer<NativeStack>? _circularBuffer;
 
@@ -232,21 +258,21 @@ class _SamplerProcessor {
   //   _slowFunctionsDetectedCallback = callback;
   // }
 
-  List<NativeFrameTimeSpent> getStacktrace(List<int> timestampRange) {
+  List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
     assert(_circularBuffer != null);
-    return List.unmodifiable(_aggregateStacks(timestampRange, _circularBuffer!));
+    return List.unmodifiable(
+        _aggregateStacks(timestampRange, _circularBuffer!));
     // return [];
   }
 
   Future<void> loop() async {
-    //
+    final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
 
     try {
       while (true) {
-        await Future.delayed(
-            const Duration(milliseconds: _sampleRateInMilliseconds));
-        final collect_stack = StackCapturer();
-        final stack = collect_stack.captureStackOfTargetThread();
+        await Future.delayed(Duration(milliseconds: sampleRateInMilliseconds));
+        final stackCapturer = StackCapturer();
+        final stack = stackCapturer.captureStackOfTargetThread();
 
         _circularBuffer ??= RingBuffer<NativeStack>(_bufferCount);
         _circularBuffer!.write(stack);
@@ -296,17 +322,21 @@ class _SamplerProcessor {
     }
   }
 
-  List<NativeFrameTimeSpent> _aggregateStacks(
+  List<AggregatedNativeFrame> _aggregateStacks(
       List<int> timestampRange, RingBuffer<NativeStack> buffer) {
-    List<String> pathFilters = <String>[
-      'libflutter.so',
-      'libapp.so',
-    ];
+    List<String> pathFilters = config.modulePathFilters;
+    // final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
+
+    // <String>[
+    //   'libflutter.so',
+    //   'libapp.so',
+    // ];
 
     int start = timestampRange[0];
     int end = timestampRange[1];
     // final maps = LinkedHashMap<int, NativeFrameTimeSpent>();
-    final frameTimeSpentMap = LinkedHashMap<int, NativeFrameTimeSpent>();
+    final frameTimeSpentMap =
+        LinkedHashMap<int, AggregatedNativeFrame>.identity();
     final allFrames = buffer.readAll().expand((e) => e!.frames).where((frame) {
       // final frame = e.frame;
 
@@ -324,15 +354,15 @@ class _SamplerProcessor {
       final pc = frame.pc;
       if (frameTimeSpentMap.containsKey(pc)) {
         final timeSpent = frameTimeSpentMap[pc]!;
-        final timestampInMacros =
-            timeSpent.timestampInMacros + _sampleRateInMilliseconds;
-        timeSpent.timestampInMacros = timestampInMacros;
-        if (timestampInMacros > 50) {
-          // needReport = true;
-        }
+        // final timestampInMacros =
+        //     timeSpent.timestampInMacros + sampleRateInMilliseconds;
+        // timeSpent.timestampInMacros = timestampInMacros;
+
+        final occurTimes = timeSpent.occurTimes + 1;
+        timeSpent.occurTimes = occurTimes;
       } else {
-        final timeSpent = NativeFrameTimeSpent(frame);
-        timeSpent.timestampInMacros = _sampleRateInMilliseconds;
+        final timeSpent = AggregatedNativeFrame(frame);
+        timeSpent.occurTimes = 1;
         frameTimeSpentMap[pc] = timeSpent;
       }
     }

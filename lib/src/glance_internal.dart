@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/scheduler.dart';
-import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/glance_stack_trace.dart';
 import 'package:glance/src/sampler.dart';
 
@@ -133,10 +132,20 @@ class GlanceConfiguration {
     this.jankThreshold = _kDefaultJankThreshold,
     // this.jankCallback,
     this.reporters = const [],
+    this.modulePathFilters = const <String>[
+      r'(.*)libflutter.so',
+      r'(.*)libapp.so',
+    ],
+    this.sampleRateInMilliseconds = kDefaultSampleRateInMilliseconds,
   });
   final int jankThreshold;
   // final JankCallback? jankCallback;
   final List<GlanceReporter> reporters;
+
+  /// e.g., libapp.so, libflutter.so
+  final List<String> modulePathFilters;
+
+  final int sampleRateInMilliseconds;
 }
 
 class Glance {
@@ -158,9 +167,17 @@ class Glance {
 
   late List<GlanceReporter> reporters;
 
-  Future<void> start({GlanceConfiguration? config}) async {
-    final jankThreshold = config?.jankThreshold ?? _kDefaultJankThreshold;
-    reporters = List.from(config?.reporters ?? []);
+  bool _started = false;
+
+  Future<void> start(
+      {GlanceConfiguration config = const GlanceConfiguration()}) async {
+    if (_started) {
+      return;
+    }
+
+    _started = true;
+    final jankThreshold = config.jankThreshold;
+    reporters = List.from(config.reporters);
 
     // final binding = GlanceWidgetBinding.ensureInitialized();
     // binding.setOnHandleDrawFrameEndCallback(
@@ -174,7 +191,10 @@ class Glance {
     //   _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
     // });
 
-    _sampleThread ??= await Sampler.create();
+    _sampleThread ??= await Sampler.create(SamplerConfig(
+      modulePathFilters: config.modulePathFilters,
+      sampleRateInMilliseconds: config.sampleRateInMilliseconds,
+    ));
     // _sampleThread?.addSlowFunctionsDetectedCallback((info) {
     //   for (final callback
     //       in List.from(_slowFunctionsDetectedCallbackCallbacks)) {
@@ -186,20 +206,20 @@ class Glance {
       if (_sampleThread == null) {
         return;
       }
-      int now = DateTime.now().microsecondsSinceEpoch;
+      // int now = DateTime.now().microsecondsSinceEpoch;
       final jankTimings = <FrameTiming>[];
       for (int i = 0; i < timings.length; ++i) {
         final FrameTiming timing = timings[i];
-        print(
-            'FramePhase.vsyncStart: ${timing.timestampInMicroseconds(FramePhase.vsyncStart)}, FramePhase.rasterFinish: ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
-        print(
-            'timing.buildDuration: ${timing.buildDuration.inMilliseconds}, timing.rasterDuration: ${timing.rasterDuration.inMilliseconds}, timing.totalSpan: ${timing.totalSpan.inMilliseconds}');
+        // print(
+        //     'FramePhase.vsyncStart: ${timing.timestampInMicroseconds(FramePhase.vsyncStart)}, FramePhase.rasterFinish: ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
+        // print(
+        //     'timing.buildDuration: ${timing.buildDuration.inMilliseconds}, timing.rasterDuration: ${timing.rasterDuration.inMilliseconds}, timing.totalSpan: ${timing.totalSpan.inMilliseconds}');
         //   print(
         //       'timing.timestampInMicroseconds(FramePhase.rasterFinish): ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
         //   print(
         //       'timing.timestampInMicroseconds(FramePhase.buildStart): ${timing.timestampInMicroseconds(FramePhase.buildStart)}');
-        final diff = timing.timestampInMicroseconds(FramePhase.rasterFinish) -
-            timing.timestampInMicroseconds(FramePhase.buildStart);
+        // final diff = timing.timestampInMicroseconds(FramePhase.rasterFinish) -
+        //     timing.timestampInMicroseconds(FramePhase.buildStart);
         final totalSpan = timing.totalSpan.inMilliseconds;
         if (totalSpan > jankThreshold) {
           // report jank
@@ -219,9 +239,12 @@ class Glance {
   }
 
   Future<void> end() async {
-    _sampleThread?.close();
+    if (!_started) {
+      return;
+    }
     SchedulerBinding.instance.removeTimingsCallback(_timingsCallback!);
     _timingsCallback = null;
+    _sampleThread?.close();
   }
 
   // Future<void> _report(int startTimestamp, int endTimestamp) async {
@@ -259,9 +282,9 @@ class Glance {
 
   Future<void> _report(List<FrameTiming> timings, int index) async {
     // Report the nearest 3 timings if possiable.
-    int preIndex = index - 1;
-    int nextIndex = index + 1;
-    List<FrameTiming> reportTimings = timings;
+    // int preIndex = index - 1;
+    // int nextIndex = index + 1;
+    // List<FrameTiming> reportTimings = timings;
     // if (preIndex >= 0) {
     //   reportTimings.add(timings[preIndex]);
     // }
@@ -269,12 +292,12 @@ class Glance {
     // if (nextIndex < timings.length) {
     //   reportTimings.add(timings[nextIndex]);
     // }
-    assert(reportTimings.isNotEmpty);
+    // assert(reportTimings.isNotEmpty);
 
     // Request stacktraces
     final timestampRange = [
-      reportTimings.first.timestampInMicroseconds(FramePhase.vsyncStart),
-      reportTimings.last.timestampInMicroseconds(FramePhase.rasterFinish),
+      timings.first.timestampInMicroseconds(FramePhase.vsyncStart),
+      timings.last.timestampInMicroseconds(FramePhase.rasterFinish),
     ];
 
     assert(_sampleThread != null);

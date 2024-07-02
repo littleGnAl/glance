@@ -11,13 +11,13 @@ const glaceStackTraceLineSpilt = ' ';
 
 class GlanceStackTraceImpl implements GlanceStackTrace {
   GlanceStackTraceImpl(this.stackTraces);
-  final List<NativeFrameTimeSpent> stackTraces;
+  final List<AggregatedNativeFrame> stackTraces;
 
   // static const _headerLine =
   //     '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***';
-  static const _spilt = ' ';
-  static const _baseAddrKey = 'base_addr';
-  static const _pcKey = 'pc';
+  // static const _spilt = ' ';
+  // static const _baseAddrKey = 'base_addr';
+  // static const _pcKey = 'pc';
 
   /// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
   /// #00  0000000000000640 0000000000042f89 30  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)   exec_time 30
@@ -35,14 +35,14 @@ class GlanceStackTraceImpl implements GlanceStackTrace {
     for (int i = 0; i < stackTraces.length; ++i) {
       final stackTrace = stackTraces[i];
       final frame = stackTrace.frame;
-      final spent = stackTrace.timestampInMacros;
+      final occurTimes = stackTrace.occurTimes;
       stringBuffer.write('#${i.toString().padLeft(3, '0')}');
       stringBuffer.write(glaceStackTraceLineSpilt);
       stringBuffer.write(frame.module!.baseAddress);
       stringBuffer.write(glaceStackTraceLineSpilt);
       stringBuffer.write(frame.pc);
       stringBuffer.write(glaceStackTraceLineSpilt);
-      stringBuffer.write(spent);
+      stringBuffer.write(occurTimes);
       stringBuffer.write(glaceStackTraceLineSpilt);
       stringBuffer.write(frame.module!.path); // Is it necessary?
       stringBuffer.writeln();

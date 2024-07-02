@@ -6,13 +6,9 @@
 // Modifications and new contributions
 // Copyright (c) 2024 Littlegnal. Licensed under the MIT License. See the LICENSE file for details.
 
-import 'dart:async';
-import 'dart:collection';
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:ffi' as ffi;
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
 import 'package:glance/src/collect_stack_native_bindings.dart';
@@ -28,10 +24,10 @@ class NativeFrame {
   });
 }
 
-class NativeFrameTimeSpent {
+class AggregatedNativeFrame {
+  AggregatedNativeFrame(this.frame);
   final NativeFrame frame;
-  int timestampInMacros = 0;
-  NativeFrameTimeSpent(this.frame);
+  int occurTimes = 0;
 
   // set timestampInMacros(int value) {
   //   _timestampInMacros = value;
@@ -111,44 +107,44 @@ class RingBuffer<T> {
   }
 }
 
-class SlowFunctionsInformation {
-  const SlowFunctionsInformation({
-    required this.stackTraces,
-    required this.jankDuration,
-  });
-  final List<NativeFrameTimeSpent> stackTraces;
-  final Duration jankDuration;
+// class SlowFunctionsInformation {
+//   const SlowFunctionsInformation({
+//     required this.stackTraces,
+//     required this.jankDuration,
+//   });
+//   final List<NativeFrameTimeSpent> stackTraces;
+//   final Duration jankDuration;
 
-  @override
-  String toString() {
-    return jsonEncode(toJson());
-  }
+//   @override
+//   String toString() {
+//     return jsonEncode(toJson());
+//   }
 
-  // JankInformation fromJson(Map<String, Object?> json) {
+//   // JankInformation fromJson(Map<String, Object?> json) {
 
-  // }
+//   // }
 
-  Map<String, Object?> toJson() {
-    return {
-      'jankDuration': jankDuration.inMilliseconds,
-      'stackTraces': stackTraces.map((frameTimeSpent) {
-        final frame = frameTimeSpent.frame;
-        final spent = frameTimeSpent.timestampInMacros;
-        return {
-          "pc": frame.pc.toString(),
-          "timestamp": frame.timestamp,
-          if (frame.module != null)
-            "baseAddress": frame.module!.baseAddress.toString(),
-          if (frame.module != null) "path": frame.module!.path,
-          'spent': spent,
-        };
-      }).toList()
-    };
-  }
-}
+//   Map<String, Object?> toJson() {
+//     return {
+//       'jankDuration': jankDuration.inMilliseconds,
+//       'stackTraces': stackTraces.map((frameTimeSpent) {
+//         final frame = frameTimeSpent.frame;
+//         final spent = frameTimeSpent.timestampInMacros;
+//         return {
+//           "pc": frame.pc.toString(),
+//           "timestamp": frame.timestamp,
+//           if (frame.module != null)
+//             "baseAddress": frame.module!.baseAddress.toString(),
+//           if (frame.module != null) "path": frame.module!.path,
+//           'spent': spent,
+//         };
+//       }).toList()
+//     };
+//   }
+// }
 
-typedef SlowFunctionsDetectedCallback = void Function(
-    SlowFunctionsInformation info);
+// typedef SlowFunctionsDetectedCallback = void Function(
+//     SlowFunctionsInformation info);
 
 ffi.DynamicLibrary _loadLib() {
   const _libName = 'glance';

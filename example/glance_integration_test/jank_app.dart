@@ -51,7 +51,6 @@ class TestJankDetectedReporter extends JankDetectedReporter {
 
 @pragma("vm:never-inline")
 void expensiveFunction() {
-  print('kjkjkjjkjkjk');
   final watch = Stopwatch();
   watch.start();
   for (int i = 0; i < 1000; ++i) {
@@ -60,7 +59,7 @@ void expensiveFunction() {
     });
   }
   watch.stop();
-  print('_expensiveFunction time spend: ${watch.elapsedMilliseconds}');
+  print('[expensiveFunction]: ${watch.elapsedMilliseconds}');
 }
 
 class JankApp extends StatelessWidget {
