@@ -247,7 +247,7 @@ class _SamplerProcessor {
   // static const _bufferCount = 2561;
   // static const _sampleRateInMilliseconds = 16;
 
-  RingBuffer<NativeStack>? _circularBuffer;
+  RingBuffer<NativeStack>? _buffer;
 
   // LinkedHashMap<int, NativeFrameTimeSpent>? _frameTimeSpentMap;
 
@@ -258,9 +258,8 @@ class _SamplerProcessor {
   // }
 
   List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
-    assert(_circularBuffer != null);
-    return List.unmodifiable(
-        _aggregateStacks(timestampRange, _circularBuffer!));
+    assert(_buffer != null);
+    return List.unmodifiable(_aggregateStacks(timestampRange, _buffer!));
     // return [];
   }
 
@@ -273,8 +272,8 @@ class _SamplerProcessor {
         final stackCapturer = StackCapturer();
         final stack = stackCapturer.captureStackOfTargetThread();
 
-        _circularBuffer ??= RingBuffer<NativeStack>(_bufferCount);
-        _circularBuffer!.write(stack);
+        _buffer ??= RingBuffer<NativeStack>(_bufferCount);
+        _buffer!.write(stack);
 
         // final jsonMapList = stack.frames.map((frame) {
         //   List<String> pathFilters = <String>[
@@ -286,7 +285,7 @@ class _SamplerProcessor {
         //       pathFilters.any((pathFilter) {
         //         return frame.module?.path.contains(pathFilter) == true;
         //       })) {
-        //     // _circularBuffer?.write(frame);
+        //     // _buffer?.write(frame);
         //   }
 
         //   if (frame.module != null) {
