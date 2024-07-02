@@ -177,7 +177,7 @@ class Glance {
 
     _started = true;
     final jankThreshold = config.jankThreshold;
-    reporters = List.from(config.reporters);
+    reporters = List.of(config.reporters, growable: false);
 
     // final binding = GlanceWidgetBinding.ensureInitialized();
     // binding.setOnHandleDrawFrameEndCallback(

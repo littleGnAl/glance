@@ -1,4 +1,4 @@
-export 'src/glance_internal.dart';
+export 'src/glance.dart';
 
 // class Glance {
 //   Future<String?> getPlatformVersion() {

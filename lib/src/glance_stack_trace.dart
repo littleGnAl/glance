@@ -36,7 +36,7 @@ class GlanceStackTraceImpl implements GlanceStackTrace {
       final stackTrace = stackTraces[i];
       final frame = stackTrace.frame;
       final occurTimes = stackTrace.occurTimes;
-      stringBuffer.write('#${i.toString().padLeft(3, '0')}');
+      stringBuffer.write('#${i.toString().padLeft(3, ' ')}');
       stringBuffer.write(glaceStackTraceLineSpilt);
       stringBuffer.write(frame.module!.baseAddress);
       stringBuffer.write(glaceStackTraceLineSpilt);
