@@ -33,9 +33,12 @@ const int kDefaultSampleRateInMilliseconds = 16;
 
 class SamplerConfig {
   SamplerConfig({
+    required this.jankThreshold,
     this.sampleRateInMilliseconds = kDefaultSampleRateInMilliseconds,
     required this.modulePathFilters,
   });
+
+  final int jankThreshold;
 
   /// e.g., libapp.so, libflutter.so
   final List<String> modulePathFilters;
@@ -343,7 +346,7 @@ class _SamplerProcessor {
           frame.timestamp >= start &&
           frame.timestamp <= end &&
           pathFilters.any((pathFilter) {
-            return frame.module?.path.contains(pathFilter) == true;
+            return RegExp(pathFilter).hasMatch(frame.module!.path);
           });
     });
 

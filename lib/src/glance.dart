@@ -192,6 +192,7 @@ class Glance {
     // });
 
     _sampleThread ??= await Sampler.create(SamplerConfig(
+      jankThreshold: jankThreshold,
       modulePathFilters: config.modulePathFilters,
       sampleRateInMilliseconds: config.sampleRateInMilliseconds,
     ));
