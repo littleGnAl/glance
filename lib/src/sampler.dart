@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:isolate';
 
 import 'package:glance/src/collect_stack.dart';
+import 'package:glance/src/constants.dart';
 
 abstract class _Request {}
 
@@ -28,8 +29,8 @@ class _GetSamplesResponse implements _Response {
 //   final SlowFunctionsInformation data;
 // }
 
-/// 16ms
-const int kDefaultSampleRateInMilliseconds = 16;
+// /// 16ms
+// const int kDefaultSampleRateInMilliseconds = 16;
 
 class SamplerConfig {
   SamplerConfig({
@@ -47,6 +48,10 @@ class SamplerConfig {
 }
 
 class Sampler {
+  Sampler._(this._responses, this._commands) {
+    _responses.listen(_handleResponsesFromIsolate);
+  }
+
   final SendPort _commands;
   final ReceivePort _responses;
   final Map<int, Completer<Object?>> _activeRequests = {};
@@ -110,10 +115,6 @@ class Sampler {
     final sendPort = msg[1] as SendPort;
 
     return Sampler._(receivePort, sendPort);
-  }
-
-  Sampler._(this._responses, this._commands) {
-    _responses.listen(_handleResponsesFromIsolate);
   }
 
   // void addSlowFunctionsDetectedCallback(
@@ -327,6 +328,8 @@ class _SamplerProcessor {
       List<int> timestampRange, RingBuffer<NativeStack> buffer) {
     List<String> pathFilters = config.modulePathFilters;
     // final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
+    final maxOccurTimes =
+        config.jankThreshold / config.sampleRateInMilliseconds + 1;
 
     // <String>[
     //   'libflutter.so',
@@ -368,7 +371,26 @@ class _SamplerProcessor {
       }
     }
 
-    return frameTimeSpentMap.values.toList().reversed.toList();
+    final ret = frameTimeSpentMap.values.toList();
+    final len = ret.length;
+    int subStart = 0;
+    int subEnd = frameTimeSpentMap.values.length - 1;
+    while (subStart < len && ret[subStart].occurTimes < maxOccurTimes) {
+      ++subStart;
+    }
+    while (subEnd >= 0 && ret[subEnd].occurTimes < maxOccurTimes) {
+      --subEnd;
+    }
+
+    final returnV = <AggregatedNativeFrame>[];
+    // Reverse and sub list
+    for (int i = subEnd, j = 0; i >= subStart; --i, ++j) {
+      // returnV[j] = ret[i];
+      returnV.add(ret[i]);
+    }
+    return returnV;
+
+    // return frameTimeSpentMap.values.toList().reversed.toList();
 
     // print('needReport: $needReport');
     // if (needReport) {

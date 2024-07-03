@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:args/args.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
+import 'package:glance/src/constants.dart';
 import 'package:glance/src/glance_stack_trace.dart';
 import 'package:process/process.dart';
 
@@ -56,7 +57,7 @@ String symbolize(
   final List<String> processLines = [];
   bool isFoundHeaderLine = false;
   for (final line in lines) {
-    if (line == glaceStackTraceHeaderLine) {
+    if (line == kGlaceStackTraceHeaderLine) {
       continue;
     }
     if (!line.startsWith('#')) {
@@ -127,7 +128,7 @@ String symbolize(
 
   final List<_Holder> holders = [];
   for (final line in processLines) {
-    final splited = line.split(glaceStackTraceLineSpilt);
+    final splited = line.split(kGlaceStackTraceLineSpilt);
     assert(splited.length == 5);
     final baseAddress = splited[1];
     final pc = splited[2];
