@@ -25,6 +25,10 @@ class GlanceImpl implements Glance {
 
   bool _started = false;
 
+  JankReport? _previousReport;
+
+  GlanceStackTrace? _previousStackTrace;
+
   @override
   Future<void> start(
       {GlanceConfiguration config = const GlanceConfiguration()}) async {
@@ -170,11 +174,17 @@ class GlanceImpl implements Glance {
     }
 
     // TODO(littlegnal): Check if the same stack trace, if yes, do not report again
+    final straceTrace = GlanceStackTraceImpl(frames);
+    if (straceTrace == _previousStackTrace) {
+      return;
+    }
 
     final report = JankReport(
-      stackTrace: GlanceStackTraceImpl(frames),
+      stackTrace: straceTrace,
       frameTimings: timings,
     );
+
+    _previousStackTrace = straceTrace;
 
     // final callbacks = List.from(_jankCallbacks);
     // for (final callback in callbacks) {
