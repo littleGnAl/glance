@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/foundation.dart' show listEquals, visibleForTesting;
 import 'package:flutter/scheduler.dart';
 import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/constants.dart';
@@ -11,7 +11,7 @@ class GlanceImpl implements Glance {
   GlanceImpl();
 
   @visibleForTesting
-  GlanceImpl.forTesting(Sampler sampler);
+  GlanceImpl.forTesting(Sampler sampler) : _sampleThread = sampler;
 
   Sampler? _sampleThread;
 
@@ -199,6 +199,17 @@ class GlanceImpl implements Glance {
 class GlanceStackTraceImpl implements GlanceStackTrace {
   GlanceStackTraceImpl(this.stackTraces);
   final List<AggregatedNativeFrame> stackTraces;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    return other is GlanceStackTraceImpl &&
+        listEquals(stackTraces, other.stackTraces);
+  }
+
+  @override
+  int get hashCode => Object.hashAll(stackTraces);
 
   // static const _headerLine =
   //     '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***';

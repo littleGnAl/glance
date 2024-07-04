@@ -142,16 +142,41 @@ class NativeFrame {
     required this.pc,
     required this.timestamp,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    return other is NativeFrame &&
+        module == other.module &&
+        pc == other.pc &&
+        timestamp == other.timestamp;
+  }
+
+  @override
+  int get hashCode => Object.hash(module, pc, timestamp);
 }
 
 class AggregatedNativeFrame {
-  AggregatedNativeFrame(this.frame);
+  AggregatedNativeFrame(this.frame, {this.occurTimes = 0});
   final NativeFrame frame;
   int occurTimes = 0;
 
   // set timestampInMacros(int value) {
   //   _timestampInMacros = value;
   // }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    return other is AggregatedNativeFrame &&
+        frame == other.frame &&
+        occurTimes == other.occurTimes;
+  }
+
+  @override
+  int get hashCode => Object.hash(frame, occurTimes);
 }
 
 class NativeModule {
@@ -164,6 +189,20 @@ class NativeModule {
       required this.path,
       required this.baseAddress,
       required this.symbolName});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    return other is NativeModule &&
+        id == other.id &&
+        path == other.path &&
+        baseAddress == other.baseAddress &&
+        symbolName == other.symbolName;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, path, baseAddress, symbolName);
 }
 
 class NativeStack {

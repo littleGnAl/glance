@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:glance/src/constants.dart';
 import 'package:glance/src/glance_impl.dart';
@@ -102,6 +103,18 @@ class JankReport {
   // final List<NativeFrameTimeSpent> stackTraces;
   final GlanceStackTrace stackTrace;
   final List<FrameTiming> frameTimings;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    return other is JankReport &&
+        stackTrace == other.stackTrace &&
+        listEquals(frameTimings, other.frameTimings);
+  }
+
+  @override
+  int get hashCode => Object.hash(stackTrace, Object.hashAll(frameTimings));
 
   @override
   String toString() {
