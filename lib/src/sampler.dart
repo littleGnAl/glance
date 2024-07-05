@@ -32,11 +32,16 @@ class _GetSamplesResponse implements _Response {
 // /// 16ms
 // const int kDefaultSampleRateInMilliseconds = 16;
 
+SamplerProcessor _defaultSamplerProcessorFactory(SamplerConfig config) {
+  return SamplerProcessor(config, StackCapturer());
+}
+
 class SamplerConfig {
   SamplerConfig({
     required this.jankThreshold,
     this.sampleRateInMilliseconds = kDefaultSampleRateInMilliseconds,
     required this.modulePathFilters,
+    this.samplerProcessorFactory = _defaultSamplerProcessorFactory,
   });
 
   final int jankThreshold;
@@ -45,6 +50,8 @@ class SamplerConfig {
   final List<String> modulePathFilters;
 
   final int sampleRateInMilliseconds;
+
+  final SamplerProcessorFactory samplerProcessorFactory;
 }
 
 class Sampler {
@@ -86,7 +93,7 @@ class Sampler {
   // }
 
   static Future<Sampler> create(SamplerConfig config) async {
-    StackCapturer().setCurrentThreadAsTarget();
+    config.samplerProcessorFactory(config).setCurrentThreadAsTarget();
 
     // Create a receive port and add its initial message handler
     final initPort = RawReceivePort();
@@ -149,7 +156,7 @@ class Sampler {
     SendPort sendPort,
     SamplerConfig config,
   ) {
-    final _SamplerProcessor collector = _SamplerProcessor(config);
+    final SamplerProcessor collector = config.samplerProcessorFactory(config);
     // collector.setSlowFunctionsDetectedCallback((info) {
     //   // print('setSlowFunctionsDetectedCallback');
     //   sendPort.send(_SlowFunctionsDetectedResponse(0, info));
@@ -220,9 +227,13 @@ class Sampler {
   }
 }
 
-class _SamplerProcessor {
-  _SamplerProcessor(this.config);
-  final SamplerConfig config;
+typedef SamplerProcessorFactory = SamplerProcessor Function(
+    SamplerConfig config);
+
+class SamplerProcessor {
+  SamplerProcessor(this._config, this._stackCapturer);
+  final SamplerConfig _config;
+  final StackCapturer _stackCapturer;
 
   // max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
 
@@ -261,6 +272,10 @@ class _SamplerProcessor {
   //   _slowFunctionsDetectedCallback = callback;
   // }
 
+  void setCurrentThreadAsTarget() {
+    _stackCapturer.setCurrentThreadAsTarget();
+  }
+
   List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
     assert(_buffer != null);
     return List.unmodifiable(_aggregateStacks(timestampRange, _buffer!));
@@ -268,13 +283,13 @@ class _SamplerProcessor {
   }
 
   Future<void> loop() async {
-    final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
+    final sampleRateInMilliseconds = _config.sampleRateInMilliseconds;
 
     try {
       while (true) {
         await Future.delayed(Duration(milliseconds: sampleRateInMilliseconds));
-        final stackCapturer = StackCapturer();
-        final stack = stackCapturer.captureStackOfTargetThread();
+        // final stackCapturer = StackCapturer();
+        final stack = _stackCapturer.captureStackOfTargetThread();
 
         _buffer ??= RingBuffer<NativeStack>(_bufferCount);
         _buffer!.write(stack);
@@ -326,10 +341,10 @@ class _SamplerProcessor {
 
   List<AggregatedNativeFrame> _aggregateStacks(
       List<int> timestampRange, RingBuffer<NativeStack> buffer) {
-    List<String> pathFilters = config.modulePathFilters;
+    List<String> pathFilters = _config.modulePathFilters;
     // final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
     final maxOccurTimes =
-        config.jankThreshold / config.sampleRateInMilliseconds + 1;
+        _config.jankThreshold / _config.sampleRateInMilliseconds + 1;
 
     // <String>[
     //   'libflutter.so',

@@ -264,7 +264,9 @@ ffi.DynamicLibrary _loadLib() {
 }
 
 class StackCapturer {
-  StackCapturer() : _nativeBindings = CollectStackNativeBindings(_loadLib());
+   StackCapturer({CollectStackNativeBindings? nativeBindings})
+      : _nativeBindings =
+            nativeBindings ?? CollectStackNativeBindings(_loadLib());
 
   final CollectStackNativeBindings _nativeBindings;
 
