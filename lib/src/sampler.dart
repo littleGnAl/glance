@@ -59,6 +59,39 @@ class Sampler {
     _responses.listen(_handleResponsesFromIsolate);
   }
 
+  static Future<Sampler> create(SamplerConfig config) async {
+    final processor = config.samplerProcessorFactory(config);
+    processor.setCurrentThreadAsTarget();
+
+    // Create a receive port and add its initial message handler
+    final initPort = RawReceivePort();
+    // (ReceivePort, SendPort)
+    final connection = Completer<List<Object>>.sync();
+    initPort.handler = (initialMessage) {
+      final commandPort = initialMessage as SendPort;
+      connection.complete([
+        ReceivePort.fromRawReceivePort(initPort),
+        commandPort,
+      ]);
+    };
+
+    // Spawn the isolate.
+    try {
+      await Isolate.spawn(_startRemoteIsolate, [initPort.sendPort, config]);
+    } on Object {
+      initPort.close();
+      rethrow;
+    }
+
+    // final (ReceivePort receivePort, SendPort sendPort) =
+    //     await connection.future;
+    final List<Object> msg = await connection.future;
+    final receivePort = msg[0] as ReceivePort;
+    final sendPort = msg[1] as SendPort;
+
+    return Sampler._(receivePort, sendPort);
+  }
+
   final SendPort _commands;
   final ReceivePort _responses;
   final Map<int, Completer<Object?>> _activeRequests = {};
@@ -92,38 +125,6 @@ class Sampler {
   //   return ffi.DynamicLibrary.process();
   // }
 
-  static Future<Sampler> create(SamplerConfig config) async {
-    config.samplerProcessorFactory(config).setCurrentThreadAsTarget();
-
-    // Create a receive port and add its initial message handler
-    final initPort = RawReceivePort();
-    // (ReceivePort, SendPort)
-    final connection = Completer<List<Object>>.sync();
-    initPort.handler = (initialMessage) {
-      final commandPort = initialMessage as SendPort;
-      connection.complete([
-        ReceivePort.fromRawReceivePort(initPort),
-        commandPort,
-      ]);
-    };
-
-    // Spawn the isolate.
-    try {
-      await Isolate.spawn(_startRemoteIsolate, [initPort.sendPort, config]);
-    } on Object {
-      initPort.close();
-      rethrow;
-    }
-
-    // final (ReceivePort receivePort, SendPort sendPort) =
-    //     await connection.future;
-    final List<Object> msg = await connection.future;
-    final receivePort = msg[0] as ReceivePort;
-    final sendPort = msg[1] as SendPort;
-
-    return Sampler._(receivePort, sendPort);
-  }
-
   // void addSlowFunctionsDetectedCallback(
   //     SlowFunctionsDetectedCallback callback) {
   //   _slowFunctionsDetectedCallbackCallbacks.add(callback);
@@ -152,10 +153,7 @@ class Sampler {
   }
 
   static void _handleCommandsToIsolate(
-    ReceivePort receivePort,
-    SendPort sendPort,
-    SamplerConfig config,
-  ) {
+      ReceivePort receivePort, SendPort sendPort, SamplerConfig config) {
     final SamplerProcessor collector = config.samplerProcessorFactory(config);
     // collector.setSlowFunctionsDetectedCallback((info) {
     //   // print('setSlowFunctionsDetectedCallback');
@@ -338,6 +336,15 @@ class SamplerProcessor {
       print('$e\n$st');
     }
   }
+
+//   bool _filter(NativeFrame frame) {
+// return frame.module != null &&
+//           frame.timestamp >= start &&
+//           frame.timestamp <= end &&
+//           pathFilters.any((pathFilter) {
+//             return RegExp(pathFilter).hasMatch(frame.module!.path);
+//           });
+//   }
 
   List<AggregatedNativeFrame> _aggregateStacks(
       List<int> timestampRange, RingBuffer<NativeStack> buffer) {

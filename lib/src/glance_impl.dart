@@ -25,8 +25,6 @@ class GlanceImpl implements Glance {
 
   bool _started = false;
 
-  JankReport? _previousReport;
-
   GlanceStackTrace? _previousStackTrace;
 
   @override
