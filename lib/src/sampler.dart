@@ -55,7 +55,7 @@ class SamplerConfig {
 }
 
 class Sampler {
-  Sampler._(this._responses, this._commands) {
+  Sampler._(this._processorIsolate, this._responses, this._commands) {
     _responses.listen(_handleResponsesFromIsolate);
   }
 
@@ -75,9 +75,10 @@ class Sampler {
       ]);
     };
 
+    late Isolate isolate;
     // Spawn the isolate.
     try {
-      await Isolate.spawn(_startRemoteIsolate, [initPort.sendPort, config]);
+      isolate = await Isolate.spawn(_startRemoteIsolate, [initPort.sendPort, config]);
     } on Object {
       initPort.close();
       rethrow;
@@ -89,8 +90,10 @@ class Sampler {
     final receivePort = msg[0] as ReceivePort;
     final sendPort = msg[1] as SendPort;
 
-    return Sampler._(receivePort, sendPort);
+    return Sampler._(isolate, receivePort, sendPort);
   }
+
+  final Isolate _processorIsolate;
 
   final SendPort _commands;
   final ReceivePort _responses;
@@ -221,6 +224,7 @@ class Sampler {
       _commands.send('shutdown');
       if (_activeRequests.isEmpty) _responses.close();
       print('--- port closed --- ');
+      _processorIsolate.kill(priority: Isolate.immediate);
     }
   }
 }
