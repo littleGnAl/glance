@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:isolate';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/sampler.dart';
@@ -46,6 +47,12 @@ class _FakeSamplerProcessor implements SamplerProcessor {
   @override
   void close() {
     sendPort.send('close');
+  }
+
+  @override
+  List<AggregatedNativeFrame> aggregateStacks(
+      List<int> timestampRange, RingBuffer<NativeStack> buffer) {
+    return [];
   }
 }
 
@@ -190,21 +197,254 @@ void main() {
       expect(stackCapturer.isSetCurrentThreadAsTarget, isTrue);
     });
 
-    test('getStacktrace', () {
-      stackCapturer = FakeStackCapturer();
-      samplerProcessor = SamplerProcessor(
-          SamplerConfig(jankThreshold: 1, modulePathFilters: []),
-          stackCapturer);
-      samplerProcessor.setCurrentThreadAsTarget();
-      samplerProcessor.getStacktrace([0, 1]);
+    test('getStacktrace', () async {
+      fakeAsync((async) async {
+        stackCapturer = FakeStackCapturer();
+        samplerProcessor = SamplerProcessor(
+          SamplerConfig(
+            jankThreshold: 1,
+            modulePathFilters: [],
+            sampleRateInMilliseconds: 1000,
+          ),
+          stackCapturer,
+        );
+        final now = Timeline.now;
+        final module1 = NativeModule(
+          id: 1,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        );
+        final frame1 = NativeFrame(
+          pc: 540642472602,
+          timestamp: now - 100,
+          module: module1,
+        );
+        final module2 = NativeModule(
+          id: 2,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        );
+        final frame2 = NativeFrame(
+          pc: 540642472608,
+          timestamp: now - 200,
+          module: module2,
+        );
+
+        stackCapturer.nativeStack =
+            NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
+
+        samplerProcessor.setCurrentThreadAsTarget();
+        samplerProcessor.loop();
+        async.elapse(const Duration(milliseconds: 1500));
+        final stackTraces = samplerProcessor.getStacktrace([now - 1000, now]);
+
+        expect(stackTraces.length == 2, isTrue);
+        // The order is reversed
+        expect(stackTraces[0].frame, frame2);
+        expect(stackTraces[1].frame, frame1);
+      });
     });
 
-    test('getStacktrace throw error if not call setCurrentThreadAsTarget',
-        () {});
+    test('getStacktrace throw error if not call setCurrentThreadAsTarget', () {
+      stackCapturer = FakeStackCapturer();
+      samplerProcessor = SamplerProcessor(
+        SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: [],
+          sampleRateInMilliseconds: 1000,
+        ),
+        stackCapturer,
+      );
+      final now = Timeline.now;
+      final module1 = NativeModule(
+        id: 1,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'hello',
+      );
+      final frame1 = NativeFrame(
+        pc: 540642472602,
+        timestamp: now - 100,
+        module: module1,
+      );
+      final module2 = NativeModule(
+        id: 2,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'world',
+      );
+      final frame2 = NativeFrame(
+        pc: 540642472608,
+        timestamp: now - 200,
+        module: module2,
+      );
 
-    test('getStacktrace after calling close', () {});
+      stackCapturer.nativeStack =
+          NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
 
-    test('loop', () {});
+      expect(
+        () => samplerProcessor.getStacktrace([now - 1000, now]),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test('getStacktrace throw error if not call loop', () {
+      stackCapturer = FakeStackCapturer();
+      samplerProcessor = SamplerProcessor(
+        SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: [],
+          sampleRateInMilliseconds: 1000,
+        ),
+        stackCapturer,
+      );
+      final now = Timeline.now;
+      final module1 = NativeModule(
+        id: 1,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'hello',
+      );
+      final frame1 = NativeFrame(
+        pc: 540642472602,
+        timestamp: now - 100,
+        module: module1,
+      );
+      final module2 = NativeModule(
+        id: 2,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'world',
+      );
+      final frame2 = NativeFrame(
+        pc: 540642472608,
+        timestamp: now - 200,
+        module: module2,
+      );
+
+      stackCapturer.nativeStack =
+          NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
+
+      samplerProcessor.setCurrentThreadAsTarget();
+
+      expect(
+        () => samplerProcessor.getStacktrace([now - 1000, now]),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test('getStacktrace after calling close', () {
+      stackCapturer = FakeStackCapturer();
+      samplerProcessor = SamplerProcessor(
+        SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: [],
+          sampleRateInMilliseconds: 1000,
+        ),
+        stackCapturer,
+      );
+      final now = Timeline.now;
+      final module1 = NativeModule(
+        id: 1,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'hello',
+      );
+      final frame1 = NativeFrame(
+        pc: 540642472602,
+        timestamp: now - 100,
+        module: module1,
+      );
+      final module2 = NativeModule(
+        id: 2,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'world',
+      );
+      final frame2 = NativeFrame(
+        pc: 540642472608,
+        timestamp: now - 200,
+        module: module2,
+      );
+
+      stackCapturer.nativeStack =
+          NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
+
+      samplerProcessor.setCurrentThreadAsTarget();
+      samplerProcessor.close();
+
+      expect(
+        () => samplerProcessor.getStacktrace([now - 1000, now]),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test('loop', () {
+      fakeAsync((async) async {
+        stackCapturer = FakeStackCapturer();
+        samplerProcessor = SamplerProcessor(
+          SamplerConfig(
+            jankThreshold: 1,
+            modulePathFilters: [],
+            sampleRateInMilliseconds: 1000,
+          ),
+          stackCapturer,
+        );
+        final now = Timeline.now;
+        final module1 = NativeModule(
+          id: 1,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        );
+        final frame1 = NativeFrame(
+          pc: 540642472602,
+          timestamp: now - 100,
+          module: module1,
+        );
+        final module2 = NativeModule(
+          id: 2,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        );
+        final frame2 = NativeFrame(
+          pc: 540642472608,
+          timestamp: now - 200,
+          module: module2,
+        );
+        final module3 = NativeModule(
+          id: 3,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        );
+        final frame3 = NativeFrame(
+          pc: 540642472605,
+          timestamp: now - 300,
+          module: module3,
+        );
+
+        stackCapturer.nativeStack =
+            NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
+
+        samplerProcessor.setCurrentThreadAsTarget();
+        samplerProcessor.loop();
+        async.elapse(const Duration(milliseconds: 1500));
+        stackCapturer.nativeStack =
+            NativeStack(frames: [frame3], modules: [module3]);
+        async.elapse(const Duration(milliseconds: 1500));
+        final stackTraces = samplerProcessor.getStacktrace([now - 1000, now]);
+
+        expect(stackTraces.length == 3, isTrue);
+        // The order is reversed
+        expect(stackTraces[0].frame, frame3);
+        expect(stackTraces[1].frame, frame2);
+        expect(stackTraces[2].frame, frame1);
+      });
+    });
 
     test('stop looping after calling close', () {});
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:isolate';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/constants.dart';
 
@@ -179,7 +180,7 @@ class SamplerProcessor {
   final SamplerConfig _config;
   final StackCapturer _stackCapturer;
   bool _isRunning = true;
-  bool debugCalledSetCurrentThreadAsTarget = false;
+  bool _debugCalledSetCurrentThreadAsTarget = false;
 
   // max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
 
@@ -212,18 +213,18 @@ class SamplerProcessor {
 
   void setCurrentThreadAsTarget() {
     assert(() {
-      debugCalledSetCurrentThreadAsTarget = true;
+      _debugCalledSetCurrentThreadAsTarget = true;
       return true;
     }());
     _stackCapturer.setCurrentThreadAsTarget();
   }
 
   List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
-    assert(debugCalledSetCurrentThreadAsTarget,
+    assert(_debugCalledSetCurrentThreadAsTarget,
         'Make sure you call `setCurrentThreadAsTarget` first');
     assert(_isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
-    return _aggregateStacks(timestampRange, _buffer!);
+    return aggregateStacks(timestampRange, _buffer!);
   }
 
   Future<void> loop() async {
@@ -236,7 +237,6 @@ class SamplerProcessor {
         if (!_isRunning || _buffer == null) {
           return;
         }
-        // final stackCapturer = StackCapturer();
         final stack = _stackCapturer.captureStackOfTargetThread();
         assert(_buffer != null);
         _buffer!.write(stack);
@@ -251,7 +251,8 @@ class SamplerProcessor {
     _buffer = null;
   }
 
-  List<AggregatedNativeFrame> _aggregateStacks(
+  @visibleForTesting
+  List<AggregatedNativeFrame> aggregateStacks(
       List<int> timestampRange, RingBuffer<NativeStack> buffer) {
     List<String> pathFilters = _config.modulePathFilters;
     // final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
