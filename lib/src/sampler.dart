@@ -65,7 +65,6 @@ class Sampler {
 
     // Create a receive port and add its initial message handler
     final initPort = RawReceivePort();
-    // (ReceivePort, SendPort)
     final connection = Completer<List<Object>>.sync();
     initPort.handler = (initialMessage) {
       final commandPort = initialMessage as SendPort;
@@ -76,9 +75,9 @@ class Sampler {
     };
 
     late Isolate isolate;
-    // Spawn the isolate.
     try {
-      isolate = await Isolate.spawn(_startRemoteIsolate, [initPort.sendPort, config]);
+      isolate =
+          await Isolate.spawn(_samplerIsolate, [initPort.sendPort, config]);
     } on Object {
       initPort.close();
       rethrow;
@@ -115,24 +114,6 @@ class Sampler {
     return response.data;
   }
 
-  // static ffi.DynamicLibrary _loadLib() {
-  //   const _libName = 'glance';
-  //   if (Platform.isWindows) {
-  //     return ffi.DynamicLibrary.open('$_libName.dll');
-  //   }
-
-  //   if (Platform.isAndroid) {
-  //     return ffi.DynamicLibrary.open('lib$_libName.so');
-  //   }
-
-  //   return ffi.DynamicLibrary.process();
-  // }
-
-  // void addSlowFunctionsDetectedCallback(
-  //     SlowFunctionsDetectedCallback callback) {
-  //   _slowFunctionsDetectedCallbackCallbacks.add(callback);
-  // }
-
   void _handleResponsesFromIsolate(dynamic message) {
     // if (message is _SlowFunctionsDetectedResponse) {
     //   for (final callback
@@ -152,78 +133,39 @@ class Sampler {
       completer.complete(response);
     }
 
-    if (_closed && _activeRequests.isEmpty) _responses.close();
+    // if (_closed && _activeRequests.isEmpty) _responses.close();
   }
 
-  static void _handleCommandsToIsolate(
-      ReceivePort receivePort, SendPort sendPort, SamplerConfig config) {
-    final SamplerProcessor collector = config.samplerProcessorFactory(config);
-    // collector.setSlowFunctionsDetectedCallback((info) {
-    //   // print('setSlowFunctionsDetectedCallback');
-    //   sendPort.send(_SlowFunctionsDetectedResponse(0, info));
-    // });
-    collector.loop();
-
-    receivePort.listen((message) {
-      if (message is _ShutdownRequest) {
-        receivePort.close();
-        return;
-      }
-
-      if (message is _GetSamplesRequest) {
-        // int start = message.timestampRange[0];
-        // int end = message.timestampRange[1];
-        // // print('start: $start, end: $end');
-        // // /lib/arm64/libflutter.so
-        // List<String> pathFilters = <String>[
-        //   'libflutter.so',
-        //   'libapp.so',
-        // ];
-        final stacktrace = collector.getStacktrace(message.timestampRange);
-        //     .where((e) {
-        //   final frame = e.frame;
-
-        //   // return e.timestamp >=start  && e.timestamp <= end;
-        //   return frame.module != null &&
-        //       // frame.timestamp >= start &&
-        //       // frame.timestamp <= end &&
-        //       pathFilters.any((pathFilter) {
-        //         return frame.module?.path.contains(pathFilter) == true;
-        //       });
-        // }).toList();
-
-        sendPort.send(_GetSamplesResponse(message.id, stacktrace));
-        return;
-      }
-
-      print('Not reachable message: $message');
-      // Not reachable.
-      assert(false);
-
-      // final (int id, String jsonText) = message as (int, String);
-      // try {
-      //   final jsonData = jsonDecode(jsonText);
-      //   sendPort.send((id, jsonData));
-      // } catch (e) {
-      //   sendPort.send((id, RemoteError(e.toString(), '')));
-      // }
-    });
-  }
-
-  static void _startRemoteIsolate(List<Object> args) {
+  static void _samplerIsolate(List<Object> args) {
     SendPort sendPort = args[0] as SendPort;
     SamplerConfig config = args[1] as SamplerConfig;
     final receivePort = ReceivePort();
     sendPort.send(receivePort.sendPort);
-    _handleCommandsToIsolate(receivePort, sendPort, config);
+
+    final SamplerProcessor processor = config.samplerProcessorFactory(config);
+
+    receivePort.listen((message) {
+      if (message is _ShutdownRequest) {
+        processor.close();
+        receivePort.close();
+      } else if (message is _GetSamplesRequest) {
+        final stacktrace = processor.getStacktrace(message.timestampRange);
+        sendPort.send(_GetSamplesResponse(message.id, stacktrace));
+      } else {
+        // Not reachable.
+        assert(false);
+      }
+    });
+
+    processor.loop();
   }
 
   void close() {
     if (!_closed) {
       _closed = true;
-      _commands.send('shutdown');
-      if (_activeRequests.isEmpty) _responses.close();
-      print('--- port closed --- ');
+      _commands.send(_ShutdownRequest());
+      _responses.close();
+      _activeRequests.clear();
       _processorIsolate.kill(priority: Isolate.immediate);
     }
   }
@@ -236,6 +178,8 @@ class SamplerProcessor {
   SamplerProcessor(this._config, this._stackCapturer);
   final SamplerConfig _config;
   final StackCapturer _stackCapturer;
+  bool _isRunning = true;
+  bool debugCalledSetCurrentThreadAsTarget = false;
 
   // max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
 
@@ -266,89 +210,46 @@ class SamplerProcessor {
 
   RingBuffer<NativeStack>? _buffer;
 
-  // LinkedHashMap<int, NativeFrameTimeSpent>? _frameTimeSpentMap;
-
-  // SlowFunctionsDetectedCallback? _slowFunctionsDetectedCallback;
-  // void setSlowFunctionsDetectedCallback(
-  //     SlowFunctionsDetectedCallback callback) {
-  //   _slowFunctionsDetectedCallback = callback;
-  // }
-
   void setCurrentThreadAsTarget() {
+    assert(() {
+      debugCalledSetCurrentThreadAsTarget = true;
+      return true;
+    }());
     _stackCapturer.setCurrentThreadAsTarget();
   }
 
   List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
-    assert(_buffer != null);
-    return List.unmodifiable(_aggregateStacks(timestampRange, _buffer!));
-    // return [];
+    assert(debugCalledSetCurrentThreadAsTarget,
+        'Make sure you call `setCurrentThreadAsTarget` first');
+    assert(_isRunning);
+    assert(_buffer != null, 'Make sure you call `loop` first');
+    return _aggregateStacks(timestampRange, _buffer!);
   }
 
   Future<void> loop() async {
     final sampleRateInMilliseconds = _config.sampleRateInMilliseconds;
+    _buffer ??= RingBuffer<NativeStack>(_bufferCount);
 
     try {
-      while (true) {
+      while (_isRunning) {
         await Future.delayed(Duration(milliseconds: sampleRateInMilliseconds));
+        if (!_isRunning || _buffer == null) {
+          return;
+        }
         // final stackCapturer = StackCapturer();
         final stack = _stackCapturer.captureStackOfTargetThread();
-
-        _buffer ??= RingBuffer<NativeStack>(_bufferCount);
+        assert(_buffer != null);
         _buffer!.write(stack);
-
-        // final jsonMapList = stack.frames.map((frame) {
-        //   List<String> pathFilters = <String>[
-        //     'libflutter.so',
-        //     'libapp.so',
-        //   ];
-
-        //   if (frame.module != null &&
-        //       pathFilters.any((pathFilter) {
-        //         return frame.module?.path.contains(pathFilter) == true;
-        //       })) {
-        //     // _buffer?.write(frame);
-        //   }
-
-        //   if (frame.module != null) {
-        //     final module = frame.module!;
-        //     // print(
-        //     //     "Frame(pc: ${frame.pc}, module: Module(path: ${module.path}, baseAddress: ${module.baseAddress}, symbolName: ${module.symbolName}))");
-
-        //     return {
-        //       "pc": frame.pc.toString(),
-        //       "baseAddress": module.baseAddress.toString(),
-        //       "path": module.path,
-        //     };
-        //   } else {
-        //     // print("Frame(pc: ${frame.pc})");
-        //     return {
-        //       "pc": frame.pc.toString(),
-        //     };
-        //   }
-        // }).toList();
-
-        // print(jsonEncode(jsonMapList));
-        // for (final json in jsonMapList) {
-        //   print(jsonEncode(json));
-        // }
-
-        // print("");
-
-        // aggregateStacks(circularBuffer);
       }
     } catch (e, st) {
       print('$e\n$st');
     }
   }
 
-//   bool _filter(NativeFrame frame) {
-// return frame.module != null &&
-//           frame.timestamp >= start &&
-//           frame.timestamp <= end &&
-//           pathFilters.any((pathFilter) {
-//             return RegExp(pathFilter).hasMatch(frame.module!.path);
-//           });
-//   }
+  void close() {
+    _isRunning = false;
+    _buffer = null;
+  }
 
   List<AggregatedNativeFrame> _aggregateStacks(
       List<int> timestampRange, RingBuffer<NativeStack> buffer) {
@@ -357,20 +258,12 @@ class SamplerProcessor {
     final maxOccurTimes =
         _config.jankThreshold / _config.sampleRateInMilliseconds + 1;
 
-    // <String>[
-    //   'libflutter.so',
-    //   'libapp.so',
-    // ];
-
     int start = timestampRange[0];
     int end = timestampRange[1];
     // final maps = LinkedHashMap<int, NativeFrameTimeSpent>();
     final frameTimeSpentMap =
         LinkedHashMap<int, AggregatedNativeFrame>.identity();
     final allFrames = buffer.readAll().expand((e) => e!.frames).where((frame) {
-      // final frame = e.frame;
-
-      // return e.timestamp >=start  && e.timestamp <= end;
       return frame.module != null &&
           frame.timestamp >= start &&
           frame.timestamp <= end &&
@@ -384,10 +277,6 @@ class SamplerProcessor {
       final pc = frame.pc;
       if (frameTimeSpentMap.containsKey(pc)) {
         final timeSpent = frameTimeSpentMap[pc]!;
-        // final timestampInMacros =
-        //     timeSpent.timestampInMacros + sampleRateInMilliseconds;
-        // timeSpent.timestampInMacros = timestampInMacros;
-
         final occurTimes = timeSpent.occurTimes + 1;
         timeSpent.occurTimes = occurTimes;
       } else {
@@ -411,24 +300,13 @@ class SamplerProcessor {
     final returnV = <AggregatedNativeFrame>[];
     // Reverse and sub list
     for (int i = subEnd, j = 0; i >= subStart; --i, ++j) {
-      // returnV[j] = ret[i];
       returnV.add(ret[i]);
     }
     return returnV;
-
-    // return frameTimeSpentMap.values.toList().reversed.toList();
-
-    // print('needReport: $needReport');
-    // if (needReport) {
-    //   _slowFunctionsDetectedCallback?.call(SlowFunctionsInformation(
-    //       stackTraces: List.from(frameTimeSpentMap!.values),
-    //       jankDuration: Duration()));
-    //   // _frameTimeSpentMap!.clear();
-    // }
   }
 }
 
-class RingBuffer<T> {
+class RingBuffer<T extends Object> {
   final List<T?> _buffer;
   int _head = 0;
   int _tail = 0;
