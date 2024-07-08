@@ -179,7 +179,8 @@ class SamplerProcessor {
   SamplerProcessor(this._config, this._stackCapturer);
   final SamplerConfig _config;
   final StackCapturer _stackCapturer;
-  bool _isRunning = true;
+  @visibleForTesting
+  bool isRunning = true;
   bool _debugCalledSetCurrentThreadAsTarget = false;
 
   // max_profile_depth = Sample::kPCArraySizeInWords* kMaxSamplesPerTick,
@@ -222,9 +223,9 @@ class SamplerProcessor {
   List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
     assert(_debugCalledSetCurrentThreadAsTarget,
         'Make sure you call `setCurrentThreadAsTarget` first');
-    assert(_isRunning);
+    assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
-    return aggregateStacks(timestampRange, _buffer!);
+    return aggregateStacks(_config, _buffer!, timestampRange);
   }
 
   Future<void> loop() async {
@@ -232,9 +233,9 @@ class SamplerProcessor {
     _buffer ??= RingBuffer<NativeStack>(_bufferCount);
 
     try {
-      while (_isRunning) {
+      while (isRunning) {
         await Future.delayed(Duration(milliseconds: sampleRateInMilliseconds));
-        if (!_isRunning || _buffer == null) {
+        if (!isRunning || _buffer == null) {
           return;
         }
         final stack = _stackCapturer.captureStackOfTargetThread();
@@ -247,17 +248,20 @@ class SamplerProcessor {
   }
 
   void close() {
-    _isRunning = false;
+    isRunning = false;
     _buffer = null;
   }
 
   @visibleForTesting
   List<AggregatedNativeFrame> aggregateStacks(
-      List<int> timestampRange, RingBuffer<NativeStack> buffer) {
-    List<String> pathFilters = _config.modulePathFilters;
+    SamplerConfig config,
+    RingBuffer<NativeStack> buffer,
+    List<int> timestampRange,
+  ) {
+    List<String> pathFilters = config.modulePathFilters;
     // final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
     final maxOccurTimes =
-        _config.jankThreshold / _config.sampleRateInMilliseconds + 1;
+        config.jankThreshold / config.sampleRateInMilliseconds + 1;
 
     int start = timestampRange[0];
     int end = timestampRange[1];

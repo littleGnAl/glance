@@ -50,8 +50,11 @@ class _FakeSamplerProcessor implements SamplerProcessor {
   }
 
   @override
-  List<AggregatedNativeFrame> aggregateStacks(
-      List<int> timestampRange, RingBuffer<NativeStack> buffer) {
+  bool isRunning = true;
+
+  @override
+  List<AggregatedNativeFrame> aggregateStacks(SamplerConfig config,
+      RingBuffer<NativeStack> buffer, List<int> timestampRange) {
     return [];
   }
 }
@@ -432,11 +435,15 @@ void main() {
 
         samplerProcessor.setCurrentThreadAsTarget();
         samplerProcessor.loop();
+        // Trigger first loop
         async.elapse(const Duration(milliseconds: 1500));
         stackCapturer.nativeStack =
             NativeStack(frames: [frame3], modules: [module3]);
+        // Trigger second loop
         async.elapse(const Duration(milliseconds: 1500));
         final stackTraces = samplerProcessor.getStacktrace([now - 1000, now]);
+        // Close it avoid unnecessary loop in test
+        samplerProcessor.close();
 
         expect(stackTraces.length == 3, isTrue);
         // The order is reversed
@@ -446,9 +453,92 @@ void main() {
       });
     });
 
-    test('stop looping after calling close', () {});
+    test('close', () {
+      stackCapturer = FakeStackCapturer();
+      samplerProcessor = SamplerProcessor(
+        SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: [],
+          sampleRateInMilliseconds: 1000,
+        ),
+        stackCapturer,
+      );
+      samplerProcessor.close();
+      expect(samplerProcessor.isRunning, isFalse);
+    });
 
-    test('close', () {});
+    group('aggregateStacks', () {
+      test('return aggregated frames', () {
+        stackCapturer = FakeStackCapturer();
+        final config = SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: [],
+          sampleRateInMilliseconds: 1000,
+        );
+        samplerProcessor = SamplerProcessor(
+          config,
+          stackCapturer,
+        );
+        final now = Timeline.now;
+        final module1 = NativeModule(
+          id: 1,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        );
+        final frame1 = NativeFrame(
+          pc: 540642472602,
+          timestamp: now - 100,
+          module: module1,
+        );
+        final module2 = NativeModule(
+          id: 2,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        );
+        final frame2 = NativeFrame(
+          pc: 540642472608,
+          timestamp: now - 200,
+          module: module2,
+        );
+        final module3 = NativeModule(
+          id: 3,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        );
+        final frame3 = NativeFrame(
+          pc: 540642472605,
+          timestamp: now - 300,
+          module: module3,
+        );
+
+        final stack1 = NativeStack(frames: [frame1], modules: [module1]);
+        final stack2 = NativeStack(frames: [frame2], modules: [module2]);
+        final stack3 = NativeStack(frames: [frame3], modules: [module3]);
+        final buffer = RingBuffer<NativeStack>(3)
+          ..write(stack1)
+          ..write(stack2)
+          ..write(stack3);
+
+        final timestampRange = <int>[now - 1000, now];
+        final aggregatedNativeFrames =
+            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+        expect(aggregatedNativeFrames.length == 3, isTrue);
+        expect(aggregatedNativeFrames[0], frame3);
+        expect(aggregatedNativeFrames[1], frame2);
+        expect(aggregatedNativeFrames[2], frame1);
+      });
+
+      test('return frames between the timestampRange', () {});
+
+      test('return frames between the timestampRange', () {});
+
+      test('return frames exceed the jankThreshold', () {});
+
+      test('return filtered modules', () {});
+    });
   });
 
   group('RingBuffer', () {
