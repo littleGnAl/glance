@@ -468,7 +468,7 @@ void main() {
     });
 
     group('aggregateStacks', () {
-      test('return aggregated frames', () {
+      test('return aggregated frames with one occurTimes', () {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
@@ -530,6 +530,8 @@ void main() {
         expect(aggregatedNativeFrames[1], frame2);
         expect(aggregatedNativeFrames[2], frame1);
       });
+
+      test('return aggregated frames with multiple occurTimes', () {});
 
       test('return frames between the timestampRange', () {});
 
