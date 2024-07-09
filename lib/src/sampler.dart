@@ -261,7 +261,7 @@ class SamplerProcessor {
     List<String> pathFilters = config.modulePathFilters;
     // final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
     final maxOccurTimes =
-        config.jankThreshold / config.sampleRateInMilliseconds + 1;
+        config.jankThreshold / config.sampleRateInMilliseconds;
 
     int start = timestampRange[0];
     int end = timestampRange[1];
@@ -296,10 +296,10 @@ class SamplerProcessor {
     final len = ret.length;
     int subStart = 0;
     int subEnd = frameTimeSpentMap.values.length - 1;
-    while (subStart < len && ret[subStart].occurTimes < maxOccurTimes) {
+    while (subStart < len && ret[subStart].occurTimes <= maxOccurTimes) {
       ++subStart;
     }
-    while (subEnd >= 0 && ret[subEnd].occurTimes < maxOccurTimes) {
+    while (subEnd >= 0 && ret[subEnd].occurTimes <= maxOccurTimes) {
       --subEnd;
     }
 
