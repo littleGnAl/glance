@@ -158,9 +158,9 @@ class NativeFrame {
 }
 
 class AggregatedNativeFrame {
-  AggregatedNativeFrame(this.frame, {this.occurTimes = 0});
-  final NativeFrame frame;
-  int occurTimes = 0;
+  AggregatedNativeFrame(this.frame, {this.occurTimes = 1});
+   NativeFrame frame;
+  int occurTimes = 1;
 
   // set timestampInMacros(int value) {
   //   _timestampInMacros = value;

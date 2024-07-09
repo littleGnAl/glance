@@ -284,6 +284,7 @@ class SamplerProcessor {
         final timeSpent = frameTimeSpentMap[pc]!;
         final occurTimes = timeSpent.occurTimes + 1;
         timeSpent.occurTimes = occurTimes;
+        timeSpent.frame = frame;
       } else {
         final timeSpent = AggregatedNativeFrame(frame);
         timeSpent.occurTimes = 1;
