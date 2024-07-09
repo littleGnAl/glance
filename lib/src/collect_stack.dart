@@ -72,19 +72,19 @@ class CollectStackNativeBindings {
   // external Pointer<Utf8> _collectStackTraceOfTargetThread(
   //     Pointer<Int64> buf, int bufSize);
 
-  ffi.Pointer<ffi.Void> Dlopen(
-    ffi.Pointer<Utf8> path,
-    int flags,
-  ) {
-    return _Dlopen(path, flags);
-  }
+  // ffi.Pointer<ffi.Void> Dlopen(
+  //   ffi.Pointer<Utf8> path,
+  //   int flags,
+  // ) {
+  //   return _Dlopen(path, flags);
+  // }
 
-  late final _DlopenPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<Utf8>, ffi.Int)>>('dlopen');
-  late final _Dlopen = _DlopenPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(ffi.Pointer<Utf8>, int)>();
+  // late final _DlopenPtr = _lookup<
+  //     ffi.NativeFunction<
+  //         ffi.Pointer<ffi.Void> Function(
+  //             ffi.Pointer<Utf8>, ffi.Int)>>('dlopen');
+  // late final _Dlopen = _DlopenPtr.asFunction<
+  //     ffi.Pointer<ffi.Void> Function(ffi.Pointer<Utf8>, int)>();
 
   /// `void *dlopen(const char *filename, int flags);`
   ///
@@ -108,15 +108,15 @@ class CollectStackNativeBindings {
 
   // TimestampNowInMicrosSinceEpoch
 
-  int TimestampNowInMicrosSinceEpoch() {
-    return _TimestampNowInMicrosSinceEpoch();
-  }
+  // int TimestampNowInMicrosSinceEpoch() {
+  //   return _TimestampNowInMicrosSinceEpoch();
+  // }
 
-  late final _TimestampNowInMicrosSinceEpochPtr =
-      _lookup<ffi.NativeFunction<ffi.Int64 Function()>>(
-          'TimestampNowInMicrosSinceEpoch');
-  late final _TimestampNowInMicrosSinceEpoch =
-      _TimestampNowInMicrosSinceEpochPtr.asFunction<int Function()>();
+  // late final _TimestampNowInMicrosSinceEpochPtr =
+  //     _lookup<ffi.NativeFunction<ffi.Int64 Function()>>(
+  //         'TimestampNowInMicrosSinceEpoch');
+  // late final _TimestampNowInMicrosSinceEpoch =
+  //     _TimestampNowInMicrosSinceEpochPtr.asFunction<int Function()>();
 
   int Dladdr(
     ffi.Pointer<ffi.Void> addr,
@@ -157,28 +157,6 @@ class NativeFrame {
   int get hashCode => Object.hash(module, pc, timestamp);
 }
 
-class AggregatedNativeFrame {
-  AggregatedNativeFrame(this.frame, {this.occurTimes = 1});
-   NativeFrame frame;
-  int occurTimes = 1;
-
-  // set timestampInMacros(int value) {
-  //   _timestampInMacros = value;
-  // }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (runtimeType != other.runtimeType) return false;
-    return other is AggregatedNativeFrame &&
-        frame == other.frame &&
-        occurTimes == other.occurTimes;
-  }
-
-  @override
-  int get hashCode => Object.hash(frame, occurTimes);
-}
-
 class NativeModule {
   final int id;
   final String path;
@@ -211,60 +189,21 @@ class NativeStack {
   NativeStack({required this.frames, required this.modules});
 }
 
-// class SlowFunctionsInformation {
-//   const SlowFunctionsInformation({
-//     required this.stackTraces,
-//     required this.jankDuration,
-//   });
-//   final List<NativeFrameTimeSpent> stackTraces;
-//   final Duration jankDuration;
-
-//   @override
-//   String toString() {
-//     return jsonEncode(toJson());
-//   }
-
-//   // JankInformation fromJson(Map<String, Object?> json) {
-
-//   // }
-
-//   Map<String, Object?> toJson() {
-//     return {
-//       'jankDuration': jankDuration.inMilliseconds,
-//       'stackTraces': stackTraces.map((frameTimeSpent) {
-//         final frame = frameTimeSpent.frame;
-//         final spent = frameTimeSpent.timestampInMacros;
-//         return {
-//           "pc": frame.pc.toString(),
-//           "timestamp": frame.timestamp,
-//           if (frame.module != null)
-//             "baseAddress": frame.module!.baseAddress.toString(),
-//           if (frame.module != null) "path": frame.module!.path,
-//           'spent': spent,
-//         };
-//       }).toList()
-//     };
-//   }
-// }
-
-// typedef SlowFunctionsDetectedCallback = void Function(
-//     SlowFunctionsInformation info);
-
 ffi.DynamicLibrary _loadLib() {
-  const _libName = 'glance';
+  const libName = 'glance';
   if (Platform.isWindows) {
-    return ffi.DynamicLibrary.open('$_libName.dll');
+    return ffi.DynamicLibrary.open('$libName.dll');
   }
 
   if (Platform.isAndroid) {
-    return ffi.DynamicLibrary.open('lib$_libName.so');
+    return ffi.DynamicLibrary.open('lib$libName.so');
   }
 
   return ffi.DynamicLibrary.process();
 }
 
 class StackCapturer {
-   StackCapturer({CollectStackNativeBindings? nativeBindings})
+  StackCapturer({CollectStackNativeBindings? nativeBindings})
       : _nativeBindings =
             nativeBindings ?? CollectStackNativeBindings(_loadLib());
 
@@ -293,8 +232,9 @@ class StackCapturer {
         final errorString = error.toDartString();
         malloc.free(error);
         print('errorString: $errorString');
-        return NativeStack(frames: [], modules: []);
-        // throw StateError(errorString); // Something went wrong. but just discard info this time.
+        return NativeStack(
+            frames: [],
+            modules: []); // Something went wrong. but just discard info this time.
       }
 
       final dlInfo = arena.allocate<DlInfo>(ffi.sizeOf<DlInfo>());

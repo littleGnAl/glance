@@ -172,6 +172,28 @@ class Sampler {
   }
 }
 
+class AggregatedNativeFrame {
+  AggregatedNativeFrame(this.frame, {this.occurTimes = 1});
+  NativeFrame frame;
+  int occurTimes = 1;
+
+  // set timestampInMacros(int value) {
+  //   _timestampInMacros = value;
+  // }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    return other is AggregatedNativeFrame &&
+        frame == other.frame &&
+        occurTimes == other.occurTimes;
+  }
+
+  @override
+  int get hashCode => Object.hash(frame, occurTimes);
+}
+
 typedef SamplerProcessorFactory = SamplerProcessor Function(
     SamplerConfig config);
 
