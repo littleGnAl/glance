@@ -263,6 +263,8 @@ class StackCapturer {
         // }
 
         final sn = _nativeBindings.LookupSymbolName(dlInfo);
+        final symbolName = sn != ffi.nullptr ? sn.toDartString() : '';
+        malloc.free(sn);
         // if (sn != ffi.nullptr) {
         //   print('sn: ${sn.toDartString()}');
         // }
@@ -275,7 +277,7 @@ class StackCapturer {
           id: modules.length,
           path: modulePath,
           baseAddress: dlInfo.ref.baseAddress.address,
-          symbolName: sn != ffi.nullptr ? sn.toDartString() : '',
+          symbolName: symbolName,
         );
 
         return NativeFrame(
