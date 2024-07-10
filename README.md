@@ -1,6 +1,6 @@
 # glance
 
-A new Flutter plugin project.
+A Flutter APM tool for detect UI jank for release.
 
 ## Getting Started
 
@@ -14,6 +14,7 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
+Many thanks
 https://github.com/mraleph/thread_collect_stack_example
 
 ## Profiling
