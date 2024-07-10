@@ -265,4 +265,6 @@ void main() {
       async.elapse(const Duration(seconds: 5));
     });
   });
+
+  test('GlanceStackTraceImpl.toString', () {});
 }
