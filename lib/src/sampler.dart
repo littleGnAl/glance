@@ -249,54 +249,56 @@ class SamplerProcessor {
     RingBuffer<NativeStack> buffer,
     List<int> timestampRange,
   ) {
-    List<String> pathFilters = config.modulePathFilters;
+    List<String> modulePathFilters = config.modulePathFilters;
     final maxOccurTimes =
         config.jankThreshold / config.sampleRateInMilliseconds;
 
     int start = timestampRange[0];
     int end = timestampRange[1];
-    final frameTimeSpentMap =
+    final aggregatedFrameMap =
         LinkedHashMap<int, AggregatedNativeFrame>.identity();
     final allFrames = buffer.readAll().expand((e) => e!.frames).where((frame) {
       return frame.module != null &&
           frame.timestamp >= start &&
           frame.timestamp <= end &&
-          pathFilters.any((pathFilter) {
+          modulePathFilters.any((pathFilter) {
             return RegExp(pathFilter).hasMatch(frame.module!.path);
           });
     });
 
     for (final frame in allFrames) {
       final pc = frame.pc;
-      if (frameTimeSpentMap.containsKey(pc)) {
-        final timeSpent = frameTimeSpentMap[pc]!;
-        final occurTimes = timeSpent.occurTimes + 1;
-        timeSpent.occurTimes = occurTimes;
-        timeSpent.frame = frame;
+      if (aggregatedFrameMap.containsKey(pc)) {
+        final aggregatedFrame = aggregatedFrameMap[pc]!;
+        final occurTimes = aggregatedFrame.occurTimes + 1;
+        aggregatedFrame.occurTimes = occurTimes;
+        aggregatedFrame.frame = frame;
       } else {
-        final timeSpent = AggregatedNativeFrame(frame);
-        timeSpent.occurTimes = 1;
-        frameTimeSpentMap[pc] = timeSpent;
+        final aggregatedFrame = AggregatedNativeFrame(frame);
+        aggregatedFrame.occurTimes = 1;
+        aggregatedFrameMap[pc] = aggregatedFrame;
       }
     }
 
-    final ret = frameTimeSpentMap.values.toList();
-    final len = ret.length;
+    final aggregatedFrameList = aggregatedFrameMap.values.toList();
+    final len = aggregatedFrameList.length;
     int subStart = 0;
-    int subEnd = frameTimeSpentMap.values.length - 1;
-    while (subStart < len && ret[subStart].occurTimes <= maxOccurTimes) {
+    int subEnd = aggregatedFrameMap.values.length - 1;
+    while (subStart < len &&
+        aggregatedFrameList[subStart].occurTimes <= maxOccurTimes) {
       ++subStart;
     }
-    while (subEnd >= 0 && ret[subEnd].occurTimes <= maxOccurTimes) {
+    while (subEnd >= 0 &&
+        aggregatedFrameList[subEnd].occurTimes <= maxOccurTimes) {
       --subEnd;
     }
 
-    final returnV = <AggregatedNativeFrame>[];
+    final finalAggregatedFrameList = <AggregatedNativeFrame>[];
     // Reverse and sub list
     for (int i = subEnd, j = 0; i >= subStart; --i, ++j) {
-      returnV.add(ret[i]);
+      finalAggregatedFrameList.add(aggregatedFrameList[i]);
     }
-    return returnV;
+    return finalAggregatedFrameList;
   }
 }
 

@@ -10,9 +10,9 @@ class GlanceImpl implements Glance {
   GlanceImpl();
 
   @visibleForTesting
-  GlanceImpl.forTesting(Sampler sampler) : _sampleThread = sampler;
+  GlanceImpl.forTesting(Sampler sampler) : _sampler = sampler;
 
-  Sampler? _sampleThread;
+  Sampler? _sampler;
 
   TimingsCallback? _timingsCallback;
 
@@ -33,14 +33,14 @@ class GlanceImpl implements Glance {
     final jankThreshold = config.jankThreshold;
     reporters = List.of(config.reporters, growable: false);
 
-    _sampleThread ??= await Sampler.create(SamplerConfig(
+    _sampler ??= await Sampler.create(SamplerConfig(
       jankThreshold: jankThreshold,
       modulePathFilters: config.modulePathFilters,
       sampleRateInMilliseconds: config.sampleRateInMilliseconds,
     ));
 
     _timingsCallback ??= (List<FrameTiming> timings) {
-      if (_sampleThread == null) {
+      if (_sampler == null) {
         return;
       }
       final jankTimings = <FrameTiming>[];
@@ -68,7 +68,7 @@ class GlanceImpl implements Glance {
     }
     SchedulerBinding.instance.removeTimingsCallback(_timingsCallback!);
     _timingsCallback = null;
-    _sampleThread?.close();
+    _sampler?.close();
   }
 
   Future<void> _report(List<FrameTiming> timings, int index) async {
@@ -77,8 +77,8 @@ class GlanceImpl implements Glance {
       timings.last.timestampInMicroseconds(FramePhase.rasterFinish),
     ];
 
-    assert(_sampleThread != null);
-    final frames = await _sampleThread!.getSamples(timestampRange);
+    assert(_sampler != null);
+    final frames = await _sampler!.getSamples(timestampRange);
     if (frames.isEmpty) {
       return;
     }
