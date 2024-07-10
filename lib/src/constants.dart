@@ -1,5 +1,5 @@
-/// 16ms
-const int kDefaultJankThreshold = 16;
+/// (16 * 2)ms, 2 frames
+const int kDefaultJankThreshold = 32;
 
 /// 16ms
 const int kDefaultSampleRateInMilliseconds = 16;

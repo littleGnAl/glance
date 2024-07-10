@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -41,55 +40,10 @@ void main() async {
 }
 
 Future<void> _startGlance() async {
-  // WidgetsFlutterBinding.ensureInitialized();
   Glance.instance.start(
       config: GlanceConfiguration(reporters: [MyJankDetectedReporter()]));
 
   await Permission.storage.request();
-
-  // Glance.instance.addJankCallback((info) async {
-  //   compute((msg) async {
-  //     final (token, info) = msg;
-  //     BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
-
-  //     final docDir = await getExternalStorageDirectory();
-  //     final stacktraceFilePath = path.join(
-  //       docDir!.absolute.path,
-  //       'jank_trace',
-  //       'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
-  //     );
-  //     print('addJankCallback stacktraceFilePath: ${stacktraceFilePath}');
-  //     final file = File(stacktraceFilePath);
-  //     file.createSync(recursive: true);
-  //     File(stacktraceFilePath).writeAsStringSync(
-  //       jsonEncode(info.toJson()),
-  //       flush: true,
-  //     );
-  //   }, (RootIsolateToken.instance, info));
-  // });
-
-  // Glance.instance.addSlowFunctionsDetectedCallback((info) {
-  //   compute((msg) async {
-  //     final (token, info) = msg;
-  //     BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
-
-  //     final docDir = await getExternalStorageDirectory();
-  //     final stacktraceFilePath = path.join(
-  //       docDir!.absolute.path,
-  //       'jank_trace',
-  //       'jank_trace_${DateTime.now().microsecondsSinceEpoch}.json',
-  //     );
-  //     print(
-  //         'SlowFunctionsDetectedCallback stacktraceFilePath: ${stacktraceFilePath}');
-  //     final file = File(stacktraceFilePath);
-  //     file.createSync(recursive: true);
-  //     File(stacktraceFilePath).writeAsStringSync(
-  //       jsonEncode(info.toJson()),
-  //       flush: true,
-  //     );
-  //   }, (RootIsolateToken.instance, info));
-  // });
-  // Glance.instance.start();
 }
 
 class MyApp extends StatelessWidget {
@@ -147,9 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
         for (int i = 0; i < 10000; ++i) 'aaa': 0,
       });
     }
-    Timeline.now;
     watch.stop();
-    print('_incrementCounter time spend: ${watch.elapsedMilliseconds}');
+    print('[_incrementCounter] spent: ${watch.elapsedMilliseconds}');
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below

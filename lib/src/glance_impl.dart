@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart' show listEquals, visibleForTesting;
 import 'package:flutter/scheduler.dart';
-import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/constants.dart';
 import 'package:glance/src/glance.dart';
 import 'package:glance/src/sampler.dart';
@@ -16,10 +15,6 @@ class GlanceImpl implements Glance {
   Sampler? _sampleThread;
 
   TimingsCallback? _timingsCallback;
-
-  // final List<JankCallback> _jankCallbacks = [];
-  // final List<SlowFunctionsDetectedCallback>
-  //     _slowFunctionsDetectedCallbackCallbacks = [];
 
   late List<GlanceReporter> reporters;
 
@@ -38,58 +33,22 @@ class GlanceImpl implements Glance {
     final jankThreshold = config.jankThreshold;
     reporters = List.of(config.reporters, growable: false);
 
-    // final binding = GlanceWidgetBinding.ensureInitialized();
-    // binding.setOnHandleDrawFrameEndCallback(
-    //     (int beginFrameTimeInMillis, int drawFrameTimeInMillis) {
-    //   final diff = drawFrameTimeInMillis - beginFrameTimeInMillis;
-    //   print('diff: $diff');
-    //   if (diff > jankThreshold) {
-    //     // report jank
-    //     // _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
-    //   }
-    //   _report(beginFrameTimeInMillis, drawFrameTimeInMillis);
-    // });
-
     _sampleThread ??= await Sampler.create(SamplerConfig(
       jankThreshold: jankThreshold,
       modulePathFilters: config.modulePathFilters,
       sampleRateInMilliseconds: config.sampleRateInMilliseconds,
     ));
-    // _sampleThread?.addSlowFunctionsDetectedCallback((info) {
-    //   for (final callback
-    //       in List.from(_slowFunctionsDetectedCallbackCallbacks)) {
-    //     callback(info);
-    //   }
-    // });
-
-    // if (_timingsCallback != null) {
-    //   SchedulerBinding.instance.removeTimingsCallback(_timingsCallback!);
-    // }
 
     _timingsCallback ??= (List<FrameTiming> timings) {
       if (_sampleThread == null) {
         return;
       }
-      // int now = DateTime.now().microsecondsSinceEpoch;
       final jankTimings = <FrameTiming>[];
       for (int i = 0; i < timings.length; ++i) {
         final FrameTiming timing = timings[i];
-        // print(
-        //     'FramePhase.vsyncStart: ${timing.timestampInMicroseconds(FramePhase.vsyncStart)}, FramePhase.rasterFinish: ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
-        // print(
-        //     'timing.buildDuration: ${timing.buildDuration.inMilliseconds}, timing.rasterDuration: ${timing.rasterDuration.inMilliseconds}, timing.totalSpan: ${timing.totalSpan.inMilliseconds}');
-        //   print(
-        //       'timing.timestampInMicroseconds(FramePhase.rasterFinish): ${timing.timestampInMicroseconds(FramePhase.rasterFinish)}');
-        //   print(
-        //       'timing.timestampInMicroseconds(FramePhase.buildStart): ${timing.timestampInMicroseconds(FramePhase.buildStart)}');
-        // final diff = timing.timestampInMicroseconds(FramePhase.rasterFinish) -
-        //     timing.timestampInMicroseconds(FramePhase.buildStart);
+
         final totalSpan = timing.totalSpan.inMilliseconds;
         if (totalSpan > jankThreshold) {
-          // report jank
-          // _report(timings, i);
-          // break;
-
           jankTimings.add(timing);
         }
       }
@@ -112,54 +71,7 @@ class GlanceImpl implements Glance {
     _sampleThread?.close();
   }
 
-  // Future<void> _report(int startTimestamp, int endTimestamp) async {
-  //   if (_sampleThread == null) {
-  //     return;
-  //   }
-  //   // Report the nearest 3 timings if possiable.
-  //   // int preIndex = index - 1;
-  //   // int nextIndex = index + 1;
-  //   // List<FrameTiming> reportTimings = [];
-  //   // if (preIndex >= 0) {
-  //   //   reportTimings.add(timings[preIndex]);
-  //   // }
-  //   // reportTimings.add(timings[index]);
-  //   // if (nextIndex < timings.length) {
-  //   //   reportTimings.add(timings[nextIndex]);
-  //   // }
-  //   // assert(reportTimings.isNotEmpty);
-
-  //   // // Request stacktraces
-  //   final timestampRange = [startTimestamp, endTimestamp];
-
-  //   assert(_sampleThread != null);
-  //   final frames = await _sampleThread!.getSamples(timestampRange);
-  //   final stacktrace = JankReport._(
-  //     stackTraces: frames,
-  //     jankDuration: Duration(milliseconds: endTimestamp - startTimestamp),
-  //   );
-
-  //   final callbacks = List.from(_jankCallbacks);
-  //   for (final callback in callbacks) {
-  //     callback(stacktrace);
-  //   }
-  // }
-
   Future<void> _report(List<FrameTiming> timings, int index) async {
-    // Report the nearest 3 timings if possiable.
-    // int preIndex = index - 1;
-    // int nextIndex = index + 1;
-    // List<FrameTiming> reportTimings = timings;
-    // if (preIndex >= 0) {
-    //   reportTimings.add(timings[preIndex]);
-    // }
-    // reportTimings.add(timings[index]);
-    // if (nextIndex < timings.length) {
-    //   reportTimings.add(timings[nextIndex]);
-    // }
-    // assert(reportTimings.isNotEmpty);
-
-    // Request stacktraces
     final timestampRange = [
       timings.first.timestampInMicroseconds(FramePhase.vsyncStart),
       timings.last.timestampInMicroseconds(FramePhase.rasterFinish),
@@ -171,7 +83,6 @@ class GlanceImpl implements Glance {
       return;
     }
 
-    // TODO(littlegnal): Check if the same stack trace, if yes, do not report again
     final straceTrace = GlanceStackTraceImpl(frames);
     if (straceTrace == _previousStackTrace) {
       return;
@@ -184,24 +95,10 @@ class GlanceImpl implements Glance {
 
     _previousStackTrace = straceTrace;
 
-    // final callbacks = List.from(_jankCallbacks);
-    // for (final callback in callbacks) {
-    //   callback(stacktrace);
-    // }
-
     for (final reporter in reporters) {
       reporter.report(report);
     }
   }
-
-  // void addJankCallback(JankCallback callback) {
-  //   _jankCallbacks.add(callback);
-  // }
-
-  // void addSlowFunctionsDetectedCallback(
-  //     SlowFunctionsDetectedCallback callback) {
-  //   _slowFunctionsDetectedCallbackCallbacks.add(callback);
-  // }
 }
 
 class GlanceStackTraceImpl implements GlanceStackTrace {
@@ -253,19 +150,6 @@ class GlanceStackTraceImpl implements GlanceStackTrace {
       stringBuffer.write(frame.module!.path); // Is it necessary?
       stringBuffer.writeln();
     }
-
-    // stackTraces.map((e) {
-    //     final frame = e.frame;
-    //     final spent = e.timestampInMacros;
-    //     return {
-    //       "pc": frame.pc.toString(),
-    //       "timestamp": frame.timestamp,
-    //       if (frame.module != null)
-    //         "baseAddress": frame.module!.baseAddress.toString(),
-    //       if (frame.module != null) "path": frame.module!.path,
-    //       'spent': spent,
-    //     };
-    //   }).toList()
 
     return stringBuffer.toString();
   }

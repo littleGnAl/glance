@@ -48,9 +48,6 @@ class CollectStackNativeBindings {
   late final _SetCurrentThreadAsTarget =
       _SetCurrentThreadAsTargetPtr.asFunction<void Function()>();
 
-  // @Native<Void Function()>(symbol: 'SetCurrentThreadAsTarget')
-  // external void setCurrentThreadAsTarget();
-
   ffi.Pointer<Utf8> CollectStackTraceOfTargetThread(
     ffi.Pointer<ffi.Int64> buf,
     int bufSize,
@@ -66,34 +63,6 @@ class CollectStackNativeBindings {
       _CollectStackTraceOfTargetThreadPtr.asFunction<
           ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, int)>();
 
-  /// From collect_stack.cc
-  // @Native<Pointer<Utf8> Function(Pointer<Int64>, Size)>(
-  //     symbol: 'CollectStackTraceOfTargetThread')
-  // external Pointer<Utf8> _collectStackTraceOfTargetThread(
-  //     Pointer<Int64> buf, int bufSize);
-
-  // ffi.Pointer<ffi.Void> Dlopen(
-  //   ffi.Pointer<Utf8> path,
-  //   int flags,
-  // ) {
-  //   return _Dlopen(path, flags);
-  // }
-
-  // late final _DlopenPtr = _lookup<
-  //     ffi.NativeFunction<
-  //         ffi.Pointer<ffi.Void> Function(
-  //             ffi.Pointer<Utf8>, ffi.Int)>>('dlopen');
-  // late final _Dlopen = _DlopenPtr.asFunction<
-  //     ffi.Pointer<ffi.Void> Function(ffi.Pointer<Utf8>, int)>();
-
-  /// `void *dlopen(const char *filename, int flags);`
-  ///
-  /// See `man dlopen`
-  // @Native<Pointer<Void> Function(Pointer<Utf8> path, Int)>(symbol: 'dlopen')
-  // external Pointer<Void> _dlopen(Pointer<Utf8> path, int flags);
-
-  // LookupSymbolName
-
   ffi.Pointer<Utf8> LookupSymbolName(
     ffi.Pointer<DlInfo> info,
   ) {
@@ -105,18 +74,6 @@ class CollectStackNativeBindings {
       'LookupSymbolName');
   late final _LookupSymbolName = _LookupSymbolNamePtr.asFunction<
       ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>();
-
-  // TimestampNowInMicrosSinceEpoch
-
-  // int TimestampNowInMicrosSinceEpoch() {
-  //   return _TimestampNowInMicrosSinceEpoch();
-  // }
-
-  // late final _TimestampNowInMicrosSinceEpochPtr =
-  //     _lookup<ffi.NativeFunction<ffi.Int64 Function()>>(
-  //         'TimestampNowInMicrosSinceEpoch');
-  // late final _TimestampNowInMicrosSinceEpoch =
-  //     _TimestampNowInMicrosSinceEpochPtr.asFunction<int Function()>();
 
   int Dladdr(
     ffi.Pointer<ffi.Void> addr,
@@ -210,11 +167,10 @@ class StackCapturer {
   final CollectStackNativeBindings _nativeBindings;
 
   void setCurrentThreadAsTarget() {
-    // final binding = CollectStackNativeBindings(_loadLib());
     _nativeBindings.SetCurrentThreadAsTarget();
   }
 
-  /// Refer to the implementation of Flutter Engine, we should use the `Timeline.now` as the current timestamp.
+  /// Refer to the implementation from Flutter Engine, we should use the `Timeline.now` as the current timestamp.
   /// https://github.com/flutter/engine/blob/5d97d2bcdffc8b21bc0b9742f1136583f4cc8e16/runtime/dart_timestamp_provider.cc#L24
   int _nowInMicrosSinceEpoch() {
     return Timeline.now;
@@ -222,7 +178,6 @@ class StackCapturer {
 
   NativeStack captureStackOfTargetThread() {
     return using((arena) {
-      // Invoke CollectStackTrace from helper library.
       const maxStackDepth = 1024;
       final outputBuffer =
           arena.allocate<ffi.Int64>(ffi.sizeOf<ffi.Int64>() * maxStackDepth);
@@ -252,25 +207,13 @@ class StackCapturer {
         if (found == 0) {
           return NativeFrame(
             pc: addr,
-            timestamp:
-                _nowInMicrosSinceEpoch(), // DateTime.now().millisecondsSinceEpoch,
+            timestamp: _nowInMicrosSinceEpoch(),
           );
         }
-
-        // if (dlInfo.ref.symbolName != ffi.nullptr) {
-        //   print(
-        //       'dlInfo.ref.symbolName: ${dlInfo.ref.symbolName.toDartString()}');
-        // }
 
         final sn = _nativeBindings.LookupSymbolName(dlInfo);
         final symbolName = sn != ffi.nullptr ? sn.toDartString() : '';
         malloc.free(sn);
-        // if (sn != ffi.nullptr) {
-        //   print('sn: ${sn.toDartString()}');
-        // }
-        // if (dlInfo.ref.fileName != ffi.nullptr) {
-        //   print('dlInfo.ref.fileName: ${dlInfo.ref.fileName.toDartString()}');
-        // }
 
         final modulePath = dlInfo.ref.fileName.toDartString();
         final module = modules[modulePath] ??= NativeModule(

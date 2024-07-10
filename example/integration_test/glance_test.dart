@@ -140,9 +140,12 @@ void main() {
       stackTraces.add(info.stackTrace.toString());
     });
     Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
-    runApp(JankApp(
+    await tester.pumpWidget(JankApp(
       builder: (c) => VsyncPhaseJankWidget(),
     ));
+    // runApp(JankApp(
+    //   builder: (c) => VsyncPhaseJankWidget(),
+    // ));
     await tester.pumpAndSettle();
 
     // Smoke smoke check

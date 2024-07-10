@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -6,7 +5,6 @@ import 'package:args/args.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart';
 import 'package:glance/src/constants.dart';
-import 'package:glance/src/glance_stack_trace.dart';
 import 'package:process/process.dart';
 
 void main(List<String> arguments) {
