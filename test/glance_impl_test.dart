@@ -6,6 +6,7 @@ import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:glance/glance.dart';
 import 'package:glance/src/collect_stack.dart';
+import 'package:glance/src/constants.dart';
 import 'package:glance/src/glance_impl.dart';
 import 'package:glance/src/sampler.dart';
 
@@ -266,5 +267,35 @@ void main() {
     });
   });
 
-  test('GlanceStackTraceImpl.toString', () {});
+  test('GlanceStackTraceImpl.toString', () {
+    final frame1 = AggregatedNativeFrame(NativeFrame(
+      pc: 540642472608,
+      timestamp: Timeline.now,
+      module: NativeModule(
+        id: 1,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'hello',
+      ),
+    ));
+    final frame2 = AggregatedNativeFrame(NativeFrame(
+      pc: 540642472607,
+      timestamp: Timeline.now,
+      module: NativeModule(
+        id: 2,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'world',
+      ),
+    ));
+    final stackTrace = GlanceStackTraceImpl([frame1, frame2]);
+
+    const expectedStackTrace = '''
+$kGlaceStackTraceHeaderLine
+#0   540641718272 540642472608 libapp.so
+#1   540641718272 540642472607 libapp.so
+''';
+
+    expect(stackTrace.toString(), expectedStackTrace);
+  });
 }
