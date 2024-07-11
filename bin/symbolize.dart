@@ -10,15 +10,30 @@ import 'package:process/process.dart';
 void main(List<String> arguments) {
   final parser = ArgParser();
   parser.addOption('symbol-file', help: 'The symbol file path');
-  parser.addOption('stack-trace-file', help: 'The stack trace file path');
+  parser.addOption('stack-traces-file', help: 'The stack traces file path');
+  parser.addOption('out', help: 'The de-symbol stack traces output file path');
 
   final results = parser.parse(arguments);
   final symbolFile = results.option('symbol-file');
-  final stackTraceFile = results.option('stack-trace-file');
+  final stackTraceFile = results.option('stack-traces-file');
+  final outputFile = results.option('out');
 
   const file.FileSystem fileSystem = LocalFileSystem();
   const processManager = LocalProcessManager();
-  symbolize(fileSystem, processManager, symbolFile!, stackTraceFile!);
+  symbolizeToOutput(
+      fileSystem, processManager, symbolFile!, stackTraceFile!, outputFile!);
+}
+
+void symbolizeToOutput(
+  file.FileSystem fileSystem,
+  ProcessManager processManager,
+  String symbolFilePath,
+  String stackTraceFilePath,
+  String outputFilePath,
+) {
+  final out =
+      symbolize(fileSystem, processManager, symbolFilePath, stackTraceFilePath);
+  fileSystem.file(outputFilePath).writeAsStringSync(out);
 }
 
 /// pc: 0xab333
@@ -52,37 +67,44 @@ String symbolize(
   final stackTrackFile = fileSystem.file(stackTraceFilePath);
   // final stackTrackFileContent = stackTrackFile.readAsStringSync();
   final lines = stackTrackFile.readAsLinesSync();
-  final List<String> processLines = [];
-  bool isFoundHeaderLine = false;
-  for (final line in lines) {
-    if (line == kGlaceStackTraceHeaderLine) {
-      continue;
-    }
-    if (!line.startsWith('#')) {
-      continue;
-    }
+  final stackTraceLineRegx = RegExp(r'^#[0-9]+\s*[0-9]+\s[0-9]+\s(.*)');
+  final List<String> processLines = lines
+      .where((line) => stackTraceLineRegx.hasMatch(line))
+      .toList(growable: false);
+  // bool isFoundHeaderLine = false;
 
-    // final spilted = line.split(glaceStackTraceLineSpilt);
-    processLines.add(line);
+  // for (final line in lines) {
+  //   if (line == kGlaceStackTraceHeaderLine) {
+  //     continue;
+  //   }
+  //   if (!line.startsWith('#')) {
+  //     continue;
+  //   }
 
-    // final baseAddress =  e['baseAddress'];
-    // final path = e['path'];
-    // final pc = e['pc'];
-    // final ts = e['timestamp'];
-    // final spent = e['spent'] ?? 0;
-    // NativeModule? module;
-    // if (baseAddress != null && path != null) {
-    //   module = NativeModule(
-    //     id: 0,
-    //     path: path,
-    //     baseAddress: int.parse(baseAddress),
-    //     symbolName: '',
-    //   );
-    // }
-    // final nativeFrame =
-    //     NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
-    // return NativeFrameTimeSpent(nativeFrame)..timestampInMacros = spent;
-  }
+  //   // final spilted = line.split(glaceStackTraceLineSpilt);
+
+  //   if (stackTraceLineRegx.hasMatch(line)) {
+  //     processLines.add(line);
+  //   }
+
+  //   // final baseAddress =  e['baseAddress'];
+  //   // final path = e['path'];
+  //   // final pc = e['pc'];
+  //   // final ts = e['timestamp'];
+  //   // final spent = e['spent'] ?? 0;
+  //   // NativeModule? module;
+  //   // if (baseAddress != null && path != null) {
+  //   //   module = NativeModule(
+  //   //     id: 0,
+  //   //     path: path,
+  //   //     baseAddress: int.parse(baseAddress),
+  //   //     symbolName: '',
+  //   //   );
+  //   // }
+  //   // final nativeFrame =
+  //   //     NativeFrame(pc: int.parse(pc), module: module, timestamp: ts);
+  //   // return NativeFrameTimeSpent(nativeFrame)..timestampInMacros = spent;
+  // }
 
   // final stackTraceJson = jsonDecode(stackTrackFileContent);
 
@@ -108,11 +130,11 @@ String symbolize(
 
   // base_addr pc functions uri times
 
-  int maxBaseAddrLen = 0;
-  int maxPCLen = 0;
+  // int maxBaseAddrLen = 0;
+  // int maxPCLen = 0;
   int maxFunctionNameLen = 0;
   int maxUriLen = 0;
-  int maxTimesLen = 0;
+  // int maxTimesLen = 0;
 
   // for (final f in frames) {
   //   final frame = f.frame;
@@ -126,12 +148,32 @@ String symbolize(
 
   final List<_Holder> holders = [];
   for (final line in processLines) {
-    final splited = line.split(kGlaceStackTraceLineSpilt);
-    assert(splited.length == 5);
-    final baseAddress = splited[1];
-    final pc = splited[2];
-    final spent = splited[3];
-    final path = splited[4];
+    late String baseAddress;
+    late String pc;
+    int subStart = 0;
+    int subEnd = 0;
+    int processIndex = 0;
+    while (subStart < line.length) {
+      while (line[subStart++] == kGlaceStackTraceLineSpilt) {}
+      while (line[subEnd++] != kGlaceStackTraceLineSpilt) {}
+
+      final value = line.substring(subStart, subEnd);
+
+      if (processIndex == 0) {
+        baseAddress = value;
+      } else if (processIndex == 1) {
+        pc = value;
+      }
+
+      ++subStart;
+    }
+
+    // final splited = line.split(kGlaceStackTraceLineSpilt);
+    // assert(splited.length == 5);
+    // final baseAddress = splited[1];
+    // final pc = splited[2];
+    // final spent = splited[3];
+    // final path = splited[4];
 
     // final frame = f.frame;
     // if (frame.module != null) {
@@ -139,7 +181,7 @@ String symbolize(
     //   // stdout.writeln();
     // }
 
-    // $ llvm-symbolizer --exe debug-info/app.android-arm.symbols --adjust-vma 3396415488 3396957692 3396957536 3397044152 3397056056 3397112352 3396903540 3397112352 3397057696 3397111684 3396845236 3396662844
+    // $ llvm-symbolizer --exe debug-info/app.android-arm.symbols --adjust-vma <baseAddress> <pcs>
     final cmd = [
       'llvm-symbolizer',
       '--exe',
@@ -166,9 +208,9 @@ String symbolize(
     String uri = '';
     // String spent = f.timestampInMacros.toString();
 
-    maxBaseAddrLen = max(maxTimesLen, baseAddress.length);
-    maxPCLen = max(maxPCLen, pc.length);
-    maxTimesLen = max(maxTimesLen, spent.length);
+    // maxBaseAddrLen = max(maxTimesLen, baseAddress.length);
+    // maxPCLen = max(maxPCLen, pc.length);
+    // maxTimesLen = max(maxTimesLen, spent.length);
 
     final outStringList =
         outString.split('\n').where((e) => e.isNotEmpty).toList();
@@ -182,7 +224,7 @@ String symbolize(
           pc: pc,
           funcName: funcName,
           uri: uri,
-          times: spent,
+          // times: spent,
         ));
 
         maxFunctionNameLen = max(maxFunctionNameLen, funcName.length);
@@ -197,7 +239,7 @@ String symbolize(
         pc: pc,
         funcName: funcName,
         uri: uri,
-        times: spent,
+        // times: spent,
       ));
 
       maxFunctionNameLen = max(maxFunctionNameLen, funcName.length);
@@ -209,24 +251,30 @@ String symbolize(
   // // base_addr pc functions uri times
   // sb.write('base_addr'.padRight(_adjustLen(maxBaseAddrLen)));
   // sb.write('pc'.padRight(_adjustLen(maxPCLen)));
-  sb.write('functions'.padRight(_adjustLen(maxFunctionNameLen)));
-  sb.write('uri'.padRight(_adjustLen(maxUriLen)));
-  sb.write('times'.padRight(_adjustLen(maxTimesLen)));
-  sb.writeln(); // new line
+  // sb.write('functions'.padRight(_adjustLen(maxFunctionNameLen)));
+  // sb.write('uri'.padRight(_adjustLen(maxUriLen)));
+  // sb.write('times'.padRight(_adjustLen(maxTimesLen)));
+  // sb.writeln(); // new line
+  int index = 0;
   for (final holder in holders) {
+    sb.write(index.toString().padRight(_adjustLen(3)));
     // sb.write(holder.baseAddr.padRight(_adjustLen(maxBaseAddrLen)));
     // sb.write(holder.pc.padRight(_adjustLen(maxPCLen)));
     sb.write(holder.funcName.padRight(_adjustLen(maxFunctionNameLen)));
     sb.write(holder.uri.padRight(_adjustLen(maxUriLen)));
-    sb.write(holder.times.padRight(_adjustLen(maxTimesLen)));
+    // sb.write(holder.times.padRight(_adjustLen(maxTimesLen)));
     sb.writeln(); // new line
+    ++index;
   }
 
-  final out = sb.toString();
+  // final out = sb.toString();
 
-  stdout.writeln(out);
+  // stdout.writeln(sb.toString());
 
-  return out;
+  // fileSystem.file(outputFilePath).writeAsStringSync(sb.toString());
+
+  // return out;
+  return sb.toString();
 }
 
 class _Holder {
@@ -235,16 +283,16 @@ class _Holder {
     required this.pc,
     required this.funcName,
     required this.uri,
-    required this.times,
+    // required this.times,
   });
   final String baseAddr;
   final String pc;
   final String funcName;
   final String uri;
-  final String times;
+  // final String times;
 }
 
-/// Add extra 4 padding to make the string pretty
+/// Add extra 2 padding to make the string pretty
 int _adjustLen(int len) {
-  return len + 4;
+  return len + 2;
 }
