@@ -20,19 +20,19 @@ void main(List<String> arguments) {
 
   const file.FileSystem fileSystem = LocalFileSystem();
   const processManager = LocalProcessManager();
-  symbolizeToOutput(
+  symbolize(
       fileSystem, processManager, symbolFile!, stackTraceFile!, outputFile!);
 }
 
-void symbolizeToOutput(
+void symbolize(
   file.FileSystem fileSystem,
   ProcessManager processManager,
   String symbolFilePath,
   String stackTraceFilePath,
   String outputFilePath,
 ) {
-  final out =
-      symbolize(fileSystem, processManager, symbolFilePath, stackTraceFilePath);
+  final out = llmSymbolizer(
+      fileSystem, processManager, symbolFilePath, stackTraceFilePath);
   fileSystem.file(outputFilePath).writeAsStringSync(out);
 }
 
@@ -58,7 +58,7 @@ void symbolizeToOutput(
 ///     "path": "/data/app/com.example.thread_collect_stack_example-TBzzwMgiQJ7BUep7husHbA==/lib/arm/libapp.so"
 ///   }
 /// ]
-String symbolize(
+String llmSymbolizer(
   file.FileSystem fileSystem,
   ProcessManager processManager,
   String symbolFilePath,
