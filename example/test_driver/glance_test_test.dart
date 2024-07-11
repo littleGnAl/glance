@@ -26,7 +26,7 @@ Future<String> _desymbols(
   await tmpFile.create(recursive: true);
   await tmpFile.writeAsString(stackTrace);
 
-  symbolize(fileSystem, processManager, symbolFilePath!, tmpFilePath);
+  llmSymbolizer(fileSystem, processManager, symbolFilePath!, tmpFilePath);
 
   String result = '';
   return result;

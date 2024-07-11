@@ -1,32 +1,42 @@
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
-#000 540672860160 540685738648 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libflutter.so
-#001 540588658688 540591296140 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#002 540588658688 540592674456 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#003 540588658688 540592674408 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#004 540588658688 540591878672 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#005 540588658688 540591832364 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#006 540588658688 540593530168 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#007 540588658688 540593532156 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#008 540588658688 540591378712 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#009 540588658688 540591378524 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#010 540588658688 540592475980 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#011 540588658688 540592475792 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#012 540588658688 540593534880 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#013 540588658688 540593535400 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#014 540588658688 540592477772 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#015 540588658688 540592075296 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#016 540588658688 540592075372 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#017 540588658688 540593441012 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#018 540588658688 540592237360 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#019 540588658688 540592280576 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#020 540588658688 540592280280 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#021 540588658688 540591740176 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#022 540588658688 540592768152 2 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#023 540588658688 540591742384 2 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#024 540588658688 540591741240 3 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#025 540588658688 540592765224 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#026 540588658688 540591817876 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#027 540588658688 540591818140 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libapp.so
-#028 540672860160 540682034480 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libflutter.so
-#029 540672860160 540681676460 32 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libflutter.so
-#030 540672860160 540686790416 1 /data/app/com.littlegnal.glance_example-mut6oceqAQgjBAHWSAO_3Q==/lib/arm64/libflutter.so
+#0   540770365440 540775068620 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libflutter.so
+#1   540790583296 540791404648 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#2   540790583296 540791935372 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#3   540790583296 540791403040 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#4   540790583296 540791403220 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#5   540790583296 540791404932 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#6   540790583296 540791935384 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#7   540790583296 540791403212 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#8   540790583296 540791935324 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#9   540790583296 540791403064 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#10  540790583296 540791403224 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#11  540790583296 540791403192 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#12  540790583296 540791403160 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#13  540790583296 540791404712 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#14  540790583296 540791403028 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#15  540790583296 540791403144 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#16  540790583296 540792715156 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#17  540790583296 540792715352 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#18  540790583296 540792790964 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#19  540790583296 540791811312 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#20  540790583296 540791724232 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#21  540790583296 540791935124 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#22  540790583296 540791935380 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#23  540790583296 540791403092 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#24  540790583296 540791385276 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#25  540790583296 540791424404 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#26  540790583296 540791420688 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#27  540790583296 540791420808 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#28  540790583296 540791408464 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#29  540790583296 540793001460 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#30  540790583296 540793209040 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#31  540790583296 540791894000 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#32  540790583296 540791895332 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#33  540790583296 540791895524 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#34  540790583296 540793120592 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#35  540790583296 540791993124 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#36  540790583296 540791993468 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#37  540790583296 540792715140 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#38  540790583296 540792371224 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#39  540790583296 540792791868 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
+#40  540790583296 540793144204 /data/app/com.littlegnal.glance_example-SFELRMEwLkjs7Em4wDWfQA==/lib/arm64/libapp.so
