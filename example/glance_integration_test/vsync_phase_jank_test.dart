@@ -5,9 +5,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:glance/glance.dart';
 
+import '_test_runner.dart';
 import 'jank_app.dart';
 
 class VsyncPhaseJankWidget extends StatefulWidget {
+  // ignore: use_super_parameters
   const VsyncPhaseJankWidget({Key? key}) : super(key: key);
 
   @override
@@ -19,11 +21,11 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
 
   // final WidgetStatesController _statesController = WidgetStatesController();
 
-  GlobalKey _buttonKey = GlobalKey();
+  final GlobalKey _buttonKey = GlobalKey();
 
   Offset _getElevatedButtonOffset() {
     RenderBox box = _buttonKey.currentContext!.findRenderObject() as RenderBox;
-    Offset position = box.localToGlobal(Offset.zero); //this is global position
+    Offset position = box.localToGlobal(Offset.zero);
     return position;
   }
 
@@ -58,85 +60,88 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
   }
 }
 
-void _vsyncPhaseJank() async {
-  final binding = WidgetsFlutterBinding.ensureInitialized();
-  final globalKey = GlobalKey<VsyncPhaseJankWidgetState>();
-  Completer<String>? stackTraceCompleter;
-  final List<String> stackTraces = [];
+// void _vsyncPhaseJank() async {
+//   final binding = WidgetsFlutterBinding.ensureInitialized();
+//   final globalKey = GlobalKey<VsyncPhaseJankWidgetState>();
+//   Completer<String>? stackTraceCompleter;
+//   final List<String> stackTraces = [];
 
-  bool finishNextTime = false;
-  final reporter = TestJankDetectedReporter((info) {
-    // if (!stackTraceCompleter.isCompleted) {
-    //   stackTraceCompleter.complete(info.stackTrace.toString());
-    // }
+//   bool finishNextTime = false;
+//   final reporter = TestJankDetectedReporter((info) {
+//     // if (!stackTraceCompleter.isCompleted) {
+//     //   stackTraceCompleter.complete(info.stackTrace.toString());
+//     // }
 
-    // stackTraces.add(info.stackTrace.toString());
+//     // stackTraces.add(info.stackTrace.toString());
 
-    // print('[glance_test] Collect stack traces start');
-    // info.stackTrace.toString().split('\n').forEach((e) {
-    //   print(e);
-    // });
-    // print('[glance_test] Collect stack traces end');
+//     // print('[glance_test] Collect stack traces start');
+//     // info.stackTrace.toString().split('\n').forEach((e) {
+//     //   print(e);
+//     // });
+//     // print('[glance_test] Collect stack traces end');
 
-    // if (finishNextTime) {
-    //   print('[glance_test_finished]');
-    // }
+//     // if (finishNextTime) {
+//     //   print('[glance_test_finished]');
+//     // }
 
-    if (stackTraceCompleter != null && !stackTraceCompleter!.isCompleted) {
-      stackTraces.add(info.stackTrace.toString());
-      stackTraceCompleter!.complete(stackTraces.join('\n'));
-    }
-  });
-  Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
-  runApp(JankApp(
-    builder: (c) => VsyncPhaseJankWidget(key: globalKey),
-  ));
+//     if (stackTraceCompleter != null && !stackTraceCompleter!.isCompleted) {
+//       stackTraces.add(info.stackTrace.toString());
+//       stackTraceCompleter!.complete(stackTraces.join('\n'));
+//     }
+//   });
+//   Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
+//   runApp(JankApp(
+//     builder: (c) => VsyncPhaseJankWidget(key: globalKey),
+//   ));
 
-  await binding.waitUntilFirstFrameRasterized;
+//   await binding.waitUntilFirstFrameRasterized;
 
-  await Future.delayed(Duration(milliseconds: 5000));
+//   await Future.delayed(Duration(milliseconds: 5000));
 
-  // globalKey.currentState?._statesController
-  //     .update(WidgetState.pressed, true); //_incrementCounter();
-  // await Future.delayed(Duration(milliseconds: 200));
-  // globalKey.currentState?._statesController.update(WidgetState.pressed, false);
+//   // globalKey.currentState?._statesController
+//   //     .update(WidgetState.pressed, true); //_incrementCounter();
+//   // await Future.delayed(Duration(milliseconds: 200));
+//   // globalKey.currentState?._statesController.update(WidgetState.pressed, false);
 
-  final offset = globalKey.currentState!._getElevatedButtonOffset();
-  print('offset: ${offset.dx}, ${offset.dy}');
-  // GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-  //   position: (offset + Offset(10, 10)),
-  // ));
+//   final offset = globalKey.currentState!._getElevatedButtonOffset();
+//   print('offset: ${offset.dx}, ${offset.dy}');
+//   // GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+//   //   position: (offset + Offset(10, 10)),
+//   // ));
 
-  stackTraceCompleter = Completer();
-  GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-    position: (offset + Offset(10, 10)),
-  ));
-  await Future.delayed(const Duration(milliseconds: 500));
-  GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-    position: (offset + Offset(10, 10)),
-  ));
+//   stackTraceCompleter = Completer();
+//   GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+//     position: (offset + Offset(10, 10)),
+//   ));
+//   await Future.delayed(const Duration(milliseconds: 500));
+//   GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+//     position: (offset + Offset(10, 10)),
+//   ));
 
-  // [glance_test_finished]
+//   // [glance_test_finished]
 
-  finishNextTime = true;
+//   finishNextTime = true;
 
-  await stackTraceCompleter.future;
+//   await stackTraceCompleter.future;
 
-  print('[glance_test] Collect stack traces start');
-  StringBuffer sb = StringBuffer();
-  stackTraces.forEach((e) {
-    sb.writeln(e);
-  });
-  sb.toString().split('\n').forEach((e) {
-    print(e);
-  });
-  print('[glance_test] Collect stack traces end');
-  print('[glance_test_finished]');
+//   // print('[glance_test] Collect stack traces start');
+//   StringBuffer sb = StringBuffer();
+//   stackTraces.forEach((e) {
+//     sb.writeln(e);
+//   });
+//   // sb.toString().split('\n').forEach((e) {
+//   //   print(e);
+//   // });
+//   // print('[glance_test] Collect stack traces end');
 
-  // if (finishNextTime) {
-  //   print('[glance_test_finished]');
-  // }
-}
+//   checkStackTraces(sb.toString());
+
+//   // print('[glance_test_finished]');
+
+//   // if (finishNextTime) {
+//   //   print('[glance_test_finished]');
+//   // }
+// }
 
 void main() {
   // IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -145,5 +150,83 @@ void main() {
 
   // _testCases['vsync_phase_jank']!();
 
-  _vsyncPhaseJank();
+  glanceIntegrationTest(() async {
+    final binding = WidgetsFlutterBinding.ensureInitialized();
+    final globalKey = GlobalKey<VsyncPhaseJankWidgetState>();
+    Completer<String>? stackTraceCompleter;
+    // final List<String> stackTraces = [];
+
+    // bool finishNextTime = false;
+    final reporter = TestJankDetectedReporter((info) {
+      // if (!stackTraceCompleter.isCompleted) {
+      //   stackTraceCompleter.complete(info.stackTrace.toString());
+      // }
+
+      // stackTraces.add(info.stackTrace.toString());
+
+      // print('[glance_test] Collect stack traces start');
+      // info.stackTrace.toString().split('\n').forEach((e) {
+      //   print(e);
+      // });
+      // print('[glance_test] Collect stack traces end');
+
+      // if (finishNextTime) {
+      //   print('[glance_test_finished]');
+      // }
+
+      if (stackTraceCompleter != null && !stackTraceCompleter.isCompleted) {
+        // stackTraces.add(info.stackTrace.toString());
+        stackTraceCompleter.complete(info.stackTrace.toString());
+      }
+    });
+    Glance.instance.start(config: GlanceConfiguration(reporters: [reporter]));
+    runApp(JankApp(
+      builder: (c) => VsyncPhaseJankWidget(key: globalKey),
+    ));
+
+    await binding.waitUntilFirstFrameRasterized;
+
+    // await Future.delayed(const Duration(milliseconds: 5000));
+
+    // globalKey.currentState?._statesController
+    //     .update(WidgetState.pressed, true); //_incrementCounter();
+    // await Future.delayed(Duration(milliseconds: 200));
+    // globalKey.currentState?._statesController.update(WidgetState.pressed, false);
+
+    final offset = globalKey.currentState!._getElevatedButtonOffset();
+    // print('offset: ${offset.dx}, ${offset.dy}');
+    // GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+    //   position: (offset + Offset(10, 10)),
+    // ));
+
+    stackTraceCompleter = Completer();
+    // Simulate click the button
+    GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+      position: (offset + const Offset(10, 10)),
+    ));
+    await Future.delayed(const Duration(milliseconds: 500));
+    GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+      position: (offset + const Offset(10, 10)),
+    ));
+
+    // [glance_test_finished]
+
+    // finishNextTime = true;
+
+    final stackTraces = await stackTraceCompleter.future;
+
+    // print('[glance_test] Collect stack traces start');
+    // StringBuffer sb = StringBuffer();
+    // stackTraces.forEach((e) {
+    //   sb.writeln(e);
+    // });
+    // sb.toString().split('\n').forEach((e) {
+    //   print(e);
+    // });
+    // print('[glance_test] Collect stack traces end');
+
+    checkStackTraces(stackTraces);
+  });
+
+  // _vsyncPhaseJank();
 }

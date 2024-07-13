@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:process/process.dart';
@@ -30,20 +31,19 @@ Future<String> _desymbols(
   final symbolFilePath =
       path.join('debug-info-integration', 'app.android-arm64.symbols');
   final tmpFilePath = path.join(path.current, 'build',
-      'glance_integration_test', '${stackTraceFileName}.tmp');
-  // final outputDir = fileSystem.directory(outputDirPath);
-  // if (out)
+      'glance_integration_test', '$stackTraceFileName.tmp');
   final tmpFile = fileSystem.file(tmpFilePath);
   await tmpFile.create(recursive: true);
   await tmpFile.writeAsString(stackTrace);
 
   String result =
-      llmSymbolizer(fileSystem, processManager, symbolFilePath!, tmpFilePath);
+      llmSymbolizer(fileSystem, processManager, symbolFilePath, tmpFilePath);
   return result;
 }
 
 Future<bool> _runTestCase(ProcessManager processManager,
     file.FileSystem fileSystem, TestCase testCase) async {
+  print('Running ${testCase.description} ...');
   print('Building ${testCase.testFilePath} ...');
   await fileSystem.directory('build').delete(recursive: true);
   final processResult = await processManager.run([
@@ -59,7 +59,6 @@ Future<bool> _runTestCase(ProcessManager processManager,
   }
   stdout.writeln('Built ${testCase.testFilePath}.');
 
-// flutter run --no-build --use-application-binary=build/app/outputs/flutter-apk/app-profile.apk
   final process = await processManager.start([
     'flutter',
     'run',
@@ -76,7 +75,7 @@ Future<bool> _runTestCase(ProcessManager processManager,
 
   bool isCollectingStackTraces = false;
   List<String> collectedStackTraces = [];
-  // Process JSON-RPC events from the flutter run command.
+  bool isCheckStackTracesSuccess = false;
   process.stdout
       .transform(utf8.decoder)
       .transform(const LineSplitter())
@@ -88,23 +87,26 @@ Future<bool> _runTestCase(ProcessManager processManager,
       const processManager = LocalProcessManager();
       print('Desymboling ...');
       final result = await _desymbols(
-          fileSystem, processManager, '', collectedStackTraces.join('\n'));
+          fileSystem,
+          processManager,
+          path.basename(testCase.testFilePath),
+          collectedStackTraces.join('\n'));
 
       print('Checking stack trace ...');
-      bool success = await testCase.onCheckStackTrace(result);
+      isCheckStackTracesSuccess = await testCase.onCheckStackTrace(result);
 
       // // VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/integration_test/glance_integration_test_main.dart:99:3     76
       // // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 65
       // // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10
-      if (success) {
-        // success
-        print('Test passed!');
-      } else {
-        print('Test failed!');
-      }
+      // if (success) {
+      //   // success
+      //   print('Test passed!');
+      // } else {
+      //   print('Test failed!');
+      // }
 
-      // adb shell pm uninstall -k com.fedmich.pagexray
-      // Uninsntall the package to restore a clean state
+      // adb shell pm uninstall -k <package-name>
+      // Uninsntall the package to restore to a clean state
       {
         final processResult = await processManager.run([
           'adb',
@@ -138,7 +140,7 @@ Future<bool> _runTestCase(ProcessManager processManager,
     }
   });
   await process.exitCode;
-  return true;
+  return isCheckStackTracesSuccess;
 }
 
 Future<void> runTest(
@@ -154,8 +156,20 @@ Future<void> runTest(
       print('Test case failed: ${testCase.testFilePath}');
     }
   }
+}
 
-  // stdout.writeln('Building app...');
-  // example/integration_test/glance_integration_test_main.dart
-  // flutter build apk --profile --split-debug-info=debug-info-integration --target integration_test/glance_integration_test_main.dart
+void checkStackTraces(String stackTraces) {
+  print('[glance_test] Collect stack traces start');
+  // The `print` will truncate the log, so we spilt the stack traces and `print` it
+  // line by line to ensure the full stack traces
+  stackTraces.split('\n').forEach((e) {
+    print(e);
+  });
+  print('[glance_test] Collect stack traces end');
+}
+
+void glanceIntegrationTest(FutureOr<void> Function() callback) async {
+  print('[glance_test_started]');
+  await callback();
+  print('[glance_test_finished]');
 }

@@ -1,10 +1,5 @@
-import 'dart:async';
-
-import 'package:flutter_test/flutter_test.dart';
-
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glance/glance.dart';
 
@@ -63,6 +58,7 @@ void expensiveFunction() {
 }
 
 class JankApp extends StatelessWidget {
+  // ignore: use_super_parameters
   const JankApp({Key? key, required this.builder}) : super(key: key);
 
   final WidgetBuilder builder;
