@@ -44,6 +44,7 @@ class SamplerConfig {
 
   final int sampleRateInMilliseconds;
 
+  /// The factory used to create a [SamplerProcessor].
   final SamplerProcessorFactory samplerProcessorFactory;
 }
 

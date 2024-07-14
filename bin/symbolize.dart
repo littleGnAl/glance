@@ -63,11 +63,11 @@ String llmSymbolizer(
     int processIndex = 0;
     int len = line.length;
     while (subStart < len) {
-      while (subStart < len && line[subStart] == kGlaceStackTraceLineSpilt) {
+      while (subStart < len && line[subStart] == kGlanceStackTraceLineSpilt) {
         subStart++;
       }
       int subEnd = subStart;
-      while (subEnd < len && line[subEnd] != kGlaceStackTraceLineSpilt) {
+      while (subEnd < len && line[subEnd] != kGlanceStackTraceLineSpilt) {
         subEnd++;
       }
 

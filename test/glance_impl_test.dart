@@ -291,7 +291,7 @@ void main() {
     final stackTrace = GlanceStackTraceImpl([frame1, frame2]);
 
     const expectedStackTrace = '''
-$kGlaceStackTraceHeaderLine
+$kGlanceStackTraceHeaderLine
 #0   540641718272 540642472608 libapp.so
 #1   540641718272 540642472607 libapp.so
 ''';

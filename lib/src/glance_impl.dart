@@ -117,26 +117,25 @@ class GlanceStackTraceImpl implements GlanceStackTrace {
   int get hashCode => Object.hashAll(stackTraces);
 
   /// Output stack traces with format:
+  /// ```
   /// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
   /// #0   <base_addr> <pc> <module_path>
   /// #1   <base_addr> <pc> <module_path>
+  /// ```
   @override
   String toString() {
     final stringBuffer = StringBuffer();
-    stringBuffer.writeln(kGlaceStackTraceHeaderLine);
+    stringBuffer.writeln(kGlanceStackTraceHeaderLine);
     for (int i = 0; i < stackTraces.length; ++i) {
       final stackTrace = stackTraces[i];
       final frame = stackTrace.frame;
-      // final occurTimes = stackTrace.occurTimes;
       stringBuffer
-          .write('#${i.toString().padRight(3, kGlaceStackTraceLineSpilt)}');
-      stringBuffer.write(kGlaceStackTraceLineSpilt);
+          .write('#${i.toString().padRight(3, kGlanceStackTraceLineSpilt)}');
+      stringBuffer.write(kGlanceStackTraceLineSpilt);
       stringBuffer.write(frame.module!.baseAddress);
-      stringBuffer.write(kGlaceStackTraceLineSpilt);
+      stringBuffer.write(kGlanceStackTraceLineSpilt);
       stringBuffer.write(frame.pc);
-      // stringBuffer.write(kGlaceStackTraceLineSpilt);
-      // stringBuffer.write(occurTimes);
-      stringBuffer.write(kGlaceStackTraceLineSpilt);
+      stringBuffer.write(kGlanceStackTraceLineSpilt);
       stringBuffer.write(frame.module!.path); // Is it necessary?
       stringBuffer.writeln();
     }

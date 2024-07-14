@@ -181,7 +181,8 @@ class StackCapturer {
     _nativeBindings.SetCurrentThreadAsTarget();
   }
 
-  /// Refer to the implementation from Flutter Engine, we should use the `Timeline.now` as the current timestamp.
+  /// Refer to the implementation from Flutter Engine, we should use the `Timeline.now`
+  /// as the current timestamp.
   /// https://github.com/flutter/engine/blob/5d97d2bcdffc8b21bc0b9742f1136583f4cc8e16/runtime/dart_timestamp_provider.cc#L24
   int _nowInMicrosSinceEpoch() {
     return Timeline.now;

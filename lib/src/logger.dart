@@ -1,7 +1,8 @@
+/// A logger utility class for the Glance.
 class GlanceLogger {
   static const _tag = '[Glance]';
 
-  /// Log function allow us to log the message in release build.
+  /// Logs a message, this function allows logging the message in release build.
   static log(String message, {bool prefixTag = true}) {
     StringBuffer bf = StringBuffer();
     if (prefixTag) {
