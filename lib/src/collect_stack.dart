@@ -44,7 +44,7 @@ class CollectStackNativeBindings {
     return _SetCurrentThreadAsTarget();
   }
 
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   late final _SetCurrentThreadAsTargetPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>(
           'SetCurrentThreadAsTarget');
@@ -52,7 +52,7 @@ class CollectStackNativeBindings {
   late final _SetCurrentThreadAsTarget =
       _SetCurrentThreadAsTargetPtr.asFunction<void Function()>();
 
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   ffi.Pointer<Utf8> CollectStackTraceOfTargetThread(
     ffi.Pointer<ffi.Int64> buf,
     int bufSize,
@@ -60,7 +60,7 @@ class CollectStackNativeBindings {
     return _CollectStackTraceOfTargetThread(buf, bufSize);
   }
 
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   late final _CollectStackTraceOfTargetThreadPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>,
@@ -70,14 +70,14 @@ class CollectStackNativeBindings {
       _CollectStackTraceOfTargetThreadPtr.asFunction<
           ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, int)>();
 
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   ffi.Pointer<Utf8> LookupSymbolName(
     ffi.Pointer<DlInfo> info,
   ) {
     return _LookupSymbolName(info);
   }
 
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   late final _LookupSymbolNamePtr = _lookup<
           ffi.NativeFunction<ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>>(
       'LookupSymbolName');
@@ -85,7 +85,7 @@ class CollectStackNativeBindings {
   late final _LookupSymbolName = _LookupSymbolNamePtr.asFunction<
       ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>();
 
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   int Dladdr(
     ffi.Pointer<ffi.Void> addr,
     ffi.Pointer<DlInfo> info,
