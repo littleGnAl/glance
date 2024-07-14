@@ -6,6 +6,7 @@ import 'package:glance/src/constants.dart';
 import 'package:glance/src/glance.dart';
 import 'package:glance/src/sampler.dart';
 
+/// Implementation of [Glance]
 class GlanceImpl implements Glance {
   GlanceImpl();
 
