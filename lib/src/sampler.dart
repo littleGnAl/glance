@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/constants.dart';
+import 'package:glance/src/logger.dart';
 
 abstract class _Request {}
 
@@ -234,7 +235,7 @@ class SamplerProcessor {
         _buffer!.write(stack);
       }
     } catch (e, st) {
-      print('$e\n$st');
+      GlanceLogger.log('error when running loop: $e\n$st');
     }
   }
 

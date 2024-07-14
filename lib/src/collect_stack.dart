@@ -11,6 +11,7 @@ import 'dart:ffi' as ffi;
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+import 'package:glance/src/logger.dart';
 
 /// Dl_info from dlfcn.h.
 ///
@@ -38,16 +39,20 @@ class CollectStackNativeBindings {
           lookup)
       : _lookup = lookup;
 
+  // ignore: non_constant_identifier_names
   void SetCurrentThreadAsTarget() {
     return _SetCurrentThreadAsTarget();
   }
 
+// ignore: non_constant_identifier_names
   late final _SetCurrentThreadAsTargetPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>(
           'SetCurrentThreadAsTarget');
+  // ignore: non_constant_identifier_names
   late final _SetCurrentThreadAsTarget =
       _SetCurrentThreadAsTargetPtr.asFunction<void Function()>();
 
+// ignore: non_constant_identifier_names
   ffi.Pointer<Utf8> CollectStackTraceOfTargetThread(
     ffi.Pointer<ffi.Int64> buf,
     int bufSize,
@@ -55,26 +60,32 @@ class CollectStackNativeBindings {
     return _CollectStackTraceOfTargetThread(buf, bufSize);
   }
 
+// ignore: non_constant_identifier_names
   late final _CollectStackTraceOfTargetThreadPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>,
               ffi.Size)>>('CollectStackTraceOfTargetThread');
+  // ignore: non_constant_identifier_names
   late final _CollectStackTraceOfTargetThread =
       _CollectStackTraceOfTargetThreadPtr.asFunction<
           ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, int)>();
 
+// ignore: non_constant_identifier_names
   ffi.Pointer<Utf8> LookupSymbolName(
     ffi.Pointer<DlInfo> info,
   ) {
     return _LookupSymbolName(info);
   }
 
+// ignore: non_constant_identifier_names
   late final _LookupSymbolNamePtr = _lookup<
           ffi.NativeFunction<ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>>(
       'LookupSymbolName');
+  // ignore: non_constant_identifier_names
   late final _LookupSymbolName = _LookupSymbolNamePtr.asFunction<
       ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>();
 
+// ignore: non_constant_identifier_names
   int Dladdr(
     ffi.Pointer<ffi.Void> addr,
     ffi.Pointer<DlInfo> info,
@@ -186,7 +197,8 @@ class StackCapturer {
       if (error != ffi.nullptr) {
         final errorString = error.toDartString();
         malloc.free(error);
-        print('errorString: $errorString');
+        GlanceLogger.log(
+            'error when calling CollectStackTraceOfTargetThread: $errorString');
         return NativeStack(
             frames: [],
             modules: []); // Something went wrong. but just discard info this time.

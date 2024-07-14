@@ -8,6 +8,7 @@ import 'package:path/path.dart' as path;
 import 'dart:io';
 
 import '../../bin/symbolize.dart';
+import 'package:glance/src/logger.dart';
 
 typedef CheckStackTraceCallback = Future<bool> Function(String stackTrace);
 
@@ -43,8 +44,8 @@ Future<String> _desymbols(
 
 Future<bool> _runTestCase(ProcessManager processManager,
     file.FileSystem fileSystem, TestCase testCase) async {
-  print('Running ${testCase.description} ...');
-  print('Building ${testCase.testFilePath} ...');
+  GlanceLogger.log('Running ${testCase.description} ...', prefixTag: false);
+  GlanceLogger.log('Building ${testCase.testFilePath} ...', prefixTag: false);
   await fileSystem.directory('build').delete(recursive: true);
   final processResult = await processManager.run([
     'flutter',
@@ -81,18 +82,18 @@ Future<bool> _runTestCase(ProcessManager processManager,
       .transform(const LineSplitter())
       .listen((l) async {
     final line = l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '');
-    print(line);
+    GlanceLogger.log(line, prefixTag: false);
     if (line.trim() == '[glance_test_finished]') {
       const file.FileSystem fileSystem = LocalFileSystem();
       const processManager = LocalProcessManager();
-      print('Desymboling ...');
+      GlanceLogger.log('Desymboling ...', prefixTag: false);
       final result = await _desymbols(
           fileSystem,
           processManager,
           path.basename(testCase.testFilePath),
           collectedStackTraces.join('\n'));
 
-      print('Checking stack trace ...');
+      GlanceLogger.log('Checking stack trace ...', prefixTag: false);
       isCheckStackTracesSuccess = await testCase.onCheckStackTrace(result);
 
       // // VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/integration_test/glance_integration_test_main.dart:99:3     76
@@ -151,25 +152,28 @@ Future<void> runTest(
   for (final testCase in testCases) {
     final success = await _runTestCase(processManager, fileSystem, testCase);
     if (success) {
-      print('Test case success: ${testCase.testFilePath}');
+      GlanceLogger.log('Test case success: ${testCase.testFilePath}',
+          prefixTag: false);
     } else {
-      print('Test case failed: ${testCase.testFilePath}');
+      GlanceLogger.log('Test case failed: ${testCase.testFilePath}',
+          prefixTag: false);
     }
   }
 }
 
 void checkStackTraces(String stackTraces) {
-  print('[glance_test] Collect stack traces start');
-  // The `print` will truncate the log, so we spilt the stack traces and `print` it
-  // line by line to ensure the full stack traces
+  GlanceLogger.log('[glance_test] Collect stack traces start',
+      prefixTag: false);
+  // The `print` method will cause the output log to be truncated, so we spilt
+  // the stack traces and `print` it line by line to ensure the full stack traces
   stackTraces.split('\n').forEach((e) {
-    print(e);
+    GlanceLogger.log(e);
   });
-  print('[glance_test] Collect stack traces end');
+  GlanceLogger.log('[glance_test] Collect stack traces end', prefixTag: false);
 }
 
 void glanceIntegrationTest(FutureOr<void> Function() callback) async {
-  print('[glance_test_started]');
+  GlanceLogger.log('[glance_test_started]', prefixTag: false);
   await callback();
-  print('[glance_test_finished]');
+  GlanceLogger.log('[glance_test_finished]', prefixTag: false);
 }
