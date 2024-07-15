@@ -24,11 +24,16 @@ references:
 
 
 
-
+Read
 https://decaf-lang.github.io/minidecaf-tutorial-deploy/docs/lab5/stackframe.html
 https://juejin.cn/post/6844903616524845063
+
+Unread
+https://www.cnblogs.com/dwlsxj/p/Stack.html
 https://zhuanlan.zhihu.com/p/77663680
 https://blog.csdn.net/Casuall/article/details/88783277
+
+https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/linux-x64-calling-convention-stack-frame
 
 page: 283
 https://awesome-programming-books.github.io/others/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB%EF%BC%9A%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93.pdf
