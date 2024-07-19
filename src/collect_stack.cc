@@ -163,12 +163,13 @@ namespace
     mcontext_t mcontext = ucontext->uc_mcontext;
     uword pc = GetProgramCounter(mcontext);
     uword fp = GetFramePointer(mcontext);
-    // TODO(littlegnal): In my device the fp becomes null in some frames, need investigate why?
-    // it most likely in debug mode.
-    if (!fp)
-    {
-      return;
-    }
+    // if (!fp)
+    // {
+    //   buffer->pcs[frame++] = 0;
+
+    //   buffer_to_fill.store(nullptr); // Signal completion
+    //   return;
+    // }
     uword sp = GetCStackPointer(mcontext);
     uword dart_sp = GetDartStackPointer(mcontext);
 
@@ -282,9 +283,7 @@ extern "C" char *LookupSymbolName(Dl_info *info)
   {
     return nullptr;
   }
-  // if (start != nullptr) {
-  //   *start = reinterpret_cast<uword>(info.dli_saddr);
-  // }
+
   int status = 0;
   size_t len = 0;
   char *demangled = abi::__cxa_demangle(info->dli_sname, nullptr, &len, &status);
@@ -293,11 +292,5 @@ extern "C" char *LookupSymbolName(Dl_info *info)
     return strdup(demangled);
   }
 
-  return strdup(info->dli_sname); // const_cast<char *>(info->dli_sname);
-}
-
-extern "C" int64_t TimestampNowInMicrosSinceEpoch()
-{
-  const auto elapsed = std::chrono::system_clock::now().time_since_epoch();
-  return std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() / 1000;
+  return strdup(info->dli_sname);
 }

@@ -11,16 +11,10 @@ project(${LIBRARY_NAME} VERSION ${LIBRARY_VERSION})
 
 set(SOURCES 
     "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack.cc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/dart_sdk/include/dart_tools_api.h"
     )
 
 add_library(${LIBRARY_NAME} SHARED
   ${SOURCES}
 )
-
-# set_target_properties(hello PROPERTIES
-#   PUBLIC_HEADER hello.h
-#   OUTPUT_NAME "hello"
-# )
 
 target_compile_definitions(${LIBRARY_NAME} PUBLIC DART_SHARED_LIB)
