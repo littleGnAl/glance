@@ -23,7 +23,13 @@ class TestCase {
   final CheckStackTraceCallback onCheckStackTrace;
 }
 
-Future<String> _desymbols(
+const _kCollectStackTracesStartFlag =
+    '[glance_test] Collect stack traces start';
+const _kCollectStackTracesEndFlag = '[glance_test] Collect stack traces end';
+const _kGlanceTestStartedFlag = '[glance_test_started]';
+const _kGlanceTestFinishedFlag = '[glance_test_finished]';
+
+Future<String> _symbolize(
   file.FileSystem fileSystem,
   ProcessManager processManager,
   String stackTraceFileName,
@@ -83,28 +89,21 @@ Future<bool> _runTestCase(ProcessManager processManager,
       .listen((l) async {
     final line = l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '');
     GlanceLogger.log(line, prefixTag: false);
-    if (line.trim() == '[glance_test_finished]') {
+    if (line.trim() == _kGlanceTestFinishedFlag) {
       const file.FileSystem fileSystem = LocalFileSystem();
       const processManager = LocalProcessManager();
-      GlanceLogger.log('Desymboling ...', prefixTag: false);
-      final result = await _desymbols(
+      GlanceLogger.log('Symbolizing ...', prefixTag: false);
+      final result = await _symbolize(
           fileSystem,
           processManager,
           path.basename(testCase.testFilePath),
           collectedStackTraces.join('\n'));
 
+      GlanceLogger.log('Symbolized stack traces:', prefixTag: false);
+      GlanceLogger.log(result, prefixTag: false);
+
       GlanceLogger.log('Checking stack trace ...', prefixTag: false);
       isCheckStackTracesSuccess = await testCase.onCheckStackTrace(result);
-
-      // // VsyncPhaseJankWidgetState._incrementCounter                   /Users/littlegnal/codes/personal-project/glance_plugin/glance/example/integration_test/glance_integration_test_main.dart:99:3     76
-      // // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10                                                                                 65
-      // // jsonEncode                                                    third_party/dart/sdk/lib/convert/json.dart:114:10
-      // if (success) {
-      //   // success
-      //   print('Test passed!');
-      // } else {
-      //   print('Test failed!');
-      // }
 
       // adb shell pm uninstall -k <package-name>
       // Uninsntall the package to restore to a clean state
@@ -127,11 +126,11 @@ Future<bool> _runTestCase(ProcessManager processManager,
       return;
     }
 
-    if (line.trim() == '[glance_test] Collect stack traces start') {
+    if (line.trim() == _kCollectStackTracesStartFlag) {
       isCollectingStackTraces = true;
       stdout.writeln('Start collecting stack traces ...');
     }
-    if (line.trim() == '[glance_test] Collect stack traces end') {
+    if (line.trim() == _kCollectStackTracesEndFlag) {
       isCollectingStackTraces = false;
       stdout.writeln('Collected stack traces');
     }
@@ -162,18 +161,17 @@ Future<void> runTest(
 }
 
 void checkStackTraces(String stackTraces) {
-  GlanceLogger.log('[glance_test] Collect stack traces start',
-      prefixTag: false);
+  GlanceLogger.log(_kCollectStackTracesStartFlag, prefixTag: false);
   // The `print` method will cause the output log to be truncated, so we spilt
   // the stack traces and `print` it line by line to ensure the full stack traces
   stackTraces.split('\n').forEach((e) {
-    GlanceLogger.log(e);
+    GlanceLogger.log(e, prefixTag: false);
   });
-  GlanceLogger.log('[glance_test] Collect stack traces end', prefixTag: false);
+  GlanceLogger.log(_kCollectStackTracesEndFlag, prefixTag: false);
 }
 
 void glanceIntegrationTest(FutureOr<void> Function() callback) async {
-  GlanceLogger.log('[glance_test_started]', prefixTag: false);
+  GlanceLogger.log(_kGlanceTestStartedFlag, prefixTag: false);
   await callback();
-  GlanceLogger.log('[glance_test_finished]', prefixTag: false);
+  GlanceLogger.log(_kGlanceTestFinishedFlag, prefixTag: false);
 }

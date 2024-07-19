@@ -7,6 +7,9 @@ environment:
   sdk: '>=3.4.0 <4.0.0'
   flutter: '>=3.3.0'
 
+executables:
+  glance: symbolize
+
 dependencies:
   flutter:
     sdk: flutter

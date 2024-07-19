@@ -1,6 +1,6 @@
 # glance
 
-A Flutter APM tool for detect UI jank for release.
+An APM(Application Performance Monitoring) library for UI jank detection for Flutter.
 
 Many thanks
 https://github.com/mraleph/thread_collect_stack_example
@@ -8,6 +8,10 @@ https://github.com/mraleph/thread_collect_stack_example
 ## Getting Started
 
 - bin/symbolize.dart
+
+```
+glance --symbol-file=pubspec.yaml --stack-traces-file=pubspec.yaml --out=./
+```
 
 
 

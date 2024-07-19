@@ -44,7 +44,6 @@ String llmSymbolizer(
   String stackTraceFilePath,
 ) {
   final stackTrackFile = fileSystem.file(stackTraceFilePath);
-  // final stackTrackFileContent = stackTrackFile.readAsStringSync();
   final lines = stackTrackFile.readAsLinesSync();
   final stackTraceLineRegx = RegExp(r'^#[0-9]+\s*[0-9]+\s[0-9]+\s(.*)');
   final List<String> processLines = lines
