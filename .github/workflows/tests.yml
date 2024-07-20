@@ -77,7 +77,7 @@ jobs:
           api-level: 31
           arch: x86_64
           profile: pixel_5
-          ram-size: 2048M
-          heap-size: 4096M
-          disk-size: 8192M
+        #   ram-size: 2048M
+        #   heap-size: 4096M
+        #   disk-size: 8192M
           script: bash scripts/glance_integration_test.sh
