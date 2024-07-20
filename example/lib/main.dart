@@ -43,7 +43,10 @@ void main() async {
 
 Future<void> _startGlance() async {
   Glance.instance.start(
-      config: GlanceConfiguration(reporters: [MyJankDetectedReporter()]));
+    config: GlanceConfiguration(
+      reporters: [MyJankDetectedReporter()],
+    ),
+  );
 
   await Permission.storage.request();
 }

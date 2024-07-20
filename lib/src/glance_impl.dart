@@ -17,7 +17,7 @@ class GlanceImpl implements Glance {
 
   TimingsCallback? _timingsCallback;
 
-  late List<GlanceReporter> reporters;
+  late List<GlanceReporter> _reporters;
 
   bool _started = false;
 
@@ -32,7 +32,7 @@ class GlanceImpl implements Glance {
 
     _started = true;
     final jankThreshold = config.jankThreshold;
-    reporters = List.of(config.reporters, growable: false);
+    _reporters = List.of(config.reporters, growable: false);
 
     _sampler ??= await Sampler.create(SamplerConfig(
       jankThreshold: jankThreshold,
@@ -96,7 +96,7 @@ class GlanceImpl implements Glance {
 
     _previousStackTrace = straceTrace;
 
-    for (final reporter in reporters) {
+    for (final reporter in _reporters) {
       reporter.report(report);
     }
   }
