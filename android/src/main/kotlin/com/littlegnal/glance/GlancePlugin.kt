@@ -9,4 +9,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 /** GlancePlugin */
-class GlancePlugin: FlutterPlugin, MethodCallHandler { }
+class GlancePlugin: FlutterPlugin {
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {}
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {}
+}
