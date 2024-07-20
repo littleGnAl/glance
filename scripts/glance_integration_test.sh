@@ -3,8 +3,9 @@
 set -e
 set -x
 
-MY_PATH=$(realpath $(dirname "$0"))
-PROJECT_ROOT=$(realpath ${MY_PATH}/..)
+# MY_PATH=$(realpath $(dirname "$0"))
+MY_PATH=$(dirname "$0")
+# PROJECT_ROOT=${MY_PATH}/..
 PLATFORM=$1 # android/ios/macos/windows/web
 
 pushd ${MY_PATH}/../example

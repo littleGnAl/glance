@@ -24,6 +24,8 @@ Glance.instance.start(config: GlanceConfiguration(reporters: [MyJankDetectedRepo
 ### Symbolize the glance stack traces
 After you get the glance stack traces, you should use the built-in tool to symbolize the stack traces.
 
+Install llvm
+
 ```
 dart pub global activate glance
 glance --symbol-file=<symbol-file-path> --stack-traces-file=<stack-traces-file-path> --out=<symbolized-output-file-path>
