@@ -20,6 +20,9 @@ glance --symbol-file=pubspec.yaml --stack-traces-file=pubspec.yaml --out=./
 - without glance
 - with glance
 
+cpu: 0%
+memory: 215MB
+
 ## TODO
 - Make the stack trace more accuracily
 references:
