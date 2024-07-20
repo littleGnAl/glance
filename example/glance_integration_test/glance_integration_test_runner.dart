@@ -5,6 +5,7 @@ import 'package:file/local.dart';
 import '_test_runner.dart';
 import 'package:glance/src/logger.dart';
 
+/// The flutter test with --spilt-debug-info not work
 void main() {
   const processManager = LocalProcessManager();
   const file.FileSystem fileSystem = LocalFileSystem();
