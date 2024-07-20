@@ -56,9 +56,6 @@ class FakeSamplerProcessor {
   final funcCallQueue = <String>[];
 
   List<AggregatedNativeFrame> frames = [];
-
-  SamplerProcessor get processor =>
-      _FakeSamplerProcessor(receivePort.sendPort, frames);
 }
 
 SamplerProcessorFactory _samplerProcessorFactory(
@@ -91,21 +88,22 @@ void main() {
     late Sampler sampler;
 
     test('create', () async {
-      fakeAsync((async) async {
-        processor = FakeSamplerProcessor();
+      processor = FakeSamplerProcessor();
 
-        sampler = await Sampler.create(SamplerConfig(
-          jankThreshold: 1,
-          modulePathFilters: [],
-          samplerProcessorFactory:
-              _samplerProcessorFactory(processor.receivePort.sendPort, []),
-        ));
-        // Delay 500ms to ensure we receive all the responses from the send port
-        async.elapse(const Duration(milliseconds: 500));
-        expect(processor.funcCallQueue.length == 2, isTrue);
-        expect(processor.funcCallQueue[0], 'setCurrentThreadAsTarget');
-        expect(processor.funcCallQueue[1], 'loop');
-      });
+      sampler = await Sampler.create(SamplerConfig(
+        jankThreshold: 1,
+        modulePathFilters: [],
+        samplerProcessorFactory:
+            _samplerProcessorFactory(processor.receivePort.sendPort, []),
+      ));
+      // Delay 500ms to ensure we receive all the responses from the send port
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      expect(processor.funcCallQueue.length, 2);
+      expect(processor.funcCallQueue[0], 'setCurrentThreadAsTarget');
+      expect(processor.funcCallQueue[1], 'loop');
+
+      sampler.close();
     });
 
     test('getSamples', () async {
@@ -132,29 +130,29 @@ void main() {
       final frames = await sampler.getSamples([now - 1000, now]);
       expect(frames, equals([frame]));
 
-      expect(processor.funcCallQueue.length == 3, isTrue);
+      expect(processor.funcCallQueue.length, 3);
       expect(processor.funcCallQueue[2], 'getStacktrace');
+
+      sampler.close();
     });
 
     test('close', () async {
-      fakeAsync((async) async {
-        processor = FakeSamplerProcessor();
+      processor = FakeSamplerProcessor();
 
-        sampler = await Sampler.create(SamplerConfig(
-          jankThreshold: 1,
-          modulePathFilters: [],
-          samplerProcessorFactory:
-              _samplerProcessorFactory(processor.receivePort.sendPort, []),
-        ));
-        // Delay 500ms to ensure we receive all the responses from the send port
-        async.elapse(const Duration(milliseconds: 500));
+      sampler = await Sampler.create(SamplerConfig(
+        jankThreshold: 1,
+        modulePathFilters: [],
+        samplerProcessorFactory:
+            _samplerProcessorFactory(processor.receivePort.sendPort, []),
+      ));
+      // Delay 500ms to ensure we receive all the responses from the send port
+      await Future.delayed(const Duration(milliseconds: 500));
 
-        sampler.close();
-        // Delay 500ms to ensure we receive all the responses from the send port
-        async.elapse(const Duration(milliseconds: 500));
-        expect(processor.funcCallQueue.length == 3, isTrue);
-        expect(processor.funcCallQueue[2], 'close');
-      });
+      sampler.close();
+      // Delay 500ms to ensure we receive all the responses from the send port
+      await Future.delayed(const Duration(milliseconds: 500));
+      expect(processor.funcCallQueue.length, 3);
+      expect(processor.funcCallQueue[2], 'close');
     });
 
     test('getSamples after calling close', () async {
@@ -230,7 +228,7 @@ void main() {
         async.elapse(const Duration(milliseconds: 1500));
         final stackTraces = samplerProcessor.getStacktrace([now - 1000, now]);
 
-        expect(stackTraces.length == 2, isTrue);
+        expect(stackTraces.length, 2);
         // The order is reversed
         expect(stackTraces[0].frame, frame2);
         expect(stackTraces[1].frame, frame1);

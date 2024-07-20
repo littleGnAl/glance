@@ -52,7 +52,11 @@ Future<bool> _runTestCase(ProcessManager processManager,
     file.FileSystem fileSystem, TestCase testCase) async {
   GlanceLogger.log('Running ${testCase.description} ...', prefixTag: false);
   GlanceLogger.log('Building ${testCase.testFilePath} ...', prefixTag: false);
-  await fileSystem.directory('build').delete(recursive: true);
+  final buildDir = fileSystem.directory('build');
+  if ((await buildDir.exists())) {
+    await fileSystem.directory('build').delete(recursive: true);
+  }
+
   final processResult = await processManager.run([
     'flutter',
     'build',

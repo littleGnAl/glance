@@ -144,7 +144,7 @@ class Sampler {
       _commands.send(_ShutdownRequest());
       _responses.close();
       _activeRequests.clear();
-      _processorIsolate.kill(priority: Isolate.immediate);
+      _processorIsolate.kill(priority: Isolate.beforeNextEvent);
     }
   }
 }
