@@ -7,6 +7,12 @@ import 'package:file/local.dart';
 import 'package:glance/src/constants.dart';
 import 'package:process/process.dart';
 
+/// Symbolize the [GlanceStackTrace] using `llvm-symbolizer` tool.
+///
+/// Usage:
+/// ```
+/// glance --symbol-file=<symbol-file-path> --stack-traces-file=<stack-traces-file-path> --out=<symbolized-output-file-path>
+/// ```
 void main(List<String> arguments) {
   final parser = ArgParser();
   parser.addOption('symbol-file', help: 'The symbol file path');

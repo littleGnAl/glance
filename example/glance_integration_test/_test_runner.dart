@@ -81,7 +81,6 @@ Future<bool> _runTestCase(ProcessManager processManager,
   ]);
   stdout.writeln('Running app...');
 
-
   bool isCollectingStackTraces = false;
   List<String> collectedStackTraces = [];
   bool isCheckStackTracesSuccess = false;
