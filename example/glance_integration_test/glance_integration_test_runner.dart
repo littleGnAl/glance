@@ -5,7 +5,12 @@ import 'package:file/local.dart';
 import '_test_runner.dart';
 import 'package:glance/src/logger.dart';
 
-/// The flutter test with --spilt-debug-info not work
+/// The flutter test with --spilt-debug-info not work in flutter integration test with
+/// profile mode, so we parse the console output line by line to handle our test
+/// process.
+/// 
+/// To add a new test case, you need to add a new [TestCase] with some necessary
+/// proerpty in `runTest`.
 void main() {
   const processManager = LocalProcessManager();
   const file.FileSystem fileSystem = LocalFileSystem();

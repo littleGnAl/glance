@@ -52,7 +52,7 @@ jobs:
       matrix:
         # version: ["3.0.0", "3.x"]
         version: ["3.x"]
-    runs-on: macos-12 #ubuntu-latest
+    runs-on: macos-12 #ubuntu-latest # We did want to run the Android test on ubuntu, but after install the llvm, there's no enough memory to create a AVD
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v3
@@ -80,4 +80,7 @@ jobs:
           ram-size: 2048M
           heap-size: 4096M
           disk-size: 8192M
-          script: bash scripts/glance_integration_test.sh
+          script: |
+            # https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
+            export PATH="${$(brew --prefix llvm@15)}/bin:$PATH"
+            bash scripts/glance_integration_test.sh
