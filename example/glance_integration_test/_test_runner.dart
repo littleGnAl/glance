@@ -50,7 +50,9 @@ Future<String> _symbolize(
 
 Future<bool> _runTestCase(ProcessManager processManager,
     file.FileSystem fileSystem, TestCase testCase) async {
-  GlanceLogger.log('Running ${testCase.description} ...', prefixTag: false);
+  GlanceLogger.log(
+      'Running TestCase(${testCase.description}, ${testCase.testFilePath}) ...',
+      prefixTag: false);
   GlanceLogger.log('Building ${testCase.testFilePath} ...', prefixTag: false);
   final buildDir = fileSystem.directory('build');
   if ((await buildDir.exists())) {
@@ -79,14 +81,16 @@ Future<bool> _runTestCase(ProcessManager processManager,
   ]);
   stdout.writeln('Running app...');
 
-  process.stderr
-      .transform(utf8.decoder)
-      .transform(const LineSplitter())
-      .listen((line) {});
 
   bool isCollectingStackTraces = false;
   List<String> collectedStackTraces = [];
   bool isCheckStackTracesSuccess = false;
+  process.stderr
+      .transform(utf8.decoder)
+      .transform(const LineSplitter())
+      .listen((l) async {
+    GlanceLogger.log(l, prefixTag: false);
+  });
   process.stdout
       .transform(utf8.decoder)
       .transform(const LineSplitter())

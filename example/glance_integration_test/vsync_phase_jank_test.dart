@@ -74,7 +74,6 @@ void main() {
 
     final offset = globalKey.currentState!._getElevatedButtonOffset();
 
-    stackTraceCompleter = Completer();
     // Simulate click the button
     GestureBinding.instance.handlePointerEvent(PointerDownEvent(
       position: (offset + const Offset(10, 10)),
@@ -83,6 +82,8 @@ void main() {
     GestureBinding.instance.handlePointerEvent(PointerUpEvent(
       position: (offset + const Offset(10, 10)),
     ));
+
+    stackTraceCompleter = Completer();
 
     final stackTraces = await stackTraceCompleter.future;
 

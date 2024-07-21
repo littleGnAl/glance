@@ -55,7 +55,7 @@ class GlanceImpl implements Glance {
       }
 
       if (jankTimings.isNotEmpty) {
-        _report(jankTimings, 0);
+        _report(jankTimings);
       }
     };
 
@@ -72,7 +72,7 @@ class GlanceImpl implements Glance {
     _sampler?.close();
   }
 
-  Future<void> _report(List<FrameTiming> timings, int index) async {
+  Future<void> _report(List<FrameTiming> timings) async {
     final timestampRange = [
       timings.first.timestampInMicroseconds(FramePhase.vsyncStart),
       timings.last.timestampInMicroseconds(FramePhase.rasterFinish),

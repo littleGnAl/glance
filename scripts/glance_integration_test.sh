@@ -11,9 +11,9 @@ PLATFORM=$1 # android/ios/macos/windows/web
 # if [ $GITHUB_ACTIONS == "true" ]; then
 # Export the llvm path if running on CI
 # https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
-BREW_PREFIX=$(brew --prefix llvm@15)
-export PATH="${BREW_PREFIX}/bin:$PATH"
-which llvm-symbolizer
+# BREW_PREFIX=$(brew --prefix llvm@15)
+# export PATH="${BREW_PREFIX}/bin:$PATH"
+# which llvm-symbolizer
 # fi
 
 
