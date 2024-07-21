@@ -13,7 +13,8 @@ class MyJankDetectedReporter extends JankDetectedReporter {
   @override
   void report(JankReport info) {
     compute((msg) async {
-      final (token, info) = msg;
+      final token = (msg as List)[0];
+      final info = (msg as List)[1];
       BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
 
       final docDir = await getExternalStorageDirectory();
@@ -31,12 +32,23 @@ class MyJankDetectedReporter extends JankDetectedReporter {
         info.stackTrace.toString(),
         flush: true,
       );
-    }, (RootIsolateToken.instance, info));
+    }, [RootIsolateToken.instance, info]);
   }
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    // myErrorsHandler.onErrorDetails(details);
+    print(details.toString());
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    // myErrorsHandler.onError(error, stack);
+    print('$error\n$stack');
+    return true;
+  };
+
   _startGlance();
   runApp(const MyApp());
 }
