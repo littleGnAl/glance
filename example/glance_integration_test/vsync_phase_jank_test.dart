@@ -37,8 +37,6 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      // Center is a layout widget. It takes a single child and positions it
-      // in the middle of the parent.
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -49,7 +47,6 @@ class VsyncPhaseJankWidgetState extends State<VsyncPhaseJankWidget> {
           ElevatedButton(
             key: _buttonKey,
             onPressed: _incrementCounter,
-            // statesController: _statesController,
             child: const Text('increment'),
           ),
         ],

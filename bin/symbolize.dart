@@ -93,7 +93,7 @@ String llmSymbolizer(
       baseAddress,
       pc,
     ];
-    final result = processManager.runSync(cmd);
+    final result = processManager.runSync(cmd, runInShell: true);
     String outString = result.stdout;
     String funcName = '';
     String uri = '';
