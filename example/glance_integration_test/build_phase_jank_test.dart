@@ -55,9 +55,8 @@ void main() {
 
     await binding.waitUntilFirstFrameRasterized;
 
-    stackTraceCompleter = Completer();
-
     globalKey.currentState!.triggerExpensiveBuild();
+    stackTraceCompleter = Completer();
 
     final stackTraces = await stackTraceCompleter.future;
     checkStackTraces(stackTraces);
