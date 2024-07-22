@@ -85,7 +85,7 @@ jobs:
       - name: run flutter android integration tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 31
+          api-level: 29
           arch: arm64-v8a
           profile: pixel_5
           ram-size: 2048M
