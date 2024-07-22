@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:args/args.dart';
@@ -91,17 +90,6 @@ String llmSymbolizer(
       ++subStart;
     }
 
-    // final findLlvmSymbolizerResult =
-    //     processManager.runSync(['which', 'llvm-symbolizer'], runInShell: true);
-    // String llvmSymbolizerPath = findLlvmSymbolizerResult.stdout;
-    // if (llvmSymbolizerPath != '') {
-    //   stdout.writeln('Found llvm-symbolizer in $llvmSymbolizerPath');
-    // } else {
-    //   stderr.writeln(
-    //       'Can not find llvm-symbolizer, please export it in the PATH');
-    //   // return '';
-    // }
-
     // $ llvm-symbolizer --exe debug-info/app.android-arm.symbols --adjust-vma <baseAddress> <pcs>
     final cmd = [
       'llvm-symbolizer',
@@ -118,7 +106,6 @@ String llmSymbolizer(
 
     final outStringList =
         outString.split('\n').where((e) => e.isNotEmpty).toList();
-    // stdout.writeln('outStringList: $outStringList');
     if (outStringList.length > 2) {
       for (int i = 0; i < outStringList.length; i += 2) {
         funcName = outStringList[i];

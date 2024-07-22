@@ -177,6 +177,7 @@ class StackCapturer {
 
   final CollectStackNativeBindings _nativeBindings;
 
+  /// Set the target capture thread. This only works for the main isolate.
   void setCurrentThreadAsTarget() {
     _nativeBindings.SetCurrentThreadAsTarget();
   }
@@ -188,6 +189,9 @@ class StackCapturer {
     return Timeline.now;
   }
 
+  /// Capture the native stack using a signal handler. For more details,
+  /// see `CollectStackTraceOfTargetThread` in `collect_stack.cc`.
+  /// Before calling this function, call [setCurrentThreadAsTarget] first.
   NativeStack captureStackOfTargetThread() {
     return using((arena) {
       const maxStackDepth = 1024;

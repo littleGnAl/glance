@@ -102,6 +102,7 @@ class GlanceImpl implements Glance {
   }
 }
 
+/// Implementation of [GlanceStackTrace]
 class GlanceStackTraceImpl implements GlanceStackTrace {
   GlanceStackTraceImpl(this.stackTraces);
   final List<AggregatedNativeFrame> stackTraces;

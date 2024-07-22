@@ -15,8 +15,8 @@ class _FakeSamplerProcessor implements SamplerProcessor {
   final List<AggregatedNativeFrame> frames;
 
   @override
-  List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
-    sendPort.send('getStacktrace');
+  List<AggregatedNativeFrame> getStackTrace(List<int> timestampRange) {
+    sendPort.send('getStackTrace');
     return frames;
   }
 
@@ -131,7 +131,7 @@ void main() {
       expect(frames, equals([frame]));
 
       expect(processor.funcCallQueue.length, 3);
-      expect(processor.funcCallQueue[2], 'getStacktrace');
+      expect(processor.funcCallQueue[2], 'getStackTrace');
 
       sampler.close();
     });
@@ -185,7 +185,7 @@ void main() {
       expect(stackCapturer.isSetCurrentThreadAsTarget, isTrue);
     });
 
-    test('getStacktrace', () async {
+    test('getStackTrace', () async {
       fakeAsync((async) async {
         stackCapturer = FakeStackCapturer();
         samplerProcessor = SamplerProcessor(
@@ -226,7 +226,7 @@ void main() {
         samplerProcessor.setCurrentThreadAsTarget();
         samplerProcessor.loop();
         async.elapse(const Duration(milliseconds: 1500));
-        final stackTraces = samplerProcessor.getStacktrace([now - 1000, now]);
+        final stackTraces = samplerProcessor.getStackTrace([now - 1000, now]);
 
         expect(stackTraces.length, 2);
         // The order is reversed
@@ -235,7 +235,7 @@ void main() {
       });
     });
 
-    test('getStacktrace throw error if not call setCurrentThreadAsTarget', () {
+    test('getStackTrace throw error if not call setCurrentThreadAsTarget', () {
       stackCapturer = FakeStackCapturer();
       samplerProcessor = SamplerProcessor(
         SamplerConfig(
@@ -273,12 +273,12 @@ void main() {
           NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
 
       expect(
-        () => samplerProcessor.getStacktrace([now - 1000, now]),
+        () => samplerProcessor.getStackTrace([now - 1000, now]),
         throwsA(isA<AssertionError>()),
       );
     });
 
-    test('getStacktrace throw error if not call loop', () {
+    test('getStackTrace throw error if not call loop', () {
       stackCapturer = FakeStackCapturer();
       samplerProcessor = SamplerProcessor(
         SamplerConfig(
@@ -318,12 +318,12 @@ void main() {
       samplerProcessor.setCurrentThreadAsTarget();
 
       expect(
-        () => samplerProcessor.getStacktrace([now - 1000, now]),
+        () => samplerProcessor.getStackTrace([now - 1000, now]),
         throwsA(isA<AssertionError>()),
       );
     });
 
-    test('getStacktrace after calling close', () {
+    test('getStackTrace after calling close', () {
       stackCapturer = FakeStackCapturer();
       samplerProcessor = SamplerProcessor(
         SamplerConfig(
@@ -364,7 +364,7 @@ void main() {
       samplerProcessor.close();
 
       expect(
-        () => samplerProcessor.getStacktrace([now - 1000, now]),
+        () => samplerProcessor.getStackTrace([now - 1000, now]),
         throwsA(isA<AssertionError>()),
       );
     });
@@ -426,7 +426,7 @@ void main() {
             NativeStack(frames: [frame3], modules: [module3]);
         // Trigger second loop
         async.elapse(const Duration(milliseconds: 1500));
-        final stackTraces = samplerProcessor.getStacktrace([now - 1000, now]);
+        final stackTraces = samplerProcessor.getStackTrace([now - 1000, now]);
         // Close it avoid unnecessary loop in test
         samplerProcessor.close();
 

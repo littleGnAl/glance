@@ -44,10 +44,12 @@ class SamplerConfig {
 
   final int sampleRateInMilliseconds;
 
-  /// The factory used to create a [SamplerProcessor].
+  /// The factory used to create a [SamplerProcessor]. This allows us to inject
+  /// the [SamplerProcessor] in tests.
   final SamplerProcessorFactory samplerProcessorFactory;
 }
 
+/// Class to start a dedicated isolate for collecting stack traces.
 class Sampler {
   Sampler._(this._processorIsolate, this._responses, this._commands) {
     _responses.listen(_handleResponsesFromIsolate);
@@ -127,7 +129,7 @@ class Sampler {
         processor.close();
         receivePort.close();
       } else if (message is _GetSamplesRequest) {
-        final stacktrace = processor.getStacktrace(message.timestampRange);
+        final stacktrace = processor.getStackTrace(message.timestampRange);
         sendPort.send(_GetSamplesResponse(message.id, stacktrace));
       } else {
         // Not reachable.
@@ -170,6 +172,7 @@ class AggregatedNativeFrame {
 typedef SamplerProcessorFactory = SamplerProcessor Function(
     SamplerConfig config);
 
+/// Class for processing the native frames.
 class SamplerProcessor {
   SamplerProcessor(this._config, this._stackCapturer);
   final SamplerConfig _config;
@@ -193,7 +196,8 @@ class SamplerProcessor {
     _stackCapturer.setCurrentThreadAsTarget();
   }
 
-  List<AggregatedNativeFrame> getStacktrace(List<int> timestampRange) {
+  /// Get the aggregated [NativeFrame]s.
+  List<AggregatedNativeFrame> getStackTrace(List<int> timestampRange) {
     assert(_debugCalledSetCurrentThreadAsTarget,
         'Make sure you call `setCurrentThreadAsTarget` first');
     assert(isRunning);
@@ -201,6 +205,11 @@ class SamplerProcessor {
     return aggregateStacks(_config, _buffer!, timestampRange);
   }
 
+  /// Start an infinite loop to capture the [NativeStack] at intervals specified
+  /// by [SamplerConfig.sampleRateInMilliseconds]. The [NativeStack]s are stored
+  /// in a [RingBuffer], and you can get the aggregated [NativeFrame]s using [getStackTrace].
+  ///
+  /// The loop will stop after you call [close].
   Future<void> loop() async {
     final sampleRateInMilliseconds = _config.sampleRateInMilliseconds;
     _buffer ??= RingBuffer<NativeStack>(_bufferCount);
@@ -225,6 +234,7 @@ class SamplerProcessor {
     _buffer = null;
   }
 
+  /// Aggregate the [NativeFrame]s by occurrence times and return them in reverse order.
   @visibleForTesting
   List<AggregatedNativeFrame> aggregateStacks(
     SamplerConfig config,

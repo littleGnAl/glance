@@ -1,4 +1,4 @@
-/// The default threshold for identifying jank (performance lag).
+/// The default threshold for identifying UI jank.
 /// This is set to 32 milliseconds by default, which is equivalent to 2 frames
 /// (each frame being 16 milliseconds).
 const int kDefaultJankThreshold = 32;

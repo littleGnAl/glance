@@ -163,13 +163,6 @@ namespace
     mcontext_t mcontext = ucontext->uc_mcontext;
     uword pc = GetProgramCounter(mcontext);
     uword fp = GetFramePointer(mcontext);
-    // if (!fp)
-    // {
-    //   buffer->pcs[frame++] = 0;
-
-    //   buffer_to_fill.store(nullptr); // Signal completion
-    //   return;
-    // }
     uword sp = GetCStackPointer(mcontext);
     uword dart_sp = GetDartStackPointer(mcontext);
 

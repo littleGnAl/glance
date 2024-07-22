@@ -40,12 +40,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
-    // myErrorsHandler.onErrorDetails(details);
-    print(details.toString());
+    // ignore: avoid_print
+    print('FlutterError.onError:\n${details.toString()}');
   };
   PlatformDispatcher.instance.onError = (error, stack) {
-    // myErrorsHandler.onError(error, stack);
-    print('$error\n$stack');
+    // ignore: avoid_print
+    print('PlatformDispatcher.instance.onError:\n$error\n$stack');
     return true;
   };
 
