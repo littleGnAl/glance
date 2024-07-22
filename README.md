@@ -2,7 +2,7 @@
 
 > This library is still under heavy development. APIs may change without notice before it reaches stable version 1.0. Feel free to try it, but it is not recommended for production use at this time.
 
-An APM (Application Performance Monitoring) library for detecting UI jank in Flutter.
+An APM (Application Performance Monitoring) library for detecting UI jank in Flutter, supporting both Android and iOS.
 
 ## Getting Started
 
