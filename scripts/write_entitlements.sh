@@ -6,7 +6,7 @@ set -e
 
 original_dir=$(pwd)
 target_dir=~/Library/Android/sdk/emulator/qemu/darwin-aarch64
-file_path=entitlements.xml
+file_path=app.entitlements
 
 xml_content='<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -19,5 +19,6 @@ xml_content='<?xml version="1.0" encoding="UTF-8"?>
 
 cd "$target_dir"
 echo "$xml_content" > "$file_path"
-codesign -s - --entitlements entitlements.xml --force ./qemu-system-aarch64
+# codesign -s - --entitlements $file_path --force ./qemu-system-aarch64
+codesign -s "$(security find-identity -v -p codesigning | awk -F '"' 'NR==1{print $2}')" --entitlements $file_path --force qemu-system-aarch64
 cd "$original_dir"
