@@ -129,7 +129,6 @@ Future<bool> _runTestCase(ProcessManager processManager,
       }
 
       process.kill();
-
       return;
     }
 
@@ -155,6 +154,7 @@ Future<void> runTest(
   file.FileSystem fileSystem,
   List<TestCase> testCases,
 ) async {
+  List<TestCase> failedTestCases = [];
   for (final testCase in testCases) {
     final success = await _runTestCase(processManager, fileSystem, testCase);
     if (success) {
@@ -163,7 +163,17 @@ Future<void> runTest(
     } else {
       GlanceLogger.log('Test case failed: ${testCase.testFilePath}',
           prefixTag: false);
+      failedTestCases.add(testCase);
     }
+  }
+
+  if (failedTestCases.isNotEmpty) {
+    GlanceLogger.log('Some test cases failed:', prefixTag: false);
+    for (final e in failedTestCases) {
+      GlanceLogger.log('- "${e.description}", ${e.testFilePath}',
+          prefixTag: false);
+    }
+    exit(1);
   }
 }
 
