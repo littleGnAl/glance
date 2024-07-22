@@ -57,6 +57,7 @@ flutter:
       android:
         package: com.littlegnal.glance
         pluginClass: GlancePlugin
+      # TODO(littlegnal): Support ios later.
       # ios:
       #   pluginClass: GlancePlugin
 
