@@ -5,8 +5,8 @@ concurrency:
   cancel-in-progress: true
 
 on:
-#   push:
-  pull_request:
+  push:
+  # pull_request:
 
 jobs:
 #   flutter_codestyle_check:
