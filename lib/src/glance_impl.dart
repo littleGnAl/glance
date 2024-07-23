@@ -49,8 +49,10 @@ class GlanceImpl implements Glance {
         final FrameTiming timing = timings[i];
 
         final totalSpan = timing.totalSpan.inMilliseconds;
+        print('timing.totalSpan: ${timing.totalSpan.inMilliseconds}');
         if (totalSpan > jankThreshold) {
           jankTimings.add(timing);
+          
         }
       }
 

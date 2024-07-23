@@ -17,7 +17,12 @@ class MyJankDetectedReporter extends JankDetectedReporter {
       final info = (msg as List)[1];
       BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
 
-      final docDir = await getExternalStorageDirectory();
+      late Directory? docDir;
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        docDir = await getApplicationDocumentsDirectory();
+      } else {
+        docDir = await getExternalStorageDirectory();
+      }
       final stacktraceFilePath = path.join(
         docDir!.absolute.path,
         'jank_trace',
@@ -57,6 +62,8 @@ Future<void> _startGlance() async {
   Glance.instance.start(
     config: GlanceConfiguration(
       reporters: [MyJankDetectedReporter()],
+      sampleRateInMilliseconds: 1,
+      jankThreshold: 16,
     ),
   );
 
@@ -109,8 +116,25 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+    void _expensiveCall() {
+    final watch = Stopwatch();
+    watch.start();
+    for (int i = 0; i < 1000; ++i) {
+      jsonEncode({
+        for (int i = 0; i < 10000; ++i) 'aaa': 0,
+      });
+    }
+    watch.stop();
+    // ignore: avoid_print
+    print('[_expensiveCall] spent: ${watch.elapsedMilliseconds}');
+    // setState(() {
+    //   _counter++;
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _expensiveCall();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),

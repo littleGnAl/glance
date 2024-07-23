@@ -10,7 +10,12 @@
 // #include <cstring>
 // #include <pthread.h>
 #include <signal.h>
+#if defined(DART_HOST_OS_ANDROID)
 #include <ucontext.h>
+#elif defined(DART_HOST_OS_IOS)
+#include <sys/ucontext.h>
+#endif
+
 // #include <unistd.h>
 #include <sys/errno.h>
 // #include <cxxabi.h> // NOLINT
@@ -255,7 +260,12 @@ namespace
   //   return IsBetween(fp, sp, sp + 4096) || IsBetween(fp, dart_sp, dart_sp + 4096);
   // }
 
-  constexpr intptr_t kObscureSignal = SIGPWR;
+#if defined(DART_HOST_OS_ANDROID)
+constexpr intptr_t kObscureSignal = SIGPWR;
+#elif defined(DART_HOST_OS_IOS)
+constexpr intptr_t kObscureSignal = SIGPROF;
+#endif
+  
 
   void DumpHandler(int signal, siginfo_t *info, void *context)
   {

@@ -189,17 +189,17 @@ class SamplerProcessor {
   RingBuffer<NativeStack>? _buffer;
 
   void setCurrentThreadAsTarget() {
-    assert(() {
-      _debugCalledSetCurrentThreadAsTarget = true;
-      return true;
-    }());
+    // assert(() {
+    //   _debugCalledSetCurrentThreadAsTarget = true;
+    //   return true;
+    // }());
     _stackCapturer.setCurrentThreadAsTarget();
   }
 
   /// Get the aggregated [NativeFrame]s.
   List<AggregatedNativeFrame> getStackTrace(List<int> timestampRange) {
-    assert(_debugCalledSetCurrentThreadAsTarget,
-        'Make sure you call `setCurrentThreadAsTarget` first');
+    // assert(_debugCalledSetCurrentThreadAsTarget,
+    //     'Make sure you call `setCurrentThreadAsTarget` first');
     assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
     return aggregateStacks(_config, _buffer!, timestampRange);
@@ -250,12 +250,15 @@ class SamplerProcessor {
     final aggregatedFrameMap =
         LinkedHashMap<int, AggregatedNativeFrame>.identity();
     final allFrames = buffer.readAll().expand((e) => e!.frames).where((frame) {
-      return frame.module != null &&
-          frame.timestamp >= start &&
-          frame.timestamp <= end &&
-          modulePathFilters.any((pathFilter) {
-            return RegExp(pathFilter).hasMatch(frame.module!.path);
-          });
+      return frame.module != null
+      //  &&
+      //     frame.timestamp >= start &&
+      //     frame.timestamp <= end 
+          // &&
+          // modulePathFilters.any((pathFilter) {
+          //   return RegExp(pathFilter).hasMatch(frame.module!.path);
+          // })
+          ;
     });
 
     for (final frame in allFrames) {
