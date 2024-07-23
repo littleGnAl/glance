@@ -7,19 +7,15 @@
 // Copyright (c) 2024 Littlegnal. Licensed under the MIT License. See the LICENSE file for details.
 
 #include <atomic>
-// #include <cstring>
-// #include <pthread.h>
 #include <signal.h>
-#if defined(DART_HOST_OS_ANDROID)
 #include <ucontext.h>
-#elif defined(DART_HOST_OS_IOS)
-#include <sys/ucontext.h>
-#endif
+// #if defined(DART_HOST_OS_ANDROID)
+// #include <ucontext.h>
+// #elif defined(DART_HOST_OS_IOS)
+// #include <sys/ucontext.h>
+// #endif
 
-// #include <unistd.h>
 #include <sys/errno.h>
-// #include <cxxabi.h> // NOLINT
-// #include <dlfcn.h>  // NOLINT
 #include <chrono>
 #include "collect_stack.h"
 
@@ -86,7 +82,6 @@ namespace
 
   std::atomic<Buffer *> buffer_to_fill;
 
-#if defined(DART_HOST_OS_ANDROID)
   uword GetProgramCounter(const mcontext_t &mcontext)
   {
 #if defined(HOST_ARCH_IA32)
@@ -105,29 +100,31 @@ namespace
 #error Unsupported architecture.
 #endif // HOST_ARCH_...
   }
-#elif defined(DART_HOST_OS_IOS)
-  // Borrowed from https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L13
-  uword GetProgramCounter(const mcontext_t &mcontext)
-  {
-    uword pc = 0;
 
-#if defined(HOST_ARCH_IA32)
-    pc = static_cast<uword>(mcontext->__ss.__eip);
-#elif defined(HOST_ARCH_X64)
-    pc = static_cast<uword>(mcontext->__ss.__rip);
-#elif defined(HOST_ARCH_ARM)
-    pc = static_cast<uword>(mcontext->__ss.__pc);
-#elif defined(HOST_ARCH_ARM64)
-    pc = static_cast<uword>(mcontext->__ss.__pc);
-#else
-#error Unsupported architecture.
-#endif // HOST_ARCH_...
+  // #if defined(DART_HOST_OS_ANDROID)
 
-    return pc;
-  }
-#endif
+  // #elif defined(DART_HOST_OS_IOS)
+  //   // Borrowed from https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L13
+  //   uword GetProgramCounter(const mcontext_t &mcontext)
+  //   {
+  //     uword pc = 0;
 
-#if defined(DART_HOST_OS_ANDROID)
+  // #if defined(HOST_ARCH_IA32)
+  //     pc = static_cast<uword>(mcontext->__ss.__eip);
+  // #elif defined(HOST_ARCH_X64)
+  //     pc = static_cast<uword>(mcontext->__ss.__rip);
+  // #elif defined(HOST_ARCH_ARM)
+  //     pc = static_cast<uword>(mcontext->__ss.__pc);
+  // #elif defined(HOST_ARCH_ARM64)
+  //     pc = static_cast<uword>(mcontext->__ss.__pc);
+  // #else
+  // #error Unsupported architecture.
+  // #endif // HOST_ARCH_...
+
+  //     return pc;
+  //   }
+  // #endif
+
   uword GetFramePointer(const mcontext_t &mcontext)
   {
 #if defined(HOST_ARCH_IA32)
@@ -156,29 +153,31 @@ namespace
 #error Unsupported architecture.
 #endif // HOST_ARCH_...
   }
-#elif defined(DART_HOST_OS_IOS)
-  // Borrowed https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L31
-  uword GetFramePointer(const mcontext_t &mcontext)
-  {
-    uword fp = 0;
 
-#if defined(HOST_ARCH_IA32)
-    fp = static_cast<uword>(mcontext->__ss.__ebp);
-#elif defined(HOST_ARCH_X64)
-    fp = static_cast<uword>(mcontext->__ss.__rbp);
-#elif defined(HOST_ARCH_ARM)
-    fp = static_cast<uword>(mcontext->__ss.__r[7]);
-#elif defined(HOST_ARCH_ARM64)
-    fp = static_cast<uword>(mcontext->__ss.__fp);
-#else
-#error Unsupported architecture.
-#endif // HOST_ARCH_...
+  // #if defined(DART_HOST_OS_ANDROID)
 
-    return fp;
-  }
-#endif
+  // #elif defined(DART_HOST_OS_IOS)
+  //   // Borrowed https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L31
+  //   uword GetFramePointer(const mcontext_t &mcontext)
+  //   {
+  //     uword fp = 0;
 
-#if defined(DART_HOST_OS_ANDROID)
+  // #if defined(HOST_ARCH_IA32)
+  //     fp = static_cast<uword>(mcontext->__ss.__ebp);
+  // #elif defined(HOST_ARCH_X64)
+  //     fp = static_cast<uword>(mcontext->__ss.__rbp);
+  // #elif defined(HOST_ARCH_ARM)
+  //     fp = static_cast<uword>(mcontext->__ss.__r[7]);
+  // #elif defined(HOST_ARCH_ARM64)
+  //     fp = static_cast<uword>(mcontext->__ss.__fp);
+  // #else
+  // #error Unsupported architecture.
+  // #endif // HOST_ARCH_...
+
+  //     return fp;
+  //   }
+  // #endif
+
   uword GetCStackPointer(const mcontext_t &mcontext)
   {
 #if defined(HOST_ARCH_IA32)
@@ -197,29 +196,31 @@ namespace
 #error Unsupported architecture.
 #endif // HOST_ARCH_...
   }
-#elif defined(DART_HOST_OS_IOS)
-  // Borrowed from https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L49
-  uword GetCStackPointer(const mcontext_t &mcontext)
-  {
-    uword sp = 0;
 
-#if defined(HOST_ARCH_IA32)
-    sp = static_cast<uword>(mcontext->__ss.__esp);
-#elif defined(HOST_ARCH_X64)
-    sp = static_cast<uword>(mcontext->__ss.__rsp);
-#elif defined(HOST_ARCH_ARM)
-    sp = static_cast<uword>(mcontext->__ss.__sp);
-#elif defined(HOST_ARCH_ARM64)
-    sp = static_cast<uword>(mcontext->__ss.__sp);
-#else
-    UNIMPLEMENTED();
-#endif // HOST_ARCH_...
+  // #if defined(DART_HOST_OS_ANDROID)
 
-    return sp;
-  }
-#endif
+  // #elif defined(DART_HOST_OS_IOS)
+  //   // Borrowed from https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L49
+  //   uword GetCStackPointer(const mcontext_t &mcontext)
+  //   {
+  //     uword sp = 0;
 
-#if defined(DART_HOST_OS_ANDROID)
+  // #if defined(HOST_ARCH_IA32)
+  //     sp = static_cast<uword>(mcontext->__ss.__esp);
+  // #elif defined(HOST_ARCH_X64)
+  //     sp = static_cast<uword>(mcontext->__ss.__rsp);
+  // #elif defined(HOST_ARCH_ARM)
+  //     sp = static_cast<uword>(mcontext->__ss.__sp);
+  // #elif defined(HOST_ARCH_ARM64)
+  //     sp = static_cast<uword>(mcontext->__ss.__sp);
+  // #else
+  //     UNIMPLEMENTED();
+  // #endif // HOST_ARCH_...
+
+  //     return sp;
+  //   }
+  // #endif
+
   uword GetDartStackPointer(const mcontext_t &mcontext)
   {
 #if defined(HOST_ARCH_ARM64)
@@ -228,19 +229,22 @@ namespace
     return GetCStackPointer(mcontext);
 #endif
   }
-#elif defined(DART_HOST_OS_IOS)
-  // Borrow from https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L67
-  uword GetDartStackPointer(const mcontext_t &mcontext)
-  {
-#if defined(TARGET_ARCH_ARM64)
-    // SPREG = R15 = 15, see
-    // https://github.com/dart-lang/sdk/blob/525a63786cd3227c000ec6f23a0004637a08b3fa/runtime/vm/constants_arm64.h#L50
-    return static_cast<uword>(mcontext->__ss.__x[15 /*SPREG*/]);
-#else
-    return GetCStackPointer(mcontext);
-#endif
-  }
-#endif
+
+  // #if defined(DART_HOST_OS_ANDROID)
+
+  // #elif defined(DART_HOST_OS_IOS)
+  //   // Borrow from https://github.com/dart-lang/sdk/blob/a9b706e19f2d5af60f6b90b2f75165ca55fe6874/runtime/vm/signal_handler_macos.cc#L67
+  //   uword GetDartStackPointer(const mcontext_t &mcontext)
+  //   {
+  // #if defined(TARGET_ARCH_ARM64)
+  //     // SPREG = R15 = 15, see
+  //     // https://github.com/dart-lang/sdk/blob/525a63786cd3227c000ec6f23a0004637a08b3fa/runtime/vm/constants_arm64.h#L50
+  //     return static_cast<uword>(mcontext->__ss.__x[15 /*SPREG*/]);
+  // #else
+  //     return GetCStackPointer(mcontext);
+  // #endif
+  //   }
+  // #endif
 
   // bool IsBetween(uword v, uword low, uword high) { return low <= v && v <= high; }
 
@@ -260,12 +264,13 @@ namespace
   //   return IsBetween(fp, sp, sp + 4096) || IsBetween(fp, dart_sp, dart_sp + 4096);
   // }
 
-#if defined(DART_HOST_OS_ANDROID)
-constexpr intptr_t kObscureSignal = SIGPWR;
-#elif defined(DART_HOST_OS_IOS)
-constexpr intptr_t kObscureSignal = SIGPROF;
-#endif
-  
+  constexpr intptr_t kObscureSignal = SIGPWR;
+
+  // #if defined(DART_HOST_OS_ANDROID)
+
+  // #elif defined(DART_HOST_OS_IOS)
+  //   constexpr intptr_t kObscureSignal = SIGPROF;
+  // #endif
 
   void DumpHandler(int signal, siginfo_t *info, void *context)
   {

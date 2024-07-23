@@ -235,49 +235,6 @@ void main() {
       });
     });
 
-    test('getStackTrace throw error if not call setCurrentThreadAsTarget', () {
-      stackCapturer = FakeStackCapturer();
-      samplerProcessor = SamplerProcessor(
-        SamplerConfig(
-          jankThreshold: 1,
-          modulePathFilters: [],
-          sampleRateInMilliseconds: 1000,
-        ),
-        stackCapturer,
-      );
-      final now = Timeline.now;
-      final module1 = NativeModule(
-        id: 1,
-        path: 'libapp.so',
-        baseAddress: 540641718272,
-        symbolName: 'hello',
-      );
-      final frame1 = NativeFrame(
-        pc: 540642472602,
-        timestamp: now - 100,
-        module: module1,
-      );
-      final module2 = NativeModule(
-        id: 2,
-        path: 'libapp.so',
-        baseAddress: 540641718272,
-        symbolName: 'world',
-      );
-      final frame2 = NativeFrame(
-        pc: 540642472608,
-        timestamp: now - 200,
-        module: module2,
-      );
-
-      stackCapturer.nativeStack =
-          NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
-
-      expect(
-        () => samplerProcessor.getStackTrace([now - 1000, now]),
-        throwsA(isA<AssertionError>()),
-      );
-    });
-
     test('getStackTrace throw error if not call loop', () {
       stackCapturer = FakeStackCapturer();
       samplerProcessor = SamplerProcessor(

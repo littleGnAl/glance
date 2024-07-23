@@ -1,13 +1,16 @@
-// #include <atomic>
+// Original BSD 3-Clause License
+// Copyright (c) 2024, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE-original file.
+
+// Modifications and new contributions
+// Copyright (c) 2024 Littlegnal. Licensed under the MIT License. See the LICENSE file for details.
+
 #include <cstring>
 #include <pthread.h>
-// #include <signal.h>
-// #include <ucontext.h>
 #include <unistd.h>
-// #include <sys/errno.h>
 #include <cxxabi.h> // NOLINT
 #include <dlfcn.h>  // NOLINT
-// #include <chrono>
 
 // Borrowed from https://github.com/dart-lang/sdk/blob/main/runtime/platform/globals.h#L107
 //
