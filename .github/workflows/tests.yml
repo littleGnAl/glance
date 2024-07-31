@@ -5,7 +5,8 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  pull_request:
+  # pull_request:
+  push:
 
 jobs:
   pub_dev_check:
