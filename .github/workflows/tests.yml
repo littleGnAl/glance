@@ -34,9 +34,8 @@ jobs:
           TOTAL: ${{ steps.analysis.outputs.total }}
           TOTAL_MAX: ${{ steps.analysis.outputs.total_max }}
         run: |
-          if (( $TOTAL_MAX - $TOTAL > 10 ))
-          then
-            echo Pub Score too low.
+          if [ $TOTAL_MAX -ne $TOTAL ]; then
+            echo "Pub Score too low."
             exit 1
           fi
 
@@ -64,7 +63,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ matrix.version }}
