@@ -108,7 +108,6 @@ See more detail:
 
 In some cases, the stack traces may not accurately reflect the exact invocation order of the Dart code. This issue requires further improvement.
 
-
 ## Acknowledgements
 
 Thanks to [thread_collect_stack_example](https://github.com/mraleph/thread_collect_stack_example) for the inspiration, which made this project possible.
