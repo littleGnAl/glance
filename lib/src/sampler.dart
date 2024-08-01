@@ -180,7 +180,8 @@ class SamplerProcessor {
   /// With all default configurations, the length is approximately 641 of 2s
   /// Refer to the dart sdk implementation.
   /// https://github.com/dart-lang/sdk/blob/bcaf745a9be6c4af0c338c43e6304c9e1c4c5535/runtime/vm/profiler.cc#L642
-  static const _bufferCount = 641;
+  // static const _bufferCount = 641;
+  static const _bufferCount = 9600;
 
   RingBuffer<NativeStack>? _buffer;
 
