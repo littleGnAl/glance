@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:isolate';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:glance/src/collect_stack.dart';
@@ -228,6 +227,38 @@ class SamplerProcessor {
     _buffer = null;
   }
 
+  void _addOrUpdateAggregatedNativeFrame(
+      SamplerConfig config,
+      List<int> timestampRange,
+      LinkedHashMap<int, AggregatedNativeFrame> aggregatedFrameMap,
+      NativeFrame frame) {
+    List<String> modulePathFilters = config.modulePathFilters;
+
+    int start = timestampRange[0];
+    int end = timestampRange[1];
+
+    final isInclude = frame.module != null &&
+        frame.timestamp >= start &&
+        frame.timestamp <= end &&
+        modulePathFilters.any((pathFilter) {
+          return RegExp(pathFilter).hasMatch(frame.module!.path);
+        });
+
+    if (!isInclude) {
+      return;
+    }
+    final pc = frame.pc;
+    if (aggregatedFrameMap.containsKey(pc)) {
+      final aggregatedFrame = aggregatedFrameMap[pc]!;
+      final occurTimes = aggregatedFrame.occurTimes + 1;
+      aggregatedFrame.occurTimes = occurTimes;
+      aggregatedFrame.frame = frame;
+    } else {
+      final aggregatedFrame = AggregatedNativeFrame(frame);
+      aggregatedFrameMap[pc] = aggregatedFrame;
+    }
+  }
+
   /// Aggregate the [NativeFrame]s by occurrence times.
   @visibleForTesting
   List<AggregatedNativeFrame> aggregateStacks(
@@ -235,56 +266,51 @@ class SamplerProcessor {
     RingBuffer<NativeStack> buffer,
     List<int> timestampRange,
   ) {
-    List<String> modulePathFilters = config.modulePathFilters;
     final maxOccurTimes =
         config.jankThreshold / config.sampleRateInMilliseconds;
 
-    int start = timestampRange[0];
-    int end = timestampRange[1];
-    final aggregatedFrameMap =
-        LinkedHashMap<int, AggregatedNativeFrame>.identity();
-    final allFrames = buffer.readAll().expand((e) => e!.frames).where((frame) {
-      return frame.module != null &&
-          frame.timestamp >= start &&
-          frame.timestamp <= end &&
-          modulePathFilters.any((pathFilter) {
-            return RegExp(pathFilter).hasMatch(frame.module!.path);
-          });
-    });
+    final parentFrameMap = LinkedHashMap<int,
+        LinkedHashMap<int, AggregatedNativeFrame>>.identity();
 
-    for (final frame in allFrames) {
-      final pc = frame.pc;
-      if (aggregatedFrameMap.containsKey(pc)) {
-        final aggregatedFrame = aggregatedFrameMap[pc]!;
-        final occurTimes = aggregatedFrame.occurTimes + 1;
-        aggregatedFrame.occurTimes = occurTimes;
-        aggregatedFrame.frame = frame;
+    for (final nativeStack in buffer.readAll().reversed) {
+      int parentFramePc = nativeStack!.frames.last.pc;
+      bool isContainParentFrame = parentFrameMap.containsKey(parentFramePc);
+
+      if (isContainParentFrame) {
+        final aggregatedFrameMap = parentFrameMap[parentFramePc]!;
+        final frames = nativeStack.frames;
+
+        // Aggregate from parent.
+        for (int i = frames.length - 1; i >= 0; --i) {
+          _addOrUpdateAggregatedNativeFrame(
+              config, timestampRange, aggregatedFrameMap, frames[i]);
+        }
       } else {
-        final aggregatedFrame = AggregatedNativeFrame(frame);
-        aggregatedFrame.occurTimes = 1;
-        aggregatedFrameMap[pc] = aggregatedFrame;
+        final aggregatedFrameMap =
+            LinkedHashMap<int, AggregatedNativeFrame>.identity();
+        final frames = nativeStack.frames;
+        for (int i = frames.length - 1; i >= 0; --i) {
+          _addOrUpdateAggregatedNativeFrame(
+              config, timestampRange, aggregatedFrameMap, frames[i]);
+        }
+        parentFrameMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
       }
     }
 
-    final aggregatedFrameList = aggregatedFrameMap.values.toList();
-    final len = aggregatedFrameList.length;
-    int subStart = 0;
-    int subEnd = aggregatedFrameMap.values.length - 1;
-    while (subStart < len &&
-        aggregatedFrameList[subStart].occurTimes < maxOccurTimes) {
-      ++subStart;
-    }
-    while (subEnd > subStart &&
-        aggregatedFrameList[subEnd].occurTimes < maxOccurTimes) {
-      --subEnd;
+    final allFrameList = <AggregatedNativeFrame>[];
+    for (final entry in parentFrameMap.entries) {
+      final jankFrames =
+          entry.value.values.where((e) => e.occurTimes > maxOccurTimes);
+      if (jankFrames.isNotEmpty) {
+        allFrameList.addAll(jankFrames.toList().reversed);
+      }
     }
 
-    if (subEnd > subStart) {
-      final end = min(kMaxStackTraces, subEnd + 1);
-      return aggregatedFrameList.sublist(subStart, end);
+    if (allFrameList.length > kMaxStackTraces) {
+      return allFrameList.sublist(0, kMaxStackTraces);
     }
 
-    return [];
+    return allFrameList;
   }
 }
 

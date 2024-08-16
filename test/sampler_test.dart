@@ -410,7 +410,7 @@ void main() {
     });
 
     group('aggregateStacks', () {
-      test('return aggregated frames with one occurTimes', () {
+      test('return aggregated frames with one frame in stack', () {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
@@ -468,15 +468,15 @@ void main() {
         final aggregatedNativeFrames =
             samplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 3);
-        expect(aggregatedNativeFrames[0].frame, frame1);
+        expect(aggregatedNativeFrames[0].frame, frame3);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
         expect(aggregatedNativeFrames[1].frame, frame2);
         expect(aggregatedNativeFrames[1].occurTimes, 1);
-        expect(aggregatedNativeFrames[2].frame, frame3);
+        expect(aggregatedNativeFrames[2].frame, frame1);
         expect(aggregatedNativeFrames[2].occurTimes, 1);
       });
 
-      test('return aggregated frames with multiple occurTimes', () {
+      test('return aggregated frames with multiple frames in stack', () {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
@@ -488,72 +488,124 @@ void main() {
           stackCapturer,
         );
         final now = Timeline.now;
-        final module1 = NativeModule(
+        final module = NativeModule(
           id: 1,
           path: 'libapp.so',
           baseAddress: 540641718272,
           symbolName: 'hello',
         );
         final frame1 = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 5000,
-          module: module1,
-        );
-        final frame1Replace = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 4000,
-          module: module1,
-        );
-        final module2 = NativeModule(
-          id: 2,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'world',
+          pc: 1,
+          timestamp: now - 100,
+          module: module,
         );
         final frame2 = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 3000,
-          module: module2,
-        );
-        final frame2Replace = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 2000,
-          module: module2,
-        );
-        final module3 = NativeModule(
-          id: 3,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'helloworld',
+          pc: 2,
+          timestamp: now - 200,
+          module: module,
         );
         final frame3 = NativeFrame(
-          pc: 540642472605,
-          timestamp: now - 1000,
-          module: module3,
+          pc: 3,
+          timestamp: now - 300,
+          module: module,
+        );
+        final frame4 = NativeFrame(
+          pc: 4,
+          timestamp: now - 400,
+          module: module,
+        );
+        final frame5 = NativeFrame(
+          pc: 5,
+          timestamp: now - 500,
+          module: module,
         );
 
-        final stack1 = NativeStack(frames: [frame1], modules: [module1]);
-        final stack2 = NativeStack(frames: [frame1Replace], modules: [module1]);
-        final stack3 = NativeStack(frames: [frame2], modules: [module2]);
-        final stack4 = NativeStack(frames: [frame2Replace], modules: [module2]);
-        final stack5 = NativeStack(frames: [frame3], modules: [module3]);
-        final buffer = RingBuffer<NativeStack>(5)
+        final stack1 = NativeStack(
+            frames: [frame1, frame2, frame3],
+            modules: [module, module, module]);
+        final stack2 =
+            NativeStack(frames: [frame4, frame5], modules: [module, module]);
+        final buffer = RingBuffer<NativeStack>(3)
           ..write(stack1)
-          ..write(stack2)
-          ..write(stack3)
-          ..write(stack4)
-          ..write(stack5);
+          ..write(stack2);
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
             samplerProcessor.aggregateStacks(config, buffer, timestampRange);
-        expect(aggregatedNativeFrames.length, 3);
-        expect(aggregatedNativeFrames[0].frame, frame1Replace);
+        expect(aggregatedNativeFrames.length, 5);
+        expect(
+          aggregatedNativeFrames.map((e) => e.frame).toList(),
+          equals([frame4, frame5, frame1, frame2, frame3]),
+        );
+        for (final frame in aggregatedNativeFrames) {
+          expect(frame.occurTimes, 1);
+        }
+      });
+
+      test(
+          'return aggregated frames with multiple frames with duplicate frames in stack',
+          () {
+        stackCapturer = FakeStackCapturer();
+        final config = SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: kAndroidDefaultModulePathFilters,
+          sampleRateInMilliseconds: 1000,
+        );
+        samplerProcessor = SamplerProcessor(
+          config,
+          stackCapturer,
+        );
+        final now = Timeline.now;
+        final module = NativeModule(
+          id: 1,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        );
+        final frame1 = NativeFrame(
+          pc: 1,
+          timestamp: now - 100,
+          module: module,
+        );
+        final frame2 = NativeFrame(
+          pc: 2,
+          timestamp: now - 200,
+          module: module,
+        );
+        final frame3 = NativeFrame(
+          pc: 3,
+          timestamp: now - 300,
+          module: module,
+        );
+        final frame4 = NativeFrame(
+          pc: 4,
+          timestamp: now - 400,
+          module: module,
+        );
+        final frame5 = NativeFrame(
+          pc: 4,
+          timestamp: now - 500,
+          module: module,
+        );
+
+        final stack1 = NativeStack(
+            frames: [frame1, frame2, frame3],
+            modules: [module, module, module]);
+        final stack2 =
+            NativeStack(frames: [frame4, frame5], modules: [module, module]);
+        final buffer = RingBuffer<NativeStack>(3)
+          ..write(stack1)
+          ..write(stack2);
+
+        final timestampRange = <int>[now - 10000, now];
+        final aggregatedNativeFrames =
+            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+        expect(aggregatedNativeFrames.length, 4);
+        expect(
+          aggregatedNativeFrames.map((e) => e.frame).toList(),
+          equals([frame4, frame1, frame2, frame3]),
+        );
         expect(aggregatedNativeFrames[0].occurTimes, 2);
-        expect(aggregatedNativeFrames[1].frame, frame2Replace);
-        expect(aggregatedNativeFrames[1].occurTimes, 2);
-        expect(aggregatedNativeFrames[2].frame, frame3);
-        expect(aggregatedNativeFrames[2].occurTimes, 1);
       });
 
       test('return frames between the timestampRange', () {
@@ -610,17 +662,17 @@ void main() {
           ..write(stack2)
           ..write(stack3);
 
-        final timestampRange = <int>[now - 4500, now];
+        final timestampRange = <int>[now - 3500, now];
         final aggregatedNativeFrames =
             samplerProcessor.aggregateStacks(config, buffer, timestampRange);
-        expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame2);
+        expect(aggregatedNativeFrames.length, 1);
+        expect(aggregatedNativeFrames[0].frame, frame3);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
-        expect(aggregatedNativeFrames[1].frame, frame3);
-        expect(aggregatedNativeFrames[1].occurTimes, 1);
       });
 
-      test('return frames greater than jankThreshold', () {
+      test(
+          'return aggregated frames greater than jankThreshold with multiple frames with duplicate frames in stack',
+          () {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 2,
@@ -632,70 +684,55 @@ void main() {
           stackCapturer,
         );
         final now = Timeline.now;
-        final module1 = NativeModule(
+        final module = NativeModule(
           id: 1,
           path: 'libapp.so',
           baseAddress: 540641718272,
           symbolName: 'hello',
         );
         final frame1 = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 5000,
-          module: module1,
-        );
-        final frame1Replace = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 4000,
-          module: module1,
-        );
-        final module2 = NativeModule(
-          id: 2,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'world',
+          pc: 1,
+          timestamp: now - 100,
+          module: module,
         );
         final frame2 = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 3000,
-          module: module2,
-        );
-        final frame2Replace = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 2000,
-          module: module2,
-        );
-        final module3 = NativeModule(
-          id: 3,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'helloworld',
+          pc: 2,
+          timestamp: now - 200,
+          module: module,
         );
         final frame3 = NativeFrame(
-          pc: 540642472605,
-          timestamp: now - 1000,
-          module: module3,
+          pc: 2,
+          timestamp: now - 300,
+          module: module,
+        );
+        final frame4 = NativeFrame(
+          pc: 2,
+          timestamp: now - 400,
+          module: module,
+        );
+        final frame5 = NativeFrame(
+          pc: 3,
+          timestamp: now - 500,
+          module: module,
         );
 
-        final stack1 = NativeStack(frames: [frame1], modules: [module1]);
-        final stack2 = NativeStack(frames: [frame1Replace], modules: [module1]);
-        final stack3 = NativeStack(frames: [frame2], modules: [module2]);
-        final stack4 = NativeStack(frames: [frame2Replace], modules: [module2]);
-        final stack5 = NativeStack(frames: [frame3], modules: [module3]);
-        final buffer = RingBuffer<NativeStack>(5)
+        final stack1 = NativeStack(
+            frames: [frame1, frame2, frame3, frame4],
+            modules: [module, module, module]);
+        final stack2 = NativeStack(frames: [frame5], modules: [module]);
+        final buffer = RingBuffer<NativeStack>(3)
           ..write(stack1)
-          ..write(stack2)
-          ..write(stack3)
-          ..write(stack4)
-          ..write(stack5);
+          ..write(stack2);
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
             samplerProcessor.aggregateStacks(config, buffer, timestampRange);
-        expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame1Replace);
-        expect(aggregatedNativeFrames[0].occurTimes, 2);
-        expect(aggregatedNativeFrames[1].frame, frame2Replace);
-        expect(aggregatedNativeFrames[1].occurTimes, 2);
+        expect(aggregatedNativeFrames.length, 1);
+        expect(
+          aggregatedNativeFrames.map((e) => e.frame).toList(),
+          equals([frame2]),
+        );
+        expect(aggregatedNativeFrames[0].occurTimes, 3);
       });
 
       test('return empty if no frames greater than jankThreshold', () {
@@ -792,9 +829,9 @@ void main() {
         final aggregatedNativeFrames =
             samplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame1);
+        expect(aggregatedNativeFrames[0].frame, frame2);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
-        expect(aggregatedNativeFrames[1].frame, frame2);
+        expect(aggregatedNativeFrames[1].frame, frame1);
         expect(aggregatedNativeFrames[1].occurTimes, 1);
       });
 
@@ -856,10 +893,45 @@ void main() {
         final aggregatedNativeFrames =
             samplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame1);
+        expect(aggregatedNativeFrames[0].frame, frame2);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
-        expect(aggregatedNativeFrames[1].frame, frame2);
+        expect(aggregatedNativeFrames[1].frame, frame1);
         expect(aggregatedNativeFrames[1].occurTimes, 1);
+      });
+
+      test('only return frames with max length kMaxStackTraces', () {
+        stackCapturer = FakeStackCapturer();
+        final config = SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: kIOSDefaultModulePathFilters,
+          sampleRateInMilliseconds: 1000,
+        );
+        samplerProcessor = SamplerProcessor(
+          config,
+          stackCapturer,
+        );
+        final now = Timeline.now;
+        final module = NativeModule(
+          id: 1,
+          path: 'Runner.app/Frameworks/App.framework/App',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        );
+        final buffer = RingBuffer<NativeStack>(200);
+
+        for (int i = 0; i < 200; ++i) {
+          final frame = NativeFrame(
+            pc: i,
+            timestamp: now - i,
+            module: module,
+          );
+          buffer.write(NativeStack(frames: [frame], modules: [module]));
+        }
+
+        final timestampRange = <int>[now - 10000, now];
+        final aggregatedNativeFrames =
+            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+        expect(aggregatedNativeFrames.length, kMaxStackTraces);
       });
 
       test('return filtered modules with kIOSDefaultModulePathFilters', () {
@@ -920,9 +992,9 @@ void main() {
         final aggregatedNativeFrames =
             samplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame1);
+        expect(aggregatedNativeFrames[0].frame, frame2);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
-        expect(aggregatedNativeFrames[1].frame, frame2);
+        expect(aggregatedNativeFrames[1].frame, frame1);
         expect(aggregatedNativeFrames[1].occurTimes, 1);
       });
     });
