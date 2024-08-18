@@ -13,6 +13,13 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack_android.cc"
+    # "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack.h"
+    # "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack_android.cc"
+
+    "${CMAKE_CURRENT_SOURCE_DIR}/stack_collector_c.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/stack_collector.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/stack_collector.cc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/stack_collector_android.cc"
     )
 
 add_library(${LIBRARY_NAME} SHARED

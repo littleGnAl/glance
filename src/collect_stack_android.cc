@@ -122,7 +122,7 @@ namespace glance
 #endif
   }
 
-  constexpr intptr_t kObscureSignal = SIGPWR;
+  constexpr intptr_t kObscureSignal = SIGPROF;
 
   void DumpHandler(int signal, siginfo_t *info, void *context)
   {
@@ -161,12 +161,22 @@ extern "C" char *CollectStackTraceOfTargetThread(int64_t *buf, size_t buf_size)
 {
   // TODO: this function is not thread safe and should probably use locking.
 
+  //   struct sigaction act = {};
+  // act.sa_sigaction = action;
+  // sigemptyset(&act.sa_mask);
+  // sigaddset(&act.sa_mask, SIGPROF);  // Prevent nested signals.
+  // act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+  // int r = sigaction(SIGPROF, &act, nullptr);
+
   // Register a signal handler for the |kObscureSignal| signal which will dump
   // the stack for us.
   struct sigaction new_act, old_act;
   new_act.sa_sigaction = &glance::DumpHandler;
-  new_act.sa_flags = SA_RESTART | SA_SIGINFO;
-  int result = sigaction(glance::kObscureSignal, &new_act, &old_act);
+  sigemptyset(&new_act.sa_mask);
+  sigaddset(&new_act.sa_mask, SIGPROF);  // Prevent nested signals.
+  // new_act.sa_flags = SA_RESTART | SA_SIGINFO;
+  new_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+  int result = sigaction(kObscureSignal, &new_act, &old_act);
   if (result != 0)
   {
     // Failed to register the signal handler. Report an error.

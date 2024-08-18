@@ -60,6 +60,7 @@ class Sampler {
   static Future<Sampler> create(SamplerConfig config) async {
     final processor = config.samplerProcessorFactory(config);
     processor.setCurrentThreadAsTarget();
+    processor.startCapture();
 
     // Create a receive port and add its initial message handler
     final initPort = RawReceivePort();
@@ -138,7 +139,8 @@ class Sampler {
       }
     });
 
-    processor.loop();
+    // processor.loop();
+    // processor.startCapture();
   }
 
   void close() {
@@ -215,6 +217,10 @@ class SamplerProcessor {
       final stacktrace = aggregateStacks(config, buffer, timestampRange);
       sendPort.send(GetSamplesResponse(id, stacktrace));
     }, args);
+  }
+
+  void startCapture() {
+    _stackCapturer.startCapture();
   }
 
   /// Start an infinite loop to capture the [NativeStack] at intervals specified
@@ -322,7 +328,7 @@ class SamplerProcessor {
     final allFrameList = <AggregatedNativeFrame>[];
     for (final entry in parentFrameMap.entries) {
       final jankFrames =
-          entry.value.values.where((e) => e.occurTimes > maxOccurTimes);
+          entry.value.values; //.where((e) => e.occurTimes > maxOccurTimes);
       if (jankFrames.isNotEmpty) {
         allFrameList.addAll(jankFrames.toList().reversed);
       }

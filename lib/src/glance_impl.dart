@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -294,7 +295,9 @@ mixin GlanceWidgetBindingMixin on WidgetsFlutterBinding {
     // Only check jank if not in build phase, because if it is in buid phase,
     // the jank has been checked by the build phase jank check
     if (schedulerPhase == SchedulerPhase.idle) {
-      _onCheckJank?.call(start, Timeline.now);
+      scheduleMicrotask(() {
+        _onCheckJank?.call(start, Timeline.now);
+      });
     }
 
     return ret;
@@ -327,6 +330,7 @@ mixin GlanceWidgetBindingMixin on WidgetsFlutterBinding {
     traceFunctionCall(() {
       super.handlePointerEvent(event);
     });
+    print('handlePointerEvent');
   }
 
   @override
