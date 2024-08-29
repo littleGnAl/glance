@@ -24,6 +24,15 @@ class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 5), () {
+      triggerExpensiveBuild();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (_isExpensiveBuild) {
       expensiveFunction();
@@ -45,21 +54,10 @@ void main() {
   };
 
   glanceIntegrationTest(() async {
-    final binding = GlanceWidgetBinding.ensureInitialized();
-    final globalKey = GlobalKey<_BuildPhaseJankWidgetState>();
-    Completer<String>? stackTraceCompleter;
+    GlanceWidgetBinding.ensureInitialized();
     final reporter = TestJankDetectedReporter((info) {
-      if (stackTraceCompleter != null && !stackTraceCompleter.isCompleted) {
-        stackTraceCompleter.complete(info.stackTrace.toString());
-      }
+      checkStackTraces(info.stackTrace.toString());
     });
-
-    runApp(JankApp(
-      builder: (c) => BuildPhaseJankWidget(key: globalKey),
-    ));
-
-    await binding.waitUntilFirstFrameRasterized;
-
     await Glance.instance.start(
       config: GlanceConfiguration(
         reporters: [reporter],
@@ -68,10 +66,8 @@ void main() {
       ),
     );
 
-    globalKey.currentState!.triggerExpensiveBuild();
-    stackTraceCompleter = Completer();
-
-    final stackTraces = await stackTraceCompleter.future;
-    checkStackTraces(stackTraces);
+    runApp(JankApp(
+      builder: (c) => const BuildPhaseJankWidget(),
+    ));
   });
 }

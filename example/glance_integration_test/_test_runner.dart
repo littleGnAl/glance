@@ -160,7 +160,10 @@ Future<bool> _runTestCase(ProcessManager processManager,
         ? l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '')
         : l.replaceAll(RegExp(r'flutter: '), '');
     GlanceLogger.log(line, prefixTag: false);
-    if (line.trim() == _kGlanceTestFinishedFlag) {
+    if (line.trim() == _kCollectStackTracesEndFlag) {
+      isCollectingStackTraces = false;
+      stdout.writeln('Collected stack traces');
+
       const file.FileSystem fileSystem = LocalFileSystem();
       const processManager = LocalProcessManager();
       GlanceLogger.log('Symbolizing ...', prefixTag: false);
@@ -182,36 +185,34 @@ Future<bool> _runTestCase(ProcessManager processManager,
       GlanceLogger.log('Checking stack trace ...', prefixTag: false);
       isCheckStackTracesSuccess = await testCase.onCheckStackTrace(result);
 
-      if (runOn == RunOnPlatform.android) {
-        // adb shell pm uninstall -k <package-name>
-        // Uninsntall the package to restore to a clean state
-        final processResult = await processManager.run([
-          'adb',
-          'shell',
-          'pm',
-          'uninstall',
-          '-k',
-          'com.littlegnal.glance_example',
-        ]);
-        if (processResult.exitCode != 0) {
-          stderr.writeln(processResult.stderr);
+      if (isCheckStackTracesSuccess) {
+        if (runOn == RunOnPlatform.android) {
+          // adb shell pm uninstall -k <package-name>
+          // Uninsntall the package to restore to a clean state
+          final processResult = await processManager.run([
+            'adb',
+            'shell',
+            'pm',
+            'uninstall',
+            '-k',
+            'com.littlegnal.glance_example',
+          ]);
+          if (processResult.exitCode != 0) {
+            stderr.writeln(processResult.stderr);
+          }
         }
-      }
-      if (runOn == RunOnPlatform.ios) {
-        await _uninstallIOSApp(fileSystem, processManager);
-      }
+        if (runOn == RunOnPlatform.ios) {
+          await _uninstallIOSApp(fileSystem, processManager);
+        }
 
-      process.kill();
-      return;
+        process.kill();
+        return;
+      }
     }
 
     if (line.trim() == _kCollectStackTracesStartFlag) {
       isCollectingStackTraces = true;
       stdout.writeln('Start collecting stack traces ...');
-    }
-    if (line.trim() == _kCollectStackTracesEndFlag) {
-      isCollectingStackTraces = false;
-      stdout.writeln('Collected stack traces');
     }
 
     if (isCollectingStackTraces) {

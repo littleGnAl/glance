@@ -36,6 +36,27 @@ class TouchEventJankWidgetState extends State<TouchEventJankWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 5), () {
+      _click();
+    });
+  }
+
+  void _click() {
+    final offset = _getElevatedButtonOffset();
+
+    // Simulate click the button
+    GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+      position: (offset + const Offset(10, 10)),
+    ));
+    GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+      position: (offset + const Offset(10, 10)),
+    ));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
@@ -69,22 +90,11 @@ void main() {
   };
 
   glanceIntegrationTest(() async {
-    final binding = GlanceWidgetBinding.ensureInitialized();
+    GlanceWidgetBinding.ensureInitialized();
 
-    final globalKey = GlobalKey<TouchEventJankWidgetState>();
-    Completer<String>? stackTraceCompleter;
     final reporter = TestJankDetectedReporter((info) {
-      if (stackTraceCompleter != null && !stackTraceCompleter.isCompleted) {
-        stackTraceCompleter.complete(info.stackTrace.toString());
-      }
+      checkStackTraces(info.stackTrace.toString());
     });
-
-    runApp(JankApp(
-      builder: (c) => TouchEventJankWidget(key: globalKey),
-    ));
-
-    await binding.waitUntilFirstFrameRasterized;
-
     await Glance.instance.start(
       config: GlanceConfiguration(
         reporters: [reporter],
@@ -92,21 +102,8 @@ void main() {
       ),
     );
 
-    final offset = globalKey.currentState!._getElevatedButtonOffset();
-
-    // Simulate click the button
-    GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-      position: (offset + const Offset(10, 10)),
+    runApp(JankApp(
+      builder: (c) => const TouchEventJankWidget(),
     ));
-    await Future.delayed(const Duration(milliseconds: 500));
-    GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-      position: (offset + const Offset(10, 10)),
-    ));
-
-    stackTraceCompleter = Completer();
-
-    final stackTraces = await stackTraceCompleter.future;
-
-    checkStackTraces(stackTraces);
   });
 }

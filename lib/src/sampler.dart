@@ -273,6 +273,9 @@ class SamplerProcessor {
         LinkedHashMap<int, AggregatedNativeFrame>>.identity();
 
     for (final nativeStack in buffer.readAll().reversed) {
+      if (nativeStack?.frames.isEmpty == true) {
+        continue;
+      }
       int parentFramePc = nativeStack!.frames.last.pc;
       bool isContainParentFrame = parentFrameMap.containsKey(parentFramePc);
 

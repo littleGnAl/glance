@@ -6,11 +6,11 @@
 // Modifications and new contributions
 // Copyright (c) 2024 Littlegnal. Licensed under the MIT License. See the LICENSE file for details.
 
-#include <cstring>
+#ifndef COLLECT_STACK_H_
+#define COLLECT_STACK_H_
+
 #include <pthread.h>
-#include <unistd.h>
-#include <cxxabi.h> // NOLINT
-#include <dlfcn.h>  // NOLINT
+#include <dlfcn.h> // NOLINT
 
 // Borrowed from https://github.com/dart-lang/sdk/blob/main/runtime/platform/globals.h#L107
 
@@ -62,87 +62,75 @@
 
 typedef uintptr_t uword;
 
-namespace
+struct Buffer
+{
+    size_t size;
+    int64_t *pcs;
+};
+
+namespace glance
 {
 
-    pthread_t target_thread;
+    extern pthread_t g_target_thread_;
 
-    struct Buffer
+    /// Borrowed from https://github.com/dart-lang/sdk/blob/3cc6105316be32e2d48b1b9b253247ad4fc89698/runtime/vm/profiler.cc#L217
+    class StackWalker
     {
-        size_t size;
-        int64_t *pcs;
+    public:
+        StackWalker(
+            pthread_t target_thread,
+            Buffer *buffer,
+            uword pc,
+            uword fp,
+            uword sp,
+            uword dart_sp);
+
+        ~StackWalker() = default;
+
+        bool GetCurrentStackBoundsIfNeeded(pthread_t target_thread);
+
+        void Walk();
+
+    private:
+        uword *CallerPC(uword *fp);
+
+        uword *CallerFP(uword *fp);
+
+        bool ValidFramePointer(uword *fp, uword &lower_bound, uword &stack_upper);
+
+        bool ValidateThreadStackBounds(uword fp,
+                                       uword sp,
+                                       uword stack_lower,
+                                       uword stack_upper);
+
+        bool GetAndValidateThreadStackBounds(
+            uintptr_t fp,
+            uintptr_t sp,
+            uword *stack_lower,
+            uword *stack_upper);
+
+        static uword stack_lower_;
+
+        static uword stack_upper_;
+
+        pthread_t target_thread_;
+
+        Buffer *buffer_;
+
+        // const uword stack_upper_;
+        const uword original_pc_;
+        const uword original_fp_;
+        const uword original_sp_;
+        const uword original_dart_sp_;
+        uword lower_bound_;
     };
 
-    bool IsBetween(const uword &v, const uword &low, const uword &high) { return low <= v && v <= high; }
-
-    bool ValidateFP(const uword &fp, const uword &sp, const uword &dart_sp)
-    {
-        if (!fp || fp == 0 || sp == 0)
-        {
-            return false;
-        }
-
-        // FP should be at least pointer size aligned.
-        if ((fp & (sizeof(void *) - 1)) != 0)
-        {
-            return false;
-        }
-
-        return IsBetween(fp, sp, sp + 4096) || IsBetween(fp, dart_sp, dart_sp + 4096);
-    }
-
-    void FillBuffer(Buffer *buffer, uword pc, uword fp, uword sp, uword dart_sp)
-    {
-        // Try unwinding starting at the current frame using FP links assuming that
-        // stack slot at FP contains caller's FP and stack slot above that one
-        // contains caller PC.
-        //
-        // This will not work for native code that does not preserve frame pointers
-        // but will work for Dart AOT compiled code.
-        intptr_t frame = 0;
-        while (ValidateFP(fp, sp, dart_sp) && frame < (buffer->size - 1))
-        {
-            buffer->pcs[frame++] = pc;
-
-            uword caller_sp = fp + 2 * sizeof(void *);
-            uword caller_fp = reinterpret_cast<uword *>(fp)[0];
-            uword caller_pc = reinterpret_cast<uword *>(fp)[1];
-            if (caller_fp == fp || caller_pc == 0)
-            {
-                break;
-            }
-
-            sp = dart_sp = caller_sp;
-            fp = caller_fp;
-            pc = caller_pc;
-        }
-
-        if (frame == 0)
-        {
-            buffer->pcs[frame++] = pc;
-        }
-        buffer->pcs[frame++] = 0;
-    }
 }
 
-extern "C" void SetCurrentThreadAsTarget() { target_thread = pthread_self(); }
+extern "C" void SetCurrentThreadAsTarget();
 
 extern "C" char *CollectStackTraceOfTargetThread(int64_t *buf, size_t buf_size);
 
-extern "C" char *LookupSymbolName(Dl_info *info)
-{
-    if (info->dli_sname == nullptr)
-    {
-        return nullptr;
-    }
+extern "C" char *LookupSymbolName(Dl_info *info);
 
-    int status = 0;
-    size_t len = 0;
-    char *demangled = abi::__cxa_demangle(info->dli_sname, nullptr, &len, &status);
-    if (status == 0)
-    {
-        return strdup(demangled);
-    }
-
-    return strdup(info->dli_sname);
-}
+#endif // COLLECT_STACK_H_

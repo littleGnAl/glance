@@ -11,11 +11,20 @@ project(${LIBRARY_NAME} VERSION ${LIBRARY_VERSION})
 
 set(SOURCES 
     "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/collect_stack_android.cc"
     )
 
 add_library(${LIBRARY_NAME} SHARED
   ${SOURCES}
 )
+
+find_library(log-lib log)
+find_library(android-lib android)
+target_link_libraries(${LIBRARY_NAME}
+        PRIVATE
+        ${log-lib}
+        ${android-lib}
+        )
 
 target_compile_definitions(${LIBRARY_NAME} PUBLIC DART_SHARED_LIB)
