@@ -11,12 +11,40 @@
 #include <ucontext.h>
 #include <sys/errno.h>
 #include <chrono>
+#include <unistd.h>
 #include "collect_stack.h"
 
-namespace
+namespace glance
 {
 
   std::atomic<Buffer *> buffer_to_fill;
+
+  bool StackWalker::GetCurrentStackBoundsIfNeeded(pthread_t target_thread)
+  {
+    if (stack_lower_ != 0 && stack_upper_ != 0)
+    {
+      return true;
+    }
+
+    pthread_attr_t attr;
+    if (pthread_getattr_np(target_thread, &attr) != 0)
+    {
+      return false;
+    }
+
+    void *base;
+    size_t size;
+    int error = pthread_attr_getstack(&attr, &base, &size);
+    pthread_attr_destroy(&attr);
+    if (error != 0)
+    {
+      return false;
+    }
+
+    stack_lower_ = reinterpret_cast<uword>(base);
+    stack_upper_ = stack_lower_ + size;
+    return true;
+  }
 
   uword GetProgramCounter(const mcontext_t &mcontext)
   {
@@ -112,16 +140,13 @@ namespace
     uword sp = GetCStackPointer(mcontext);
     uword dart_sp = GetDartStackPointer(mcontext);
 
-    FillBuffer(buffer, pc, fp, sp, dart_sp);
+    glance::StackWalker stack_walker(glance::g_target_thread_, buffer, pc, fp, sp, dart_sp);
+    stack_walker.Walk();
 
     buffer_to_fill.store(nullptr); // Signal completion
   }
 
-} // namespace
-
-// Set the current thread as a target for subsequent CollectStackTrace
-// calls. Can only register one thread at a time.
-// extern "C" void SetCurrentThreadAsTarget() { target_thread = pthread_self(); }
+} // namespace glance
 
 // Collect stack trace of the target thread previously set by
 // SetCurrentThreadAsTarget into the given |buf| buffer.
@@ -139,9 +164,9 @@ extern "C" char *CollectStackTraceOfTargetThread(int64_t *buf, size_t buf_size)
   // Register a signal handler for the |kObscureSignal| signal which will dump
   // the stack for us.
   struct sigaction new_act, old_act;
-  new_act.sa_sigaction = &DumpHandler;
+  new_act.sa_sigaction = &glance::DumpHandler;
   new_act.sa_flags = SA_RESTART | SA_SIGINFO;
-  int result = sigaction(kObscureSignal, &new_act, &old_act);
+  int result = sigaction(glance::kObscureSignal, &new_act, &old_act);
   if (result != 0)
   {
     // Failed to register the signal handler. Report an error.
@@ -151,9 +176,9 @@ extern "C" char *CollectStackTraceOfTargetThread(int64_t *buf, size_t buf_size)
   }
 
   Buffer buffer{buf_size, buf};
-  buffer_to_fill = &buffer;
+  glance::buffer_to_fill = &buffer;
 
-  result = pthread_kill(target_thread, kObscureSignal);
+  result = pthread_kill(glance::g_target_thread_, glance::kObscureSignal);
   if (result != 0)
   {
     // Failed to send the signal.
@@ -161,7 +186,7 @@ extern "C" char *CollectStackTraceOfTargetThread(int64_t *buf, size_t buf_size)
     strerror_r(errno, buf, sizeof(buf));
 
     // Restore old action.
-    sigaction(kObscureSignal, &old_act, nullptr);
+    sigaction(glance::kObscureSignal, &old_act, nullptr);
     return strdup(buf);
   }
 
@@ -169,17 +194,17 @@ extern "C" char *CollectStackTraceOfTargetThread(int64_t *buf, size_t buf_size)
   //
   // Note: can't use wait/notify here because it is not signal safe.
   int i = 0;
-  while (buffer_to_fill.load() != nullptr && i++ < 50)
+  while (glance::buffer_to_fill.load() != nullptr && i++ < 50)
   {
     usleep(1000);
   }
 
   // Restore old action.
-  sigaction(kObscureSignal, &old_act, nullptr);
+  sigaction(glance::kObscureSignal, &old_act, nullptr);
 
-  if (buffer_to_fill.load() != nullptr)
+  if (glance::buffer_to_fill.load() != nullptr)
   {
-    buffer_to_fill.store(nullptr);
+    glance::buffer_to_fill.store(nullptr);
     return strdup("signal handler did not trigger within 50ms");
   }
 

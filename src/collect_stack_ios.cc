@@ -9,6 +9,8 @@
 #include <sys/types.h>          // NOLINT
 #include <unistd.h>             // NOLINT
 
+#include <iostream>
+
 #include "collect_stack.h"
 
 // Borrowed from https://github.com/dart-lang/sdk/blob/master/runtime/vm/thread_interrupter_macos.cc
@@ -31,6 +33,19 @@ typedef arm_thread_state32_t __thread_state_flavor_t;
 
 namespace glance
 {
+    bool StackWalker::GetCurrentStackBoundsIfNeeded(pthread_t target_thread)
+    {
+        if (stack_lower_ != 0 && stack_upper_ != 0)
+        {
+            return true;
+        }
+
+        stack_upper_ = reinterpret_cast<uword>(pthread_get_stackaddr_np(target_thread));
+        stack_lower_ = stack_upper_ - pthread_get_stacksize_np(target_thread);
+
+        return true;
+    }
+
     struct InterruptedThreadState
     {
         uintptr_t pc;
@@ -49,7 +64,8 @@ namespace glance
             res = thread_suspend(mach_thread_);
         }
 
-        void CollectSample(int64_t *buf, size_t buf_size)
+        void
+        CollectSample(int64_t *buf, size_t buf_size)
         {
             if (res != KERN_SUCCESS)
             {
@@ -67,7 +83,8 @@ namespace glance
             InterruptedThreadState its = ProcessState(state);
 
             Buffer buffer{buf_size, buf};
-            FillBuffer(&buffer, its.pc, its.fp, its.csp, its.dsp);
+            glance::StackWalker stack_walker(os_thread_, &buffer, its.pc, its.fp, its.csp, its.dsp);
+            stack_walker.Walk();
         }
 
         ~ThreadInterrupterMacOS()
@@ -119,7 +136,7 @@ namespace glance
 
 extern "C" char *CollectStackTraceOfTargetThread(int64_t *buf, size_t buf_size)
 {
-    glance::ThreadInterrupterMacOS interrupter(target_thread);
+    glance::ThreadInterrupterMacOS interrupter(glance::g_target_thread_);
     interrupter.CollectSample(buf, buf_size);
 
     return nullptr;
