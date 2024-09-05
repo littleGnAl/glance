@@ -14,10 +14,16 @@ class _FakeSamplerProcessor implements SamplerProcessor {
 
   final List<AggregatedNativeFrame> frames;
 
+  int id = 0;
+
   @override
-  List<AggregatedNativeFrame> getStackTrace(List<int> timestampRange) {
+  Future<void> getStackTrace(
+    SendPort stackTraceSendPort,
+    int messageId,
+    List<int> timestampRange,
+  ) async {
     sendPort.send('getStackTrace');
-    return frames;
+    stackTraceSendPort.send(GetSamplesResponse(id++, frames));
   }
 
   @override
@@ -37,12 +43,6 @@ class _FakeSamplerProcessor implements SamplerProcessor {
 
   @override
   bool isRunning = true;
-
-  @override
-  List<AggregatedNativeFrame> aggregateStacks(SamplerConfig config,
-      RingBuffer<NativeStack> buffer, List<int> timestampRange) {
-    return [];
-  }
 }
 
 class FakeSamplerProcessor {
@@ -226,7 +226,13 @@ void main() {
         samplerProcessor.setCurrentThreadAsTarget();
         samplerProcessor.loop();
         async.elapse(const Duration(milliseconds: 1500));
-        final stackTraces = samplerProcessor.getStackTrace([now - 1000, now]);
+
+        final receivePort = ReceivePort();
+        final response = receivePort.take(1);
+        final sendPort = receivePort.sendPort;
+        await samplerProcessor.getStackTrace(sendPort, 1, [now - 1000, now]);
+        final stackTraces =
+            (await response.cast<GetSamplesResponse>().first).data;
 
         expect(stackTraces.length, 2);
         // The order is reversed
@@ -274,8 +280,11 @@ void main() {
 
       samplerProcessor.setCurrentThreadAsTarget();
 
+      final receivePort = ReceivePort();
+      final sendPort = receivePort.sendPort;
+
       expect(
-        () => samplerProcessor.getStackTrace([now - 1000, now]),
+        () => (samplerProcessor.getStackTrace(sendPort, 1, [now - 1000, now])),
         throwsA(isA<AssertionError>()),
       );
     });
@@ -320,79 +329,92 @@ void main() {
       samplerProcessor.setCurrentThreadAsTarget();
       samplerProcessor.close();
 
+      final receivePort = ReceivePort();
+
+      final sendPort = receivePort.sendPort;
+
       expect(
-        () => samplerProcessor.getStackTrace([now - 1000, now]),
+        () => samplerProcessor.getStackTrace(sendPort, 1, [now - 1000, now]),
         throwsA(isA<AssertionError>()),
       );
     });
 
-    test('loop', () {
-      fakeAsync((async) async {
-        stackCapturer = FakeStackCapturer();
-        samplerProcessor = SamplerProcessor(
-          SamplerConfig(
-            jankThreshold: 1,
-            modulePathFilters: [],
-            sampleRateInMilliseconds: 1000,
-          ),
-          stackCapturer,
-        );
-        final now = Timeline.now;
-        final module1 = NativeModule(
-          id: 1,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'hello',
-        );
-        final frame1 = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 100,
-          module: module1,
-        );
-        final module2 = NativeModule(
-          id: 2,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'world',
-        );
-        final frame2 = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 200,
-          module: module2,
-        );
-        final module3 = NativeModule(
-          id: 3,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'world',
-        );
-        final frame3 = NativeFrame(
-          pc: 540642472605,
-          timestamp: now - 300,
-          module: module3,
-        );
+    test('loop', () async {
+      stackCapturer = FakeStackCapturer();
+      samplerProcessor = SamplerProcessor(
+        SamplerConfig(
+          jankThreshold: 1,
+          modulePathFilters: kAndroidDefaultModulePathFilters,
+          sampleRateInMilliseconds: 1000,
+        ),
+        stackCapturer,
+      );
+      final now = Timeline.now;
+      final module1 = NativeModule(
+        id: 1,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'hello',
+      );
+      final frame1 = NativeFrame(
+        pc: 540642472602,
+        timestamp: now - 100,
+        module: module1,
+      );
+      final module2 = NativeModule(
+        id: 2,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'world',
+      );
+      final frame2 = NativeFrame(
+        pc: 540642472608,
+        timestamp: now - 200,
+        module: module2,
+      );
+      final module3 = NativeModule(
+        id: 3,
+        path: 'libapp.so',
+        baseAddress: 540641718272,
+        symbolName: 'world',
+      );
+      final frame3 = NativeFrame(
+        pc: 540642472605,
+        timestamp: now - 300,
+        module: module3,
+      );
 
+      samplerProcessor.setCurrentThreadAsTarget();
+
+      fakeAsync((async) {
         stackCapturer.nativeStack =
             NativeStack(frames: [frame1, frame2], modules: [module1, module2]);
 
-        samplerProcessor.setCurrentThreadAsTarget();
         samplerProcessor.loop();
-        // Trigger first loop
+        // Trigger the first loop
         async.elapse(const Duration(milliseconds: 1500));
         stackCapturer.nativeStack =
             NativeStack(frames: [frame3], modules: [module3]);
-        // Trigger second loop
+        // Trigger the second loop
         async.elapse(const Duration(milliseconds: 1500));
-        final stackTraces = samplerProcessor.getStackTrace([now - 1000, now]);
-        // Close it avoid unnecessary loop in test
-        samplerProcessor.close();
-
-        expect(stackTraces.length == 3, isTrue);
-        // The order is reversed
-        expect(stackTraces[0].frame, frame3);
-        expect(stackTraces[1].frame, frame2);
-        expect(stackTraces[2].frame, frame1);
       });
+
+      final receivePort = ReceivePort();
+      final response = receivePort.take(1);
+      final sendPort = receivePort.sendPort;
+
+      samplerProcessor.getStackTrace(sendPort, 1, [now - 1000, now]);
+      final stackTraces =
+          (await response.cast<GetSamplesResponse>().first).data;
+
+      // Close it avoid unnecessary loop in test
+      samplerProcessor.close();
+
+      expect(stackTraces.length == 3, isTrue);
+      // The order is reversed
+      expect(stackTraces[0].frame, frame3);
+      expect(stackTraces[1].frame, frame1);
+      expect(stackTraces[2].frame, frame2);
     });
 
     test('close', () {
@@ -466,7 +488,7 @@ void main() {
 
         final timestampRange = <int>[now - 1000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 3);
         expect(aggregatedNativeFrames[0].frame, frame3);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
@@ -531,7 +553,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 5);
         expect(
           aggregatedNativeFrames.map((e) => e.frame).toList(),
@@ -599,7 +621,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 4);
         expect(
           aggregatedNativeFrames.map((e) => e.frame).toList(),
@@ -664,7 +686,7 @@ void main() {
 
         final timestampRange = <int>[now - 3500, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 1);
         expect(aggregatedNativeFrames[0].frame, frame3);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
@@ -726,7 +748,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 1);
         expect(
           aggregatedNativeFrames.map((e) => e.frame).toList(),
@@ -765,7 +787,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 0);
       });
 
@@ -827,7 +849,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 2);
         expect(aggregatedNativeFrames[0].frame, frame2);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
@@ -891,7 +913,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 2);
         expect(aggregatedNativeFrames[0].frame, frame2);
         expect(aggregatedNativeFrames[0].occurTimes, 1);
@@ -930,7 +952,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, kMaxStackTraces);
       });
 
@@ -990,7 +1012,7 @@ void main() {
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames =
-            samplerProcessor.aggregateStacks(config, buffer, timestampRange);
+            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, 2);
         expect(aggregatedNativeFrames[0].frame, frame2);
         expect(aggregatedNativeFrames[0].occurTimes, 1);

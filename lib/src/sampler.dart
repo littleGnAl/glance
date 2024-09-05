@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:isolate';
 
-import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/foundation.dart' show compute;
 import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/constants.dart';
 import 'package:glance/src/logger.dart';
+import 'package:meta/meta.dart' show visibleForTesting;
 
 abstract class _Request {}
 
@@ -19,8 +20,9 @@ class _GetSamplesRequest implements _Request {
   final List<int> timestampRange;
 }
 
-class _GetSamplesResponse implements _Response {
-  const _GetSamplesResponse(this.id, this.data);
+@visibleForTesting
+class GetSamplesResponse implements _Response {
+  const GetSamplesResponse(this.id, this.data);
   final int id;
   final List<AggregatedNativeFrame> data;
 }
@@ -101,12 +103,12 @@ class Sampler {
     final id = _idCounter++;
     _activeRequests[id] = completer;
     _commands.send(_GetSamplesRequest(id, timestampRange));
-    final response = (await completer.future) as _GetSamplesResponse;
+    final response = (await completer.future) as GetSamplesResponse;
     return response.data;
   }
 
   void _handleResponsesFromIsolate(dynamic message) {
-    final _GetSamplesResponse response = message as _GetSamplesResponse;
+    final GetSamplesResponse response = message as GetSamplesResponse;
     final completer = _activeRequests.remove(response.id)!;
 
     if (response is RemoteError) {
@@ -129,8 +131,7 @@ class Sampler {
         processor.close();
         receivePort.close();
       } else if (message is _GetSamplesRequest) {
-        final stacktrace = processor.getStackTrace(message.timestampRange);
-        sendPort.send(_GetSamplesResponse(message.id, stacktrace));
+        processor.getStackTrace(sendPort, message.id, message.timestampRange);
       } else {
         // Not reachable.
         assert(false);
@@ -191,11 +192,29 @@ class SamplerProcessor {
     _stackCapturer.setCurrentThreadAsTarget();
   }
 
-  /// Get the aggregated [NativeFrame]s.
-  List<AggregatedNativeFrame> getStackTrace(List<int> timestampRange) {
+  /// Retrieves the aggregated [NativeFrame]s.
+  ///
+  /// The [NativeFrame]s are aggregated in a separate isolate using the [compute] function
+  /// to prevent blocking the stack capture process. The result is sent directly to the [sendPort].
+  Future<void> getStackTrace(
+    SendPort sendPort,
+    int messageId,
+    List<int> timestampRange,
+  ) {
     assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
-    return aggregateStacks(_config, _buffer!, timestampRange);
+
+    final args = [sendPort, _config, _buffer!, timestampRange, messageId];
+    return compute((args) {
+      final sendPort = (args as List)[0] as SendPort;
+      final config = args[1] as SamplerConfig;
+      final buffer = args[2] as RingBuffer<NativeStack>;
+      final timestampRange = args[3] as List<int>;
+      final id = args[4] as int;
+
+      final stacktrace = aggregateStacks(config, buffer, timestampRange);
+      sendPort.send(GetSamplesResponse(id, stacktrace));
+    }, args);
   }
 
   /// Start an infinite loop to capture the [NativeStack] at intervals specified
@@ -227,45 +246,45 @@ class SamplerProcessor {
     _buffer = null;
   }
 
-  void _addOrUpdateAggregatedNativeFrame(
-      SamplerConfig config,
-      List<int> timestampRange,
-      LinkedHashMap<int, AggregatedNativeFrame> aggregatedFrameMap,
-      NativeFrame frame) {
-    List<String> modulePathFilters = config.modulePathFilters;
-
-    int start = timestampRange[0];
-    int end = timestampRange[1];
-
-    final isInclude = frame.module != null &&
-        frame.timestamp >= start &&
-        frame.timestamp <= end &&
-        modulePathFilters.any((pathFilter) {
-          return RegExp(pathFilter).hasMatch(frame.module!.path);
-        });
-
-    if (!isInclude) {
-      return;
-    }
-    final pc = frame.pc;
-    if (aggregatedFrameMap.containsKey(pc)) {
-      final aggregatedFrame = aggregatedFrameMap[pc]!;
-      final occurTimes = aggregatedFrame.occurTimes + 1;
-      aggregatedFrame.occurTimes = occurTimes;
-      aggregatedFrame.frame = frame;
-    } else {
-      final aggregatedFrame = AggregatedNativeFrame(frame);
-      aggregatedFrameMap[pc] = aggregatedFrame;
-    }
-  }
-
   /// Aggregate the [NativeFrame]s by occurrence times.
   @visibleForTesting
-  List<AggregatedNativeFrame> aggregateStacks(
+  static List<AggregatedNativeFrame> aggregateStacks(
     SamplerConfig config,
     RingBuffer<NativeStack> buffer,
     List<int> timestampRange,
   ) {
+    void addOrUpdateAggregatedNativeFrame(
+        SamplerConfig config,
+        List<int> timestampRange,
+        LinkedHashMap<int, AggregatedNativeFrame> aggregatedFrameMap,
+        NativeFrame frame) {
+      List<String> modulePathFilters = config.modulePathFilters;
+
+      int start = timestampRange[0];
+      int end = timestampRange[1];
+
+      final isInclude = frame.module != null &&
+          frame.timestamp >= start &&
+          frame.timestamp <= end &&
+          modulePathFilters.any((pathFilter) {
+            return RegExp(pathFilter).hasMatch(frame.module!.path);
+          });
+
+      if (!isInclude) {
+        return;
+      }
+      final pc = frame.pc;
+      if (aggregatedFrameMap.containsKey(pc)) {
+        final aggregatedFrame = aggregatedFrameMap[pc]!;
+        final occurTimes = aggregatedFrame.occurTimes + 1;
+        aggregatedFrame.occurTimes = occurTimes;
+        aggregatedFrame.frame = frame;
+      } else {
+        final aggregatedFrame = AggregatedNativeFrame(frame);
+        aggregatedFrameMap[pc] = aggregatedFrame;
+      }
+    }
+
     final maxOccurTimes =
         config.jankThreshold / config.sampleRateInMilliseconds;
 
@@ -285,7 +304,7 @@ class SamplerProcessor {
 
         // Aggregate from parent.
         for (int i = frames.length - 1; i >= 0; --i) {
-          _addOrUpdateAggregatedNativeFrame(
+          addOrUpdateAggregatedNativeFrame(
               config, timestampRange, aggregatedFrameMap, frames[i]);
         }
       } else {
@@ -293,7 +312,7 @@ class SamplerProcessor {
             LinkedHashMap<int, AggregatedNativeFrame>.identity();
         final frames = nativeStack.frames;
         for (int i = frames.length - 1; i >= 0; --i) {
-          _addOrUpdateAggregatedNativeFrame(
+          addOrUpdateAggregatedNativeFrame(
               config, timestampRange, aggregatedFrameMap, frames[i]);
         }
         parentFrameMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
