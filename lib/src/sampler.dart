@@ -194,6 +194,17 @@ class SamplerProcessor {
     _stackCapturer.setCurrentThreadAsTarget();
   }
 
+  /// Get the aggregated [NativeFrame]s.
+  // List<AggregatedNativeFrame> getStackTrace(List<int> timestampRange) {
+  //   assert(isRunning);
+  //   assert(_buffer != null, 'Make sure you call `loop` first');
+  //   // return aggregateStacks(_config, _buffer!.readAll(), timestampRange);
+
+  //   final nativeSamples = _stackCapturer.getSamples();
+
+  //   return aggregateStacks(_config, nativeSamples, timestampRange);
+  // }
+
   /// Retrieves the aggregated [NativeFrame]s.
   ///
   /// The [NativeFrame]s are aggregated in a separate isolate using the [compute] function
@@ -206,11 +217,15 @@ class SamplerProcessor {
     assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
 
-    final args = [sendPort, _config, _buffer!, timestampRange, messageId];
+    final List<NativeStack> nativeSamples = _stackCapturer.getSamples();
+
+    // return aggregateStacks(_config, nativeSamples, timestampRange);
+
+    final args = [sendPort, _config, nativeSamples!, timestampRange, messageId];
     return compute((args) {
       final sendPort = (args as List)[0] as SendPort;
       final config = args[1] as SamplerConfig;
-      final buffer = args[2] as RingBuffer<NativeStack>;
+      final buffer = args[2] as List<NativeStack>;
       final timestampRange = args[3] as List<int>;
       final id = args[4] as int;
 
@@ -256,7 +271,7 @@ class SamplerProcessor {
   @visibleForTesting
   static List<AggregatedNativeFrame> aggregateStacks(
     SamplerConfig config,
-    RingBuffer<NativeStack> buffer,
+    List<NativeStack?> buffer,
     List<int> timestampRange,
   ) {
     void addOrUpdateAggregatedNativeFrame(
@@ -297,7 +312,8 @@ class SamplerProcessor {
     final parentFrameMap = LinkedHashMap<int,
         LinkedHashMap<int, AggregatedNativeFrame>>.identity();
 
-    for (final nativeStack in buffer.readAll().reversed) {
+    // for (final nativeStack in buffer.readAll().reversed) {
+    for (final nativeStack in buffer.reversed) {
       if (nativeStack?.frames.isEmpty == true) {
         continue;
       }
