@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:flutter/foundation.dart' show compute;
+import 'package:glance/glance.dart';
 import 'package:glance/src/collect_stack.dart';
 import 'package:glance/src/constants.dart';
+import 'package:glance/src/glance_impl.dart';
 import 'package:glance/src/logger.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
 
@@ -37,6 +40,7 @@ class SamplerConfig {
     this.sampleRateInMilliseconds = kDefaultSampleRateInMilliseconds,
     required this.modulePathFilters,
     this.samplerProcessorFactory = _defaultSamplerProcessorFactory,
+    required this.stackTraceListener,
   });
 
   final int jankThreshold;
@@ -49,11 +53,17 @@ class SamplerConfig {
   /// The factory used to create a [SamplerProcessor]. This allows us to inject
   /// the [SamplerProcessor] in tests.
   final SamplerProcessorFactory samplerProcessorFactory;
+
+  final StackTraceListener stackTraceListener;
 }
+
+typedef StackTraceListener = void Function(
+    List<AggregatedNativeFrame> stackTraces);
 
 /// Class to start a dedicated isolate for collecting stack traces.
 class Sampler {
-  Sampler._(this._processorIsolate, this._responses, this._commands) {
+  Sampler._(this._processorIsolate, this._responses, this._commands,
+      this._stackTraceListener) {
     _responses.listen(_handleResponsesFromIsolate);
   }
 
@@ -85,7 +95,7 @@ class Sampler {
     final receivePort = msg[0] as ReceivePort;
     final sendPort = msg[1] as SendPort;
 
-    return Sampler._(isolate, receivePort, sendPort);
+    return Sampler._(isolate, receivePort, sendPort, config.stackTraceListener);
   }
 
   final Isolate _processorIsolate;
@@ -95,6 +105,8 @@ class Sampler {
   final Map<int, Completer<Object?>> _activeRequests = {};
   int _idCounter = 0;
   bool _closed = false;
+
+  final StackTraceListener _stackTraceListener;
 
   Future<List<AggregatedNativeFrame>> getSamples(
       List<int> timestampRange) async {
@@ -109,12 +121,18 @@ class Sampler {
 
   void _handleResponsesFromIsolate(dynamic message) {
     final GetSamplesResponse response = message as GetSamplesResponse;
-    final completer = _activeRequests.remove(response.id)!;
+    // final completer = _activeRequests.remove(response.id)!;
 
     if (response is RemoteError) {
-      completer.completeError(response);
+      // completer.completeError(response);
     } else {
-      completer.complete(response);
+      // completer.complete(response);
+      // _reporter
+      //     .report(JankReport(stackTrace: GlanceStackTraceImpl(response.data)));
+
+      // print('response.data: ${response.data.length}');
+
+      _stackTraceListener(response.data);
     }
   }
 
@@ -131,14 +149,14 @@ class Sampler {
         processor.close();
         receivePort.close();
       } else if (message is _GetSamplesRequest) {
-        processor.getStackTrace(sendPort, message.id, message.timestampRange);
+        // processor.getStackTrace(sendPort, message.id, message.timestampRange);
       } else {
         // Not reachable.
         assert(false);
       }
     });
 
-    processor.loop();
+    processor.loop(sendPort);
   }
 
   void close() {
@@ -184,7 +202,8 @@ class SamplerProcessor {
   /// With all default configurations, the length is approximately 641 of 2s
   /// Refer to the dart sdk implementation.
   /// https://github.com/dart-lang/sdk/blob/bcaf745a9be6c4af0c338c43e6304c9e1c4c5535/runtime/vm/profiler.cc#L642
-  static const _bufferCount = 641;
+  // static const _bufferCount = 641;
+  static const _bufferCount = 321;
 
   RingBuffer<NativeStack>? _buffer;
 
@@ -200,11 +219,12 @@ class SamplerProcessor {
     SendPort sendPort,
     int messageId,
     List<int> timestampRange,
+    RingBuffer<NativeStack> buffer,
   ) {
     assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
 
-    final args = [sendPort, _config, _buffer!, timestampRange, messageId];
+    final args = [sendPort, _config, buffer!, timestampRange, messageId];
     return compute((args) {
       final sendPort = (args as List)[0] as SendPort;
       final config = args[1] as SamplerConfig;
@@ -212,8 +232,10 @@ class SamplerProcessor {
       final timestampRange = args[3] as List<int>;
       final id = args[4] as int;
 
-      final stacktrace = aggregateStacks(config, buffer, timestampRange);
-      sendPort.send(GetSamplesResponse(id, stacktrace));
+      final stacktrace = aggregateStacks(config, buffer, timestampRange, 0);
+      if (stacktrace.length > 90) {
+        sendPort.send(GetSamplesResponse(id, stacktrace));
+      }
     }, args);
   }
 
@@ -222,19 +244,75 @@ class SamplerProcessor {
   /// in a [RingBuffer], and you can get the aggregated [NativeFrame]s using [getStackTrace].
   ///
   /// The loop will stop after you call [close].
-  Future<void> loop() async {
+  Future<void> loop(SendPort sendPort) async {
+    final streamController = StreamController();
+    streamController.stream.listen((data) {
+      getStackTrace(sendPort, 0, [0, 0], data);
+    });
+
     final sampleRateInMilliseconds = _config.sampleRateInMilliseconds;
     _buffer ??= RingBuffer<NativeStack>(_bufferCount);
 
+    int waitTime = 0;
+    // sampleRateInMilliseconds * 1000;
+    int now = Timeline.now;
+    int nextTime = now + sampleRateInMilliseconds * 1000;
+    int previousTime = now;
+
+    final maxOccurTimes =
+        _config.jankThreshold / _config.sampleRateInMilliseconds;
+    final loopStartTime = Timeline.now;
+    int loopCounter = 0;
+
     try {
       while (isRunning) {
-        await Future.delayed(Duration(milliseconds: sampleRateInMilliseconds));
+        loopCounter++;
+        now = Timeline.now;
+        // if ((now + sampleRateInMilliseconds * 1000) > nextTime) {
+        //   waitTime = nextTime - now;
+        // }
+
+        if (now > nextTime) {
+          waitTime = 0;
+        } else {
+          waitTime = nextTime - now;
+        }
+
+        nextTime += sampleRateInMilliseconds * 1000;
+        // print('waitTime: $waitTime');
+        await Future.delayed(Duration(microseconds: waitTime));
+        // await Future.delayed(Duration(milliseconds: sampleRateInMilliseconds));
+        // previousTime = Timeline.now;
         if (!isRunning || _buffer == null) {
           return;
         }
         final stack = _stackCapturer.captureStackOfTargetThread();
         assert(_buffer != null);
         _buffer!.write(stack);
+
+        int current = Timeline.now;
+        int expectedLoopCount =
+            ((current - loopStartTime) / (sampleRateInMilliseconds * 1000))
+                .toInt();
+        final multipiler =
+            ((expectedLoopCount - loopCounter) / expectedLoopCount);
+
+        int m = (maxOccurTimes - maxOccurTimes * multipiler).toInt();
+        // print(
+        //     'maxOccurTimes: $m, expectedLoopCount: $expectedLoopCount, loopCounter: $loopCounter, multipiler:$multipiler');
+
+        // getStackTrace(sendPort, message.id, message.timestampRange);
+        // Stopwatch stopwatch = Stopwatch()..start();
+        // final stacktrace = aggregateStacks(_config, _buffer!, [], m);
+        // // print('stacktrace; ${stacktrace.length}, stopwatch.elapsedMilliseconds: ${stopwatch.elapsedMilliseconds}');
+        // if (stacktrace.length > 2) {
+        //   _buffer = RingBuffer<NativeStack>(_bufferCount);
+        //   sendPort.send(GetSamplesResponse(0, stacktrace));
+        // }
+
+        // getStackTrace(sendPort, 0, [0, 0]);
+
+        streamController.sink.add(_buffer!);
       }
     } catch (e, st) {
       GlanceLogger.log('error when running loop: $e\n$st');
@@ -252,6 +330,7 @@ class SamplerProcessor {
     SamplerConfig config,
     RingBuffer<NativeStack> buffer,
     List<int> timestampRange,
+    int maxOccurTimes,
   ) {
     void addOrUpdateAggregatedNativeFrame(
         SamplerConfig config,
@@ -260,12 +339,12 @@ class SamplerProcessor {
         NativeFrame frame) {
       List<String> modulePathFilters = config.modulePathFilters;
 
-      int start = timestampRange[0];
-      int end = timestampRange[1];
+      // int start = timestampRange[0];
+      // int end = timestampRange[1];
 
       final isInclude = frame.module != null &&
-          frame.timestamp >= start &&
-          frame.timestamp <= end &&
+          // frame.timestamp >= start &&
+          // frame.timestamp <= end &&
           modulePathFilters.any((pathFilter) {
             return RegExp(pathFilter).hasMatch(frame.module!.path);
           });
@@ -287,6 +366,8 @@ class SamplerProcessor {
 
     final maxOccurTimes =
         config.jankThreshold / config.sampleRateInMilliseconds;
+    // final maxOccurTimes = 1;
+    // print('maxOccurTimes: $maxOccurTimes');
 
     final parentFrameMap = LinkedHashMap<int,
         LinkedHashMap<int, AggregatedNativeFrame>>.identity();
@@ -322,7 +403,7 @@ class SamplerProcessor {
     final allFrameList = <AggregatedNativeFrame>[];
     for (final entry in parentFrameMap.entries) {
       final jankFrames =
-          entry.value.values.where((e) => e.occurTimes > maxOccurTimes);
+          entry.value.values;//.where((e) => e.occurTimes > maxOccurTimes);
       if (jankFrames.isNotEmpty) {
         allFrameList.addAll(jankFrames.toList().reversed);
       }

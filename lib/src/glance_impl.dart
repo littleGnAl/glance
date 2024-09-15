@@ -50,6 +50,9 @@ class GlanceImpl implements Glance {
       jankThreshold: jankThreshold,
       modulePathFilters: modulePathFilters,
       sampleRateInMilliseconds: sampleRateInMilliseconds,
+      stackTraceListener: (stackTraces) {
+        _report(stackTraces);
+      },
     ));
 
     _checkJank = (int start, int end) {
@@ -59,7 +62,7 @@ class GlanceImpl implements Glance {
 
       final totalSpan = (end - start) / 1000.0;
       if (totalSpan > jankThreshold) {
-        _report(start, end);
+        // _report(start, end);
       }
     };
     GlanceWidgetBinding.instance.onCheckJank = _checkJank!;
@@ -77,14 +80,15 @@ class GlanceImpl implements Glance {
     _dartStackTraceInfo = null;
   }
 
-  Future<void> _report(int start, int end) async {
-    final timestampRange = [start, end];
+  // Future<void> _report(int start, int end) async {
+  Future<void> _report(List<AggregatedNativeFrame> frames) async {
+    // final timestampRange = [start, end];
 
-    assert(_sampler != null);
-    final frames = await _sampler!.getSamples(timestampRange);
-    if (frames.isEmpty) {
-      return;
-    }
+    // assert(_sampler != null);
+    // final frames = await _sampler!.getSamples(timestampRange);
+    // if (frames.isEmpty) {
+    //   return;
+    // }
 
     final straceTrace = GlanceStackTraceImpl(
         frames, _dartStackTraceInfo ?? const DartStackTraceInfo(0, []));
