@@ -39,9 +39,9 @@ class TouchEventJankWidgetState extends State<TouchEventJankWidget> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 5), () {
-      _click();
-    });
+    // Future.delayed(const Duration(seconds: 5), () {
+    //   _click();
+    // });
   }
 
   void _click() {

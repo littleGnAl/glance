@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:flutter/foundation.dart' show compute;
@@ -53,9 +54,13 @@ class SamplerConfig {
 
 /// Class to start a dedicated isolate for collecting stack traces.
 class Sampler {
-  Sampler._(this._processorIsolate, this._responses, this._commands) {
+  Sampler._(this._processorIsolate, this._responses, this._commands,
+      this._samplerProcessor, this._samplerConfig) {
     _responses.listen(_handleResponsesFromIsolate);
   }
+
+  final SamplerConfig _samplerConfig;
+  final SamplerProcessor _samplerProcessor;
 
   static Future<Sampler> create(SamplerConfig config) async {
     final processor = config.samplerProcessorFactory(config);
@@ -86,7 +91,7 @@ class Sampler {
     final receivePort = msg[0] as ReceivePort;
     final sendPort = msg[1] as SendPort;
 
-    return Sampler._(isolate, receivePort, sendPort);
+    return Sampler._(isolate, receivePort, sendPort, processor, config);
   }
 
   final Isolate _processorIsolate;
@@ -97,15 +102,48 @@ class Sampler {
   int _idCounter = 0;
   bool _closed = false;
 
+  // Future<List<AggregatedNativeFrame>> getSamples(
+  //     List<int> timestampRange) async {
+  //   if (_closed) throw StateError('Closed');
+  //   final completer = Completer<Object?>.sync();
+  //   final id = _idCounter++;
+  //   _activeRequests[id] = completer;
+  //   _commands.send(_GetSamplesRequest(id, timestampRange));
+  //   final response = (await completer.future) as GetSamplesResponse;
+  //   return response.data;
+  // }
+
   Future<List<AggregatedNativeFrame>> getSamples(
       List<int> timestampRange) async {
     if (_closed) throw StateError('Closed');
-    final completer = Completer<Object?>.sync();
-    final id = _idCounter++;
-    _activeRequests[id] = completer;
-    _commands.send(_GetSamplesRequest(id, timestampRange));
-    final response = (await completer.future) as GetSamplesResponse;
-    return response.data;
+    // final completer = Completer<Object?>.sync();
+    // final id = _idCounter++;
+    // _activeRequests[id] = completer;
+    // _commands.send(_GetSamplesRequest(id, timestampRange));
+    // final response = (await completer.future) as GetSamplesResponse;
+    // return response.data;
+
+    // _samplerProcessor.getStackTrace(
+    //     sendPort, message.id, message.timestampRange);
+
+    final List<NativeStack> nativeSamples =
+        _samplerProcessor.getNativeSamples();
+
+    final args = [_samplerConfig, nativeSamples!, timestampRange];
+    return compute((args) {
+      // final sendPort = (args as List)[0] as SendPort;
+      final config = (args as List)[0]! as SamplerConfig;
+      final buffer = args[1]! as List<NativeStack>;
+      final timestampRange = args[2]! as List<int>;
+      // final id = args[4] as int;
+
+      final stacktrace =
+          SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
+      print('stacktrace: ${stacktrace.length}');
+      // sendPort.send(GetSamplesResponse(id, stacktrace));
+
+      return stacktrace;
+    }, args);
   }
 
   void _handleResponsesFromIsolate(dynamic message) {
@@ -132,6 +170,7 @@ class Sampler {
         processor.close();
         receivePort.close();
       } else if (message is _GetSamplesRequest) {
+        print('lll');
         processor.getStackTrace(sendPort, message.id, message.timestampRange);
       } else {
         // Not reachable.
@@ -218,6 +257,7 @@ class SamplerProcessor {
     assert(_buffer != null, 'Make sure you call `loop` first');
 
     final List<NativeStack> nativeSamples = _stackCapturer.getSamples();
+    print('nativeSamples: ${nativeSamples.length}');
 
     // return aggregateStacks(_config, nativeSamples, timestampRange);
 
@@ -230,8 +270,18 @@ class SamplerProcessor {
       final id = args[4] as int;
 
       final stacktrace = aggregateStacks(config, buffer, timestampRange);
+      print('stacktrace: ${stacktrace.length}');
       sendPort.send(GetSamplesResponse(id, stacktrace));
     }, args);
+  }
+
+  List<NativeStack> getNativeSamples() {
+    // Stopwatch stopwatch = Stopwatch()..start();
+    int now = Timeline.now;
+    final List<NativeStack> nativeSamples = _stackCapturer.getSamples();
+    // stopwatch.stop();
+    print('getNativeSamples times: ${Timeline.now - now}');
+    return nativeSamples;
   }
 
   void startCapture() {
@@ -285,8 +335,8 @@ class SamplerProcessor {
       int end = timestampRange[1];
 
       final isInclude = frame.module != null &&
-          frame.timestamp >= start &&
-          frame.timestamp <= end &&
+          // frame.timestamp >= start &&
+          // frame.timestamp <= end &&
           modulePathFilters.any((pathFilter) {
             return RegExp(pathFilter).hasMatch(frame.module!.path);
           });

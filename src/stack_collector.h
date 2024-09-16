@@ -9,6 +9,7 @@
 #include <cxxabi.h> // NOLINT
 #include <dlfcn.h>  // NOLINT
 #include "stack_collector_c.h"
+#include "collect_stack.h"
 
 #if defined(_M_X64) || defined(__x86_64__)
 #define HOST_ARCH_X64 1

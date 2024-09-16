@@ -27,9 +27,9 @@ class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 5), () {
-      triggerExpensiveBuild();
-    });
+    // Future.delayed(const Duration(seconds: 5), () {
+    //   triggerExpensiveBuild();
+    // });
   }
 
   @override
@@ -37,7 +37,15 @@ class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
     if (_isExpensiveBuild) {
       expensiveFunction();
     }
-    return const SizedBox();
+
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          triggerExpensiveBuild();
+        },
+        child: const Text('ExpensiveBuild'),
+      ),
+    );
   }
 }
 

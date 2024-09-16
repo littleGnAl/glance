@@ -382,7 +382,7 @@ class StackCapturer {
 
   List<NativeStack> getSamples() {
     return using((arena) {
-      print('_stackCapturerHandle: ${_stackCapturerHandle.address}');
+      // print('_stackCapturerHandle: ${_stackCapturerHandle.address}');
       _nativeBindings.DisableThreadInterrupts(_stackCapturerHandle);
       //final dlInfo = arena.allocate<DlInfo>(ffi.sizeOf<DlInfo>());
       final outSamples =

@@ -168,5 +168,10 @@ namespace glance
 
         buffer_.put(stack);
         // LOGCATE("buffer_.put(stack);");
+
+
+
+
+        
     }
 }
