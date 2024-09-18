@@ -214,6 +214,9 @@ class SamplerProcessor {
   StackTraceMap<int, StackTraceMap<int, AggregatedNativeFrame>>
       _preStackTraceMap = StackTraceMap(99);
 
+  List<AggregatedNativeFrame> _aggregatedFrames = [];
+  bool _isWaitingAllFramesDone = false;
+
   /// Retrieves the aggregated [NativeFrame]s.
   ///
   /// The [NativeFrame]s are aggregated in a separate isolate using the [compute] function
@@ -224,7 +227,7 @@ class SamplerProcessor {
     List<int> timestampRange,
     RingBuffer<NativeStack> buffer,
     NativeStack nativeStack,
-  ) {
+  ) async {
     assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
 
@@ -242,8 +245,23 @@ class SamplerProcessor {
     //   }
     // }, args);
 
-    aggregateStacks(
+    final frames = aggregateStacks(
         _config, buffer, _preStackTraceMap, nativeStack, timestampRange, 0);
+    if (frames.isNotEmpty) {
+      _isWaitingAllFramesDone = true;
+      if (_aggregatedFrames.isNotEmpty &&
+          frames.first.frame.pc == _aggregatedFrames.first.frame.pc) {
+        _isWaitingAllFramesDone = false;
+        sendPort.send(GetSamplesResponse(0, frames));
+        _aggregatedFrames.clear();
+        _preStackTraceMap.clear();
+        return;
+      }
+
+      _aggregatedFrames = frames;
+    } else {
+      _aggregatedFrames.clear();
+    }
   }
 
   /// Start an infinite loop to capture the [NativeStack] at intervals specified
@@ -252,10 +270,10 @@ class SamplerProcessor {
   ///
   /// The loop will stop after you call [close].
   Future<void> loop(SendPort sendPort) async {
-    final streamController = StreamController();
-    streamController.stream.listen((data) {
-      getStackTrace(sendPort, 0, [0, 0], data);
-    });
+    // final streamController = StreamController();
+    // streamController.stream.listen((data) {
+    //   getStackTrace(sendPort, 0, [0, 0], data);
+    // });
 
     final sampleRateInMilliseconds = _config.sampleRateInMilliseconds;
     _buffer ??= RingBuffer<NativeStack>(_bufferCount);
@@ -297,14 +315,14 @@ class SamplerProcessor {
         assert(_buffer != null);
         _buffer!.write(stack);
 
-        int current = Timeline.now;
-        int expectedLoopCount =
-            ((current - loopStartTime) / (sampleRateInMilliseconds * 1000))
-                .toInt();
-        final multipiler =
-            ((expectedLoopCount - loopCounter) / expectedLoopCount);
+        // int current = Timeline.now;
+        // int expectedLoopCount =
+        //     ((current - loopStartTime) / (sampleRateInMilliseconds * 1000))
+        //         .toInt();
+        // final multipiler =
+        //     ((expectedLoopCount - loopCounter) / expectedLoopCount);
 
-        int m = (maxOccurTimes - maxOccurTimes * multipiler).toInt();
+        // int m = (maxOccurTimes - maxOccurTimes * multipiler).toInt();
         // print(
         //     'maxOccurTimes: $m, expectedLoopCount: $expectedLoopCount, loopCounter: $loopCounter, multipiler:$multipiler');
 
@@ -319,7 +337,9 @@ class SamplerProcessor {
 
         // getStackTrace(sendPort, 0, [0, 0]);
 
-        streamController.sink.add(_buffer!);
+        // streamController.sink.add(_buffer!);
+
+        getStackTrace(sendPort, 0, [0, 0], _buffer!, stack);
       }
     } catch (e, st) {
       GlanceLogger.log('error when running loop: $e\n$st');
@@ -530,7 +550,7 @@ class SamplerProcessor {
     final allFrameList = <AggregatedNativeFrame>[];
     for (final entry in stackTraceMap.entries) {
       final jankFrames =
-          entry.value.values; //.where((e) => e.occurTimes > maxOccurTimes);
+          entry.value.values.where((e) => e.occurTimes > maxOccurTimes);
       if (jankFrames.isNotEmpty) {
         allFrameList.addAll(jankFrames.toList().reversed);
       }
