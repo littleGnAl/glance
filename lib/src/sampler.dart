@@ -211,6 +211,9 @@ class SamplerProcessor {
     _stackCapturer.setCurrentThreadAsTarget();
   }
 
+  StackTraceMap<int, StackTraceMap<int, AggregatedNativeFrame>>
+      _preStackTraceMap = StackTraceMap(99);
+
   /// Retrieves the aggregated [NativeFrame]s.
   ///
   /// The [NativeFrame]s are aggregated in a separate isolate using the [compute] function
@@ -220,23 +223,27 @@ class SamplerProcessor {
     int messageId,
     List<int> timestampRange,
     RingBuffer<NativeStack> buffer,
+    NativeStack nativeStack,
   ) {
     assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
 
-    final args = [sendPort, _config, buffer!, timestampRange, messageId];
-    return compute((args) {
-      final sendPort = (args as List)[0] as SendPort;
-      final config = args[1] as SamplerConfig;
-      final buffer = args[2] as RingBuffer<NativeStack>;
-      final timestampRange = args[3] as List<int>;
-      final id = args[4] as int;
+    // final args = [sendPort, _config, buffer!, timestampRange, messageId];
+    // return compute((args) {
+    //   final sendPort = (args as List)[0] as SendPort;
+    //   final config = args[1] as SamplerConfig;
+    //   final buffer = args[2] as RingBuffer<NativeStack>;
+    //   final timestampRange = args[3] as List<int>;
+    //   final id = args[4] as int;
 
-      final stacktrace = aggregateStacks(config, buffer, timestampRange, 0);
-      if (stacktrace.length > 90) {
-        sendPort.send(GetSamplesResponse(id, stacktrace));
-      }
-    }, args);
+    //   final stacktrace = aggregateStacks(config, buffer, timestampRange, 0);
+    //   if (stacktrace.length > 90) {
+    //     sendPort.send(GetSamplesResponse(id, stacktrace));
+    //   }
+    // }, args);
+
+    aggregateStacks(
+        _config, buffer, _preStackTraceMap, nativeStack, timestampRange, 0);
   }
 
   /// Start an infinite loop to capture the [NativeStack] at intervals specified
@@ -324,11 +331,105 @@ class SamplerProcessor {
     _buffer = null;
   }
 
+//   /// Aggregate the [NativeFrame]s by occurrence times.
+//   @visibleForTesting
+//   static List<AggregatedNativeFrame> aggregateStacks(
+//     SamplerConfig config,
+//     RingBuffer<NativeStack> buffer,
+//     List<int> timestampRange,
+//     int maxOccurTimes,
+//   ) {
+//     void addOrUpdateAggregatedNativeFrame(
+//         SamplerConfig config,
+//         List<int> timestampRange,
+//         LinkedHashMap<int, AggregatedNativeFrame> aggregatedFrameMap,
+//         NativeFrame frame) {
+//       List<String> modulePathFilters = config.modulePathFilters;
+
+//       // int start = timestampRange[0];
+//       // int end = timestampRange[1];
+
+//       final isInclude = frame.module != null &&
+//           // frame.timestamp >= start &&
+//           // frame.timestamp <= end &&
+//           modulePathFilters.any((pathFilter) {
+//             return RegExp(pathFilter).hasMatch(frame.module!.path);
+//           });
+
+//       if (!isInclude) {
+//         return;
+//       }
+//       final pc = frame.pc;
+//       if (aggregatedFrameMap.containsKey(pc)) {
+//         final aggregatedFrame = aggregatedFrameMap[pc]!;
+//         final occurTimes = aggregatedFrame.occurTimes + 1;
+//         aggregatedFrame.occurTimes = occurTimes;
+//         aggregatedFrame.frame = frame;
+//       } else {
+//         final aggregatedFrame = AggregatedNativeFrame(frame);
+//         aggregatedFrameMap[pc] = aggregatedFrame;
+//       }
+//     }
+
+//     final maxOccurTimes =
+//         config.jankThreshold / config.sampleRateInMilliseconds;
+//     // final maxOccurTimes = 1;
+//     // print('maxOccurTimes: $maxOccurTimes');
+
+//     final parentFrameMap = LinkedHashMap<int,
+//         LinkedHashMap<int, AggregatedNativeFrame>>.identity();
+
+//     for (final nativeStack in buffer.readAll().reversed) {
+//       if (nativeStack?.frames.isEmpty == true) {
+//         continue;
+//       }
+//       int parentFramePc = nativeStack!.frames.last.pc;
+//       bool isContainParentFrame = parentFrameMap.containsKey(parentFramePc);
+
+//       if (isContainParentFrame) {
+//         final aggregatedFrameMap = parentFrameMap[parentFramePc]!;
+//         final frames = nativeStack.frames;
+
+//         // Aggregate from parent.
+//         for (int i = frames.length - 1; i >= 0; --i) {
+//           addOrUpdateAggregatedNativeFrame(
+//               config, timestampRange, aggregatedFrameMap, frames[i]);
+//         }
+//       } else {
+//         final aggregatedFrameMap =
+//             LinkedHashMap<int, AggregatedNativeFrame>.identity();
+//         final frames = nativeStack.frames;
+//         for (int i = frames.length - 1; i >= 0; --i) {
+//           addOrUpdateAggregatedNativeFrame(
+//               config, timestampRange, aggregatedFrameMap, frames[i]);
+//         }
+//         parentFrameMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
+//       }
+//     }
+
+//     final allFrameList = <AggregatedNativeFrame>[];
+//     for (final entry in parentFrameMap.entries) {
+//       final jankFrames =
+//           entry.value.values; //.where((e) => e.occurTimes > maxOccurTimes);
+//       if (jankFrames.isNotEmpty) {
+//         allFrameList.addAll(jankFrames.toList().reversed);
+//       }
+//     }
+
+//     if (allFrameList.length > kMaxStackTraces) {
+//       return allFrameList.sublist(0, kMaxStackTraces);
+//     }
+
+//     return allFrameList;
+//   }
+
   /// Aggregate the [NativeFrame]s by occurrence times.
   @visibleForTesting
   static List<AggregatedNativeFrame> aggregateStacks(
     SamplerConfig config,
     RingBuffer<NativeStack> buffer,
+    StackTraceMap<int, StackTraceMap<int, AggregatedNativeFrame>> stackTraceMap,
+    NativeStack nativeStack,
     List<int> timestampRange,
     int maxOccurTimes,
   ) {
@@ -369,41 +470,67 @@ class SamplerProcessor {
     // final maxOccurTimes = 1;
     // print('maxOccurTimes: $maxOccurTimes');
 
-    final parentFrameMap = LinkedHashMap<int,
-        LinkedHashMap<int, AggregatedNativeFrame>>.identity();
+    // final parentFrameMap =
+    //     StackTraceMap<int, LinkedHashMap<int, AggregatedNativeFrame>>(99);
 
-    for (final nativeStack in buffer.readAll().reversed) {
-      if (nativeStack?.frames.isEmpty == true) {
-        continue;
+    // for (final nativeStack in buffer.readAll().reversed) {
+    //   if (nativeStack?.frames.isEmpty == true) {
+    //     continue;
+    //   }
+    //   int parentFramePc = nativeStack!.frames.last.pc;
+    //   bool isContainParentFrame = parentFrameMap.containsKey(parentFramePc);
+
+    //   if (isContainParentFrame) {
+    //     final aggregatedFrameMap = parentFrameMap[parentFramePc]!;
+    //     final frames = nativeStack.frames;
+
+    //     // Aggregate from parent.
+    //     for (int i = frames.length - 1; i >= 0; --i) {
+    //       addOrUpdateAggregatedNativeFrame(
+    //           config, timestampRange, aggregatedFrameMap, frames[i]);
+    //     }
+    //   } else {
+    //     final aggregatedFrameMap =
+    //         StackTraceMap<int, AggregatedNativeFrame>(99);
+    //     final frames = nativeStack.frames;
+    //     for (int i = frames.length - 1; i >= 0; --i) {
+    //       addOrUpdateAggregatedNativeFrame(
+    //           config, timestampRange, aggregatedFrameMap, frames[i]);
+    //     }
+    //     parentFrameMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
+    //   }
+    // }
+
+    if (nativeStack.frames.isEmpty == true) {
+      // continue;
+      return [];
+    }
+    int parentFramePc = nativeStack!.frames.last.pc;
+    bool isContainParentFrame = stackTraceMap.containsKey(parentFramePc);
+
+    if (isContainParentFrame) {
+      final aggregatedFrameMap = stackTraceMap[parentFramePc]!;
+      final frames = nativeStack.frames;
+
+      // Aggregate from parent.
+      for (int i = frames.length - 1; i >= 0; --i) {
+        addOrUpdateAggregatedNativeFrame(
+            config, timestampRange, aggregatedFrameMap, frames[i]);
       }
-      int parentFramePc = nativeStack!.frames.last.pc;
-      bool isContainParentFrame = parentFrameMap.containsKey(parentFramePc);
-
-      if (isContainParentFrame) {
-        final aggregatedFrameMap = parentFrameMap[parentFramePc]!;
-        final frames = nativeStack.frames;
-
-        // Aggregate from parent.
-        for (int i = frames.length - 1; i >= 0; --i) {
-          addOrUpdateAggregatedNativeFrame(
-              config, timestampRange, aggregatedFrameMap, frames[i]);
-        }
-      } else {
-        final aggregatedFrameMap =
-            LinkedHashMap<int, AggregatedNativeFrame>.identity();
-        final frames = nativeStack.frames;
-        for (int i = frames.length - 1; i >= 0; --i) {
-          addOrUpdateAggregatedNativeFrame(
-              config, timestampRange, aggregatedFrameMap, frames[i]);
-        }
-        parentFrameMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
+    } else {
+      final aggregatedFrameMap = StackTraceMap<int, AggregatedNativeFrame>(99);
+      final frames = nativeStack.frames;
+      for (int i = frames.length - 1; i >= 0; --i) {
+        addOrUpdateAggregatedNativeFrame(
+            config, timestampRange, aggregatedFrameMap, frames[i]);
       }
+      stackTraceMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
     }
 
     final allFrameList = <AggregatedNativeFrame>[];
-    for (final entry in parentFrameMap.entries) {
+    for (final entry in stackTraceMap.entries) {
       final jankFrames =
-          entry.value.values;//.where((e) => e.occurTimes > maxOccurTimes);
+          entry.value.values; //.where((e) => e.occurTimes > maxOccurTimes);
       if (jankFrames.isNotEmpty) {
         allFrameList.addAll(jankFrames.toList().reversed);
       }
@@ -471,3 +598,95 @@ class RingBuffer<T extends Object> {
     return _buffer.toString();
   }
 }
+
+class StackTraceMap<K, V> implements LinkedHashMap<K, V> {
+  StackTraceMap(this.capacity) : _map = LinkedHashMap.identity();
+
+  final int capacity;
+  final LinkedHashMap<K, V> _map;
+
+  void _removeIf() {
+    if (_map.length >= capacity) {
+      _map.remove(_map.keys.first);
+    }
+  }
+
+  @override
+  V? operator [](Object? key) => _map[key];
+
+  @override
+  void operator []=(K key, V value) {
+    _removeIf();
+    _map[key] = value;
+  }
+
+  @override
+  void addAll(Map<K, V> other) => _map.addAll(other);
+
+  @override
+  void addEntries(Iterable<MapEntry<K, V>> newEntries) =>
+      _map.addEntries(newEntries);
+
+  @override
+  Map<RK, RV> cast<RK, RV>() => _map.cast();
+
+  @override
+  void clear() => _map.clear();
+
+  @override
+  bool containsKey(Object? key) => _map.containsKey(key);
+
+  @override
+  bool containsValue(Object? value) => _map.containsValue(value);
+
+  @override
+  // TODO: implement entries
+  Iterable<MapEntry<K, V>> get entries => _map.entries;
+
+  @override
+  void forEach(void Function(K key, V value) action) => _map.forEach(action);
+  @override
+  // TODO: implement isEmpty
+  bool get isEmpty => _map.isEmpty;
+
+  @override
+  // TODO: implement isNotEmpty
+  bool get isNotEmpty => _map.isNotEmpty;
+
+  @override
+  // TODO: implement keys
+  Iterable<K> get keys => _map.keys;
+
+  @override
+  // TODO: implement length
+  int get length => _map.length;
+
+  @override
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) convert) =>
+      _map.map(convert);
+
+  @override
+  V putIfAbsent(K key, V Function() ifAbsent) {
+    _removeIf();
+    return _map.putIfAbsent(key, ifAbsent);
+  }
+
+  @override
+  V? remove(Object? key) => _map.remove(key);
+
+  @override
+  void removeWhere(bool Function(K key, V value) test) =>
+      _map.removeWhere(test);
+
+  @override
+  V update(K key, V Function(V value) update, {V Function()? ifAbsent}) =>
+      _map.update(key, update);
+
+  @override
+  void updateAll(V Function(K key, V value) update) => _map.updateAll(update);
+
+  @override
+  // TODO: implement values
+  Iterable<V> get values => _map.values;
+} // identity
+
