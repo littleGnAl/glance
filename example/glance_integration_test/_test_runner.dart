@@ -111,11 +111,19 @@ Future<bool> _runTestCase(ProcessManager processManager,
   GlanceLogger.log(
       'Running TestCase(${testCase.description}, ${testCase.testFilePath}) on ${runOn == RunOnPlatform.android ? 'Android' : 'iOS'} ...',
       prefixTag: false);
+
+  // Run `flutter clean` to get a clean build.
+  await processManager.run([
+    'flutter',
+    'clean',
+  ]);
+  GlanceLogger.log('Cleaned cache.', prefixTag: false);
   GlanceLogger.log('Building ${testCase.testFilePath} ...', prefixTag: false);
-  final buildDir = fileSystem.directory('build');
-  if ((await buildDir.exists())) {
-    await fileSystem.directory('build').delete(recursive: true);
+
+  if ((fileSystem.directory('debug-info-integration').existsSync())) {
+    fileSystem.directory('debug-info-integration').deleteSync(recursive: true);
   }
+  fileSystem.directory('debug-info-integration').createSync(recursive: true);
 
   final processResult = await processManager.run([
     'flutter',
