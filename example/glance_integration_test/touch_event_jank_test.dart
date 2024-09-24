@@ -39,12 +39,12 @@ class TouchEventJankWidgetState extends State<TouchEventJankWidget> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 5), () {
-      _click();
-    });
+    _click();
   }
 
-  void _click() {
+  Future<void> _click() async {
+    await WidgetsBinding.instance.waitUntilFirstFrameRasterized;
+
     final offset = _getElevatedButtonOffset();
 
     // Simulate click the button

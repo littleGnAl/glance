@@ -17,7 +17,8 @@ class BuildPhaseJankWidget extends StatefulWidget {
 class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
   bool _isExpensiveBuild = false;
 
-  void triggerExpensiveBuild() {
+  Future<void> triggerExpensiveBuild() async {
+    await WidgetsBinding.instance.waitUntilFirstFrameRasterized;
     setState(() {
       _isExpensiveBuild = true;
     });
@@ -27,9 +28,7 @@ class _BuildPhaseJankWidgetState extends State<BuildPhaseJankWidget> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 5), () {
-      triggerExpensiveBuild();
-    });
+    triggerExpensiveBuild();
   }
 
   @override
