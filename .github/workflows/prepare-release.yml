@@ -39,8 +39,8 @@ jobs:
       - name: Run release-it
         id: release_it_step
         run: |
-          # Adding `ignoreRecommendedBump` to the `.release-it.json` file is not work for me.
           # Eliminate the warning: WARNING The recommended bump is "patch", but is overridden with "xxx".
+          # Adding `ignoreRecommendedBump` to the `.release-it.json` file is not work for me. Use `grep` to filter it.
           CHANGELOG=$(release-it ${{ inputs.version }} --changelog  2>&1 | grep -Pv 'WARNING The recommended bump is "patch",.*')
           echo "The CHANGELOG: ${CHANGELOG}"
           # https://github.com/orgs/community/discussions/26288#discussioncomment-3876281
