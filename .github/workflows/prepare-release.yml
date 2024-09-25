@@ -39,7 +39,7 @@ jobs:
       - name: Run release-it
         id: release_it_step
         run: |
-          CHANGELOG=$(release-it --changelog)
+          CHANGELOG=$(release-it ${{ inputs.version }} --changelog)
           echo "changelog=${CHANGELOG}" >> $GITHUB_OUTPUT
 
           release-it ${{ inputs.version }} \
@@ -73,7 +73,7 @@ jobs:
           delete-branch: true
           title: "Release ${{ inputs.version }}"
           body: |
-            Release **${{ inputs.version }}**
+            ## Changelog
 
             ${{ steps.release_it_step.outputs.changelog }}
 
