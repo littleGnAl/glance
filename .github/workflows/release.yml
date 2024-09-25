@@ -49,11 +49,10 @@ jobs:
           echo "::set-output name=version::${PUBSPEC_VERSION}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish Dart Package 🚢
-        id: publish
-        uses: k-paxian/dart-package-publisher@master
-        with:
-          accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
-          refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
-          force: true # We have checked the `dart pub publish --dry-run` `in build.yaml`, it's ok to force publish here.
-          skipTests: true
+
+  publish_pub: # See https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pub-dev
+    name: Publish to pub.dev
+    needs: release_if_merged
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
