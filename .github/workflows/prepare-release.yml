@@ -39,7 +39,7 @@ jobs:
       - name: Run release-it
         id: release_it_step
         run: |
-          CHANGELOG=$(release-it ${{ inputs.version }} --changelog)
+          CHANGELOG=$(release-it ${{ inputs.version }} --changelog --no-increment)
           # https://github.com/orgs/community/discussions/26288#discussioncomment-3876281
           delimiter="EOF"
           echo "changelog<<${delimiter}" >> "${GITHUB_OUTPUT}"
