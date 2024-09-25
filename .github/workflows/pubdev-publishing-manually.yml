@@ -36,14 +36,25 @@ jobs:
           fi
 
       # Sets the GitHub-signed OIDC token
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: stable
+    #   - name: Setup Dart
+    #     uses: dart-lang/setup-dart@v1
+    #     with:
+    #       sdk: stable
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+
+      - name: 🪪 Get Id Token
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let pub_token = await core.getIDToken('https://pub.dev')
+            core.exportVariable('PUB_TOKEN', pub_token)
+
+      - name: 📢 Authenticate
+        run: flutter pub pub token add https://pub.dev --env-var PUB_TOKEN
+
       - name: Publish
         run: dart pub publish --force
