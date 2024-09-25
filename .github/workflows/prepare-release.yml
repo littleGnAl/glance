@@ -40,12 +40,11 @@ jobs:
         id: release_it_step
         run: |
           CHANGELOG=$(release-it ${{ inputs.version }} --changelog)
-          # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#example-of-a-multiline-string
-          {
-            echo 'changelog<<EOF'
-            ${CHANGELOG}
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
+          # https://github.com/orgs/community/discussions/26288#discussioncomment-3876281
+          delimiter="EOF"
+          echo "changelog<<${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo "${CHANGELOG}" >> "${GITHUB_OUTPUT}"
+          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
 
           release-it ${{ inputs.version }} \
             --git.commit \
