@@ -39,7 +39,7 @@ jobs:
       - name: Run release-it
         id: release_it_step
         run: |
-          CHANGELOG=$(release-it ${{ inputs.version }} --changelog)
+          CHANGELOG="${$(release-it ${{ inputs.version }} --changelog)}"
           echo "changelog=${CHANGELOG}" >> $GITHUB_OUTPUT
 
           release-it ${{ inputs.version }} \
