@@ -58,6 +58,11 @@ jobs:
     permissions:
       id-token: write # Required for authentication using OIDC
     steps:
+      # Sets the GitHub-signed OIDC token
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
