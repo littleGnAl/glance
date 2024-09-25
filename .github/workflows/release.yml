@@ -1,0 +1,58 @@
+name: Release to Github release/pub.dev and tag 🚀
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  release_if_merged:
+    if: ${{ github.event.pull_request.merged == true && 
+            github.event.pull_request.base.ref == 'main' && 
+            contains(github.event.pull_request.labels.*.name, 'ci:prepare_release') }}
+    outputs:
+      release_version: ${{steps.release.outputs.version}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install release-it
+        run: |
+          npm install -g release-it
+          npm install -g release-it/bumper
+          npm install -g release-it/conventional-changelog
+      - name: git config
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Release
+        id: release
+        run: |
+          PUBSPEC_VERSION=$(grep 'version: ' pubspec.yaml | sed -e 's,.*: \(.*\),\1,')
+          echo "pubspec version: ${PUBSPEC_VERSION}"
+
+          release-it ${PUBSPEC_VERSION} \
+            --no-git.commit \
+            --'git.commitMessage="Release ${version}"' \
+            --git.tag \
+            --'git.tagName="${version}"' \
+            --'git.tagAnnotation="Release ${version}"' \
+            --git.push \
+            --github.release \
+            --no-github.web \
+            --ci
+          echo "::set-output name=version::${PUBSPEC_VERSION}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish_pub: # See https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pub-dev
+    name: Publish to pub.dev
+    needs: release_if_merged
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
