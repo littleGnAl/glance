@@ -36,7 +36,12 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - run: |
+      - name: Run release-it
+        id: release_it_step
+        run: |
+          CHANGELOG=$(release-it --changelog)
+          echo "changelog=${CHANGELOG}" >> $GITHUB_OUTPUT
+
           release-it ${{ inputs.version }} \
             --git.commit \
             --'git.commitMessage="Release ${version}"' \
@@ -70,13 +75,9 @@ jobs:
           body: |
             Release **${{ inputs.version }}**
 
-            After this pull request is merged, the following steps below will be going on:
+            ${{ steps.release_it_step.outputs.changelog }}
 
-            * Create tag for **${{ inputs.version }}**
-            * Publish to pub.dev
-            * Create Github release for **${{ inputs.version }}**
-
-            *This pull request is opened by bot*
+            *After this pull request is merged, the `release.yml` will be trigger. This pull request is opened by bot*
           labels: |
             ci:skip
             ci:prepare_release
