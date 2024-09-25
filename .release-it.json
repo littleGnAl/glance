@@ -18,7 +18,8 @@
           {
             "type": "chore"
           }
-        ]
+        ],
+        "ignoreRecommendedBump": true
       }
     },
     "@release-it/bumper": {
