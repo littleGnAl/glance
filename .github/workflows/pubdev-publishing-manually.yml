@@ -34,6 +34,12 @@ jobs:
             exit 1;
           fi
 
+      # Sets the GitHub-signed OIDC token
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
