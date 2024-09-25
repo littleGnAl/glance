@@ -36,7 +36,19 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - run: |
+      - name: Run release-it
+        id: release_it_step
+        run: |
+          # Eliminate the warning: WARNING The recommended bump is "patch", but is overridden with "xxx".
+          # Adding `ignoreRecommendedBump` to the `.release-it.json` file is not work for me. Use `grep` to filter it.
+          CHANGELOG=$(release-it ${{ inputs.version }} --changelog  2>&1 | grep -Pv 'WARNING The recommended bump is "patch",.*')
+          echo "The CHANGELOG: ${CHANGELOG}"
+          # https://github.com/orgs/community/discussions/26288#discussioncomment-3876281
+          delimiter="EOF"
+          echo "changelog<<${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo "${CHANGELOG}" >> "${GITHUB_OUTPUT}"
+          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+
           release-it ${{ inputs.version }} \
             --git.commit \
             --'git.commitMessage="Release ${version}"' \
@@ -68,15 +80,11 @@ jobs:
           delete-branch: true
           title: "Release ${{ inputs.version }}"
           body: |
-            Release **${{ inputs.version }}**
+            ## Changelog
 
-            After this pull request is merged, the following steps below will be going on:
+            ${{ steps.release_it_step.outputs.changelog }}
 
-            * Create tag for **${{ inputs.version }}**
-            * Publish to pub.dev
-            * Create Github release for **${{ inputs.version }}**
-
-            *This pull request is opened by bot*
+            *After this pull request is merged, the `release.yml` will be trigger. This pull request is opened by bot*
           labels: |
             ci:skip
             ci:prepare_release
