@@ -12,6 +12,9 @@ on:
 jobs:
   publishing:
     runs-on: ubuntu-latest
+    # See https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pub-dev
+    permissions:
+        id-token: write # Required for authentication using OIDC
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
