@@ -39,7 +39,8 @@ jobs:
       - name: Run release-it
         id: release_it_step
         run: |
-          CHANGELOG=$(release-it ${{ inputs.version }} --changelog --no-increment)
+          # Eliminate the warning: WARNING The recommended bump is "patch", but is overridden with "xxx".
+          CHANGELOG=$(release-it ${{ inputs.version }} --changelog  2>&1 | grep -v "WARNING The recommended bump is "patch",")
           # https://github.com/orgs/community/discussions/26288#discussioncomment-3876281
           delimiter="EOF"
           echo "changelog<<${delimiter}" >> "${GITHUB_OUTPUT}"
