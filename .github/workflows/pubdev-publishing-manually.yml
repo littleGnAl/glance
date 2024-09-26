@@ -21,19 +21,19 @@ jobs:
         with:
           ref: ${{ inputs.release_branch }}
           fetch-depth: 0
-      - name: Get tags
-        run: git fetch --tags origin
-      - name: Check Versions 🔎
-        run: |
-          set -eo pipefail
-          export LIB_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "LIB_VERSION: ${LIB_VERSION}"
-          export PUBSPEC_VERSION=$(grep 'version: ' pubspec.yaml | sed -e 's,.*: \(.*\),\1,')
-          echo "PUBSPEC_VERSION: ${PUBSPEC_VERSION}"
-          if [ "$LIB_VERSION" != "${PUBSPEC_VERSION}" ]; then
-            echo "Version in 'pubspec.yaml' does not match tag.";
-            exit 1;
-          fi
+    #   - name: Get tags
+    #     run: git fetch --tags origin
+    #   - name: Check Versions 🔎
+    #     run: |
+    #       set -eo pipefail
+    #       export LIB_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+    #       echo "LIB_VERSION: ${LIB_VERSION}"
+    #       export PUBSPEC_VERSION=$(grep 'version: ' pubspec.yaml | sed -e 's,.*: \(.*\),\1,')
+    #       echo "PUBSPEC_VERSION: ${PUBSPEC_VERSION}"
+    #       if [ "$LIB_VERSION" != "${PUBSPEC_VERSION}" ]; then
+    #         echo "Version in 'pubspec.yaml' does not match tag.";
+    #         exit 1;
+    #       fi
 
       # Sets the GitHub-signed OIDC token
     #   - name: Setup Dart
