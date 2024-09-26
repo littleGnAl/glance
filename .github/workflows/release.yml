@@ -49,23 +49,3 @@ jobs:
           echo "::set-output name=version::${PUBSPEC_VERSION}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish_pub:
-    name: Publish to pub.dev
-    needs: release_if_merged
-    runs-on: ubuntu-latest
-    # See https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pub-dev
-    permissions:
-      id-token: write # Required for authentication using OIDC
-    steps:
-      # Sets the GitHub-signed OIDC token
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: stable
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - name: Publish
-        run: dart pub publish --force
