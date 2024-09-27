@@ -26,7 +26,7 @@ class GlanceImpl implements Glance {
 
   bool _started = false;
 
-  GlanceStackTrace? _previousStackTrace;
+  GlanceStackTraceImpl? _previousStackTrace;
 
   DartStackTraceInfo? _dartStackTraceInfo;
 
@@ -183,8 +183,8 @@ class DartStackTraceInfo {
       isolateInstructions, Object.hashAll(dartStackTraceHeaderLines));
 }
 
-/// Implementation of [GlanceStackTrace]
-class GlanceStackTraceImpl implements GlanceStackTrace {
+/// Implementation of [StackTrace] of glance.
+class GlanceStackTraceImpl implements StackTrace {
   const GlanceStackTraceImpl(this.stackTraces, this.dartStackTraceInfo);
   final List<AggregatedNativeFrame> stackTraces;
 
