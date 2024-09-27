@@ -32,9 +32,6 @@ class GlanceWidgetBinding extends WidgetsFlutterBinding
   }
 }
 
-/// Represents a stack trace used in [Glance]
-abstract class GlanceStackTrace {}
-
 /// Defines a reporter that can report specific information in [Glance].
 abstract class GlanceReporter<T> {
   void report(T info);
@@ -51,7 +48,7 @@ class JankReport {
   });
 
   /// The stack traces captured when UI jank was detected.
-  final GlanceStackTrace stackTrace;
+  final StackTrace stackTrace;
 
   @override
   bool operator ==(Object other) {

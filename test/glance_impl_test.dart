@@ -360,29 +360,30 @@ void main() {
     });
   });
 
-  test('GlanceStackTraceImpl.toString', () {
-    final frame1 = AggregatedNativeFrame(NativeFrame(
-      pc: 110,
-      timestamp: Timeline.now,
-      module: NativeModule(
-        id: 1,
-        path: 'libapp.so',
-        baseAddress: 540641718272,
-        symbolName: 'hello',
-      ),
-    ));
-    final frame2 = AggregatedNativeFrame(NativeFrame(
-      pc: 120,
-      timestamp: Timeline.now,
-      module: NativeModule(
-        id: 2,
-        path: 'libapp.so',
-        baseAddress: 540641718272,
-        symbolName: 'world',
-      ),
-    ));
-    const isolateInstructions = 100;
-    final dartStackTraceHeaderLines = '''
+  group('GlanceStackTraceImpl', () {
+    test('GlanceStackTraceImpl.toString', () {
+      final frame1 = AggregatedNativeFrame(NativeFrame(
+        pc: 110,
+        timestamp: Timeline.now,
+        module: NativeModule(
+          id: 1,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        ),
+      ));
+      final frame2 = AggregatedNativeFrame(NativeFrame(
+        pc: 120,
+        timestamp: Timeline.now,
+        module: NativeModule(
+          id: 2,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        ),
+      ));
+      const isolateInstructions = 100;
+      final dartStackTraceHeaderLines = '''
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 pid: 3081, tid: 6164033536, name io.flutter.1.ui
 os: ios arch: arm64 comp: no sim: no
@@ -390,14 +391,14 @@ build_id: 'a8a967193ee33ac7a4852e7160590972'
 isolate_dso_base: 1016b8000, vm_dso_base: 1016b8000
 isolate_instructions: 100, vm_instructions: 1016bc000
 '''
-        .trim()
-        .split('\n');
-    DartStackTraceInfo dartStackTraceInfo =
-        DartStackTraceInfo(isolateInstructions, dartStackTraceHeaderLines);
-    final stackTrace =
-        GlanceStackTraceImpl([frame1, frame2], dartStackTraceInfo);
+          .trim()
+          .split('\n');
+      DartStackTraceInfo dartStackTraceInfo =
+          DartStackTraceInfo(isolateInstructions, dartStackTraceHeaderLines);
+      final stackTrace =
+          GlanceStackTraceImpl([frame1, frame2], dartStackTraceInfo);
 
-    const expectedStackTrace = '''
+      const expectedStackTrace = '''
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 pid: 3081, tid: 6164033536, name io.flutter.1.ui
 os: ios arch: arm64 comp: no sim: no
@@ -408,46 +409,46 @@ isolate_instructions: 100, vm_instructions: 1016bc000
     #01 abs 0000000000000078 _kDartIsolateSnapshotInstructions+0x14
 ''';
 
-    expect(stackTrace.toString(), expectedStackTrace);
-  });
+      expect(stackTrace.toString(), expectedStackTrace);
+    });
 
-  test('GlanceStackTraceImpl.toString when dart stack trace infos are empty',
-      () {
-    final frame1 = AggregatedNativeFrame(NativeFrame(
-      pc: 110,
-      timestamp: Timeline.now,
-      module: NativeModule(
-        id: 1,
-        path: 'libapp.so',
-        baseAddress: 540641718272,
-        symbolName: 'hello',
-      ),
-    ));
-    final frame2 = AggregatedNativeFrame(NativeFrame(
-      pc: 120,
-      timestamp: Timeline.now,
-      module: NativeModule(
-        id: 2,
-        path: 'libapp.so',
-        baseAddress: 540641718272,
-        symbolName: 'world',
-      ),
-    ));
-    DartStackTraceInfo dartStackTraceInfo = const DartStackTraceInfo(0, []);
-    final stackTrace =
-        GlanceStackTraceImpl([frame1, frame2], dartStackTraceInfo);
+    test('GlanceStackTraceImpl.toString when dart stack trace infos are empty',
+        () {
+      final frame1 = AggregatedNativeFrame(NativeFrame(
+        pc: 110,
+        timestamp: Timeline.now,
+        module: NativeModule(
+          id: 1,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        ),
+      ));
+      final frame2 = AggregatedNativeFrame(NativeFrame(
+        pc: 120,
+        timestamp: Timeline.now,
+        module: NativeModule(
+          id: 2,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        ),
+      ));
+      DartStackTraceInfo dartStackTraceInfo = const DartStackTraceInfo(0, []);
+      final stackTrace =
+          GlanceStackTraceImpl([frame1, frame2], dartStackTraceInfo);
 
-    const expectedStackTrace = '''
+      const expectedStackTrace = '''
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
     #00 abs 000000000000006e _kDartIsolateSnapshotInstructions
     #01 abs 0000000000000078 _kDartIsolateSnapshotInstructions
 ''';
 
-    expect(stackTrace.toString(), expectedStackTrace);
-  });
+      expect(stackTrace.toString(), expectedStackTrace);
+    });
 
-  test('Able to parseDartStackTraceInfo', () async {
-    final fakeDartStackTrace = '''
+    test('Able to parseDartStackTraceInfo', () async {
+      final fakeDartStackTrace = '''
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 pid: 3081, tid: 6164033536, name io.flutter.1.ui
 os: ios arch: arm64 comp: no sim: no
@@ -457,13 +458,13 @@ isolate_instructions: 100, vm_instructions: 1016bc000
     #00 abs 000000000000006e _kDartIsolateSnapshotInstructions+0xa
     #01 abs 0000000000000078 _kDartIsolateSnapshotInstructions+0x14
 '''
-        .trim();
+          .trim();
 
-    final info =
-        (glance as GlanceImpl).parseDartStackTraceInfo(fakeDartStackTrace);
-    expect(info!.isolateInstructions, 256);
+      final info =
+          (glance as GlanceImpl).parseDartStackTraceInfo(fakeDartStackTrace);
+      expect(info!.isolateInstructions, 256);
 
-    final expectedDartStackTraceHeaderLines = '''
+      final expectedDartStackTraceHeaderLines = '''
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 pid: 3081, tid: 6164033536, name io.flutter.1.ui
 os: ios arch: arm64 comp: no sim: no
@@ -471,9 +472,40 @@ build_id: 'a8a967193ee33ac7a4852e7160590972'
 isolate_dso_base: 1016b8000, vm_dso_base: 1016b8000
 isolate_instructions: 100, vm_instructions: 1016bc000
 '''
-        .trim()
-        .split('\n');
-    expect(info.dartStackTraceHeaderLines,
-        equals(expectedDartStackTraceHeaderLines));
+          .trim()
+          .split('\n');
+      expect(info.dartStackTraceHeaderLines,
+          equals(expectedDartStackTraceHeaderLines));
+    });
+
+    test('check equals', () {
+      final frame1 = AggregatedNativeFrame(NativeFrame(
+        pc: 110,
+        timestamp: Timeline.now,
+        module: NativeModule(
+          id: 1,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'hello',
+        ),
+      ));
+      final frame2 = AggregatedNativeFrame(NativeFrame(
+        pc: 120,
+        timestamp: Timeline.now,
+        module: NativeModule(
+          id: 2,
+          path: 'libapp.so',
+          baseAddress: 540641718272,
+          symbolName: 'world',
+        ),
+      ));
+      DartStackTraceInfo dartStackTraceInfo = const DartStackTraceInfo(0, []);
+      final stackTrace1 =
+          GlanceStackTraceImpl([frame1, frame2], dartStackTraceInfo);
+      final stackTrace2 =
+          GlanceStackTraceImpl([frame1, frame2], dartStackTraceInfo);
+
+      expect(stackTrace1, equals(stackTrace2));
+    });
   });
 }
