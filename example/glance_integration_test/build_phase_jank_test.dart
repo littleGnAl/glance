@@ -60,8 +60,6 @@ void main() {
     await Glance.instance.start(
       config: GlanceConfiguration(
         reporters: [reporter],
-        jankThreshold: 5,
-        sampleRateInMilliseconds: 1,
       ),
     );
 
