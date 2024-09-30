@@ -2,7 +2,7 @@
 const int kDefaultJankThreshold = 16;
 
 /// The default sample rate for measuring performance in milliseconds.
-const int kDefaultSampleRateInMilliseconds = 1;
+const int kDefaultSampleRateInMilliseconds = 10;
 
 /// Limits the maximum number of stack traces to 99. Any stack traces exceeding
 /// `kMaxStackTraces` will be dropped.
