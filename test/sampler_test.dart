@@ -92,7 +92,6 @@ void main() {
 
       sampler = await Sampler.create(SamplerConfig(
         jankThreshold: 1,
-        modulePathFilters: [],
         samplerProcessorFactory:
             _samplerProcessorFactory(processor.receivePort.sendPort, []),
       ));
@@ -121,7 +120,6 @@ void main() {
 
       sampler = await Sampler.create(SamplerConfig(
         jankThreshold: 1,
-        modulePathFilters: [],
         samplerProcessorFactory:
             _samplerProcessorFactory(processor.receivePort.sendPort, [frame]),
       ));
@@ -141,7 +139,6 @@ void main() {
 
       sampler = await Sampler.create(SamplerConfig(
         jankThreshold: 1,
-        modulePathFilters: [],
         samplerProcessorFactory:
             _samplerProcessorFactory(processor.receivePort.sendPort, []),
       ));
@@ -160,7 +157,6 @@ void main() {
 
       sampler = await Sampler.create(SamplerConfig(
         jankThreshold: 1,
-        modulePathFilters: [],
         samplerProcessorFactory:
             _samplerProcessorFactory(processor.receivePort.sendPort, []),
       ));
@@ -178,9 +174,8 @@ void main() {
 
     test('setCurrentThreadAsTarget', () {
       stackCapturer = FakeStackCapturer();
-      samplerProcessor = SamplerProcessor(
-          SamplerConfig(jankThreshold: 1, modulePathFilters: []),
-          stackCapturer);
+      samplerProcessor =
+          SamplerProcessor(SamplerConfig(jankThreshold: 1), stackCapturer);
       samplerProcessor.setCurrentThreadAsTarget();
       expect(stackCapturer.isSetCurrentThreadAsTarget, isTrue);
     });
@@ -191,7 +186,6 @@ void main() {
         samplerProcessor = SamplerProcessor(
           SamplerConfig(
             jankThreshold: 1,
-            modulePathFilters: [],
             sampleRateInMilliseconds: 1000,
           ),
           stackCapturer,
@@ -246,7 +240,6 @@ void main() {
       samplerProcessor = SamplerProcessor(
         SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: [],
           sampleRateInMilliseconds: 1000,
         ),
         stackCapturer,
@@ -294,7 +287,6 @@ void main() {
       samplerProcessor = SamplerProcessor(
         SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: [],
           sampleRateInMilliseconds: 1000,
         ),
         stackCapturer,
@@ -344,7 +336,6 @@ void main() {
       samplerProcessor = SamplerProcessor(
         SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
           sampleRateInMilliseconds: 1000,
         ),
         stackCapturer,
@@ -422,7 +413,6 @@ void main() {
       samplerProcessor = SamplerProcessor(
         SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: [],
           sampleRateInMilliseconds: 1000,
         ),
         stackCapturer,
@@ -436,7 +426,6 @@ void main() {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
           sampleRateInMilliseconds: 1000,
         );
         samplerProcessor = SamplerProcessor(
@@ -502,7 +491,6 @@ void main() {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
           sampleRateInMilliseconds: 1000,
         );
         samplerProcessor = SamplerProcessor(
@@ -570,7 +558,6 @@ void main() {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
           sampleRateInMilliseconds: 1000,
         );
         samplerProcessor = SamplerProcessor(
@@ -634,7 +621,6 @@ void main() {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
           sampleRateInMilliseconds: 1000,
         );
         samplerProcessor = SamplerProcessor(
@@ -698,7 +684,6 @@ void main() {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 2,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
           sampleRateInMilliseconds: 1,
         );
         samplerProcessor = SamplerProcessor(
@@ -761,7 +746,6 @@ void main() {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 10,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
           sampleRateInMilliseconds: 1,
         );
         samplerProcessor = SamplerProcessor(
@@ -791,141 +775,10 @@ void main() {
         expect(aggregatedNativeFrames.length, 0);
       });
 
-      test('return filtered modules', () {
-        stackCapturer = FakeStackCapturer();
-        final config = SamplerConfig(
-          jankThreshold: 1,
-          modulePathFilters: [
-            r'(.*)libapp.so',
-          ],
-          sampleRateInMilliseconds: 1000,
-        );
-        samplerProcessor = SamplerProcessor(
-          config,
-          stackCapturer,
-        );
-        final now = Timeline.now;
-        final module1 = NativeModule(
-          id: 1,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'hello',
-        );
-        final frame1 = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 5000,
-          module: module1,
-        );
-        final module2 = NativeModule(
-          id: 2,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'world',
-        );
-        final frame2 = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 4000,
-          module: module2,
-        );
-        final module3 = NativeModule(
-          id: 3,
-          path: 'libflutter.so',
-          baseAddress: 540641718272,
-          symbolName: 'helloworld',
-        );
-        final frame3 = NativeFrame(
-          pc: 540642472605,
-          timestamp: now - 3000,
-          module: module3,
-        );
-
-        final stack1 = NativeStack(frames: [frame1], modules: [module1]);
-        final stack2 = NativeStack(frames: [frame2], modules: [module2]);
-        final stack3 = NativeStack(frames: [frame3], modules: [module3]);
-        final buffer = RingBuffer<NativeStack>(3)
-          ..write(stack1)
-          ..write(stack2)
-          ..write(stack3);
-
-        final timestampRange = <int>[now - 10000, now];
-        final aggregatedNativeFrames =
-            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
-        expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame2);
-        expect(aggregatedNativeFrames[0].occurTimes, 1);
-        expect(aggregatedNativeFrames[1].frame, frame1);
-        expect(aggregatedNativeFrames[1].occurTimes, 1);
-      });
-
-      test('return filtered modules with kAndroidDefaultModulePathFilters', () {
-        stackCapturer = FakeStackCapturer();
-        final config = SamplerConfig(
-          jankThreshold: 1,
-          modulePathFilters: kAndroidDefaultModulePathFilters,
-          sampleRateInMilliseconds: 1000,
-        );
-        samplerProcessor = SamplerProcessor(
-          config,
-          stackCapturer,
-        );
-        final now = Timeline.now;
-        final module1 = NativeModule(
-          id: 1,
-          path: 'libapp.so',
-          baseAddress: 540641718272,
-          symbolName: 'hello',
-        );
-        final frame1 = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 5000,
-          module: module1,
-        );
-        final module2 = NativeModule(
-          id: 2,
-          path: 'libflutter.so',
-          baseAddress: 540641718272,
-          symbolName: 'world',
-        );
-        final frame2 = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 4000,
-          module: module2,
-        );
-        final module3 = NativeModule(
-          id: 3,
-          path: 'libcore.so',
-          baseAddress: 540641718272,
-          symbolName: 'helloworld',
-        );
-        final frame3 = NativeFrame(
-          pc: 540642472605,
-          timestamp: now - 3000,
-          module: module3,
-        );
-
-        final stack1 = NativeStack(frames: [frame1], modules: [module1]);
-        final stack2 = NativeStack(frames: [frame2], modules: [module2]);
-        final stack3 = NativeStack(frames: [frame3], modules: [module3]);
-        final buffer = RingBuffer<NativeStack>(3)
-          ..write(stack1)
-          ..write(stack2)
-          ..write(stack3);
-
-        final timestampRange = <int>[now - 10000, now];
-        final aggregatedNativeFrames =
-            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
-        expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame2);
-        expect(aggregatedNativeFrames[0].occurTimes, 1);
-        expect(aggregatedNativeFrames[1].frame, frame1);
-        expect(aggregatedNativeFrames[1].occurTimes, 1);
-      });
-
       test('only return frames with max length kMaxStackTraces', () {
         stackCapturer = FakeStackCapturer();
         final config = SamplerConfig(
           jankThreshold: 1,
-          modulePathFilters: kIOSDefaultModulePathFilters,
           sampleRateInMilliseconds: 1000,
         );
         samplerProcessor = SamplerProcessor(
@@ -954,70 +807,6 @@ void main() {
         final aggregatedNativeFrames =
             SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
         expect(aggregatedNativeFrames.length, kMaxStackTraces);
-      });
-
-      test('return filtered modules with kIOSDefaultModulePathFilters', () {
-        stackCapturer = FakeStackCapturer();
-        final config = SamplerConfig(
-          jankThreshold: 1,
-          modulePathFilters: kIOSDefaultModulePathFilters,
-          sampleRateInMilliseconds: 1000,
-        );
-        samplerProcessor = SamplerProcessor(
-          config,
-          stackCapturer,
-        );
-        final now = Timeline.now;
-        final module1 = NativeModule(
-          id: 1,
-          path: 'Runner.app/Frameworks/App.framework/App',
-          baseAddress: 540641718272,
-          symbolName: 'hello',
-        );
-        final frame1 = NativeFrame(
-          pc: 540642472602,
-          timestamp: now - 5000,
-          module: module1,
-        );
-        final module2 = NativeModule(
-          id: 2,
-          path: 'Runner.app/Frameworks/Flutter.framework/Flutter',
-          baseAddress: 540641718272,
-          symbolName: 'world',
-        );
-        final frame2 = NativeFrame(
-          pc: 540642472608,
-          timestamp: now - 4000,
-          module: module2,
-        );
-        final module3 = NativeModule(
-          id: 3,
-          path: 'Runner.app/Frameworks/Core.framework/Core',
-          baseAddress: 540641718272,
-          symbolName: 'helloworld',
-        );
-        final frame3 = NativeFrame(
-          pc: 540642472605,
-          timestamp: now - 3000,
-          module: module3,
-        );
-
-        final stack1 = NativeStack(frames: [frame1], modules: [module1]);
-        final stack2 = NativeStack(frames: [frame2], modules: [module2]);
-        final stack3 = NativeStack(frames: [frame3], modules: [module3]);
-        final buffer = RingBuffer<NativeStack>(3)
-          ..write(stack1)
-          ..write(stack2)
-          ..write(stack3);
-
-        final timestampRange = <int>[now - 10000, now];
-        final aggregatedNativeFrames =
-            SamplerProcessor.aggregateStacks(config, buffer, timestampRange);
-        expect(aggregatedNativeFrames.length, 2);
-        expect(aggregatedNativeFrames[0].frame, frame2);
-        expect(aggregatedNativeFrames[0].occurTimes, 1);
-        expect(aggregatedNativeFrames[1].frame, frame1);
-        expect(aggregatedNativeFrames[1].occurTimes, 1);
       });
     });
   });
@@ -1065,7 +854,7 @@ void main() {
       final buffer = RingBuffer<int>(3);
       buffer.write(1);
       buffer.write(2);
-      expect(buffer.readAll(), equals([1, 2]));
+      expect(buffer.readAllReversed(), equals([2, 1]));
     });
 
     test('readAll after full', () {
@@ -1073,7 +862,7 @@ void main() {
       buffer.write(1);
       buffer.write(2);
       buffer.write(3);
-      expect(buffer.readAll(), equals([2, 3]));
+      expect(buffer.readAllReversed(), equals([3, 2]));
     });
   });
 }

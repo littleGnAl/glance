@@ -68,25 +68,13 @@ class GlanceConfiguration {
     this.reporters = const [],
     List<String> modulePathFilters = const [],
     this.sampleRateInMilliseconds = kDefaultSampleRateInMilliseconds,
-  }) : _modulePathFilters = modulePathFilters;
+  });
 
   /// The threshold in milliseconds for detecting UI jank. Defaults to [kDefaultJankThreshold].
   final int jankThreshold;
 
   /// A list of reporters that will handle the reporting of UI jank.
   final List<GlanceReporter> reporters;
-
-  /// Filters with regex patterns for module paths.
-  /// If not set, [kAndroidDefaultModulePathFilters] is used on Android, and [kIOSDefaultModulePathFilters] is used on iOS.
-  final List<String> _modulePathFilters;
-  List<String> get modulePathFilters {
-    if (_modulePathFilters.isNotEmpty) {
-      return _modulePathFilters;
-    }
-    return defaultTargetPlatform == TargetPlatform.android
-        ? kAndroidDefaultModulePathFilters
-        : kIOSDefaultModulePathFilters;
-  }
 
   /// The interval in milliseconds for capture the stack traces. Defaults to [kDefaultSampleRateInMilliseconds].
   /// Lower value will capture more accuracy stack traces, but will impace the performance.
