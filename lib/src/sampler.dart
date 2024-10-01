@@ -35,14 +35,10 @@ class SamplerConfig {
   SamplerConfig({
     required this.jankThreshold,
     this.sampleRateInMilliseconds = kDefaultSampleRateInMilliseconds,
-    required this.modulePathFilters,
     this.samplerProcessorFactory = _defaultSamplerProcessorFactory,
   });
 
   final int jankThreshold;
-
-  /// e.g., libapp.so, libflutter.so
-  final List<String> modulePathFilters;
 
   final int sampleRateInMilliseconds;
 
@@ -200,21 +196,12 @@ class SamplerProcessor {
     SendPort sendPort,
     int messageId,
     List<int> timestampRange,
-  ) {
+  ) async {
     assert(isRunning);
     assert(_buffer != null, 'Make sure you call `loop` first');
 
-    final args = [sendPort, _config, _buffer!, timestampRange, messageId];
-    return compute((args) {
-      final sendPort = (args as List)[0] as SendPort;
-      final config = args[1] as SamplerConfig;
-      final buffer = args[2] as RingBuffer<NativeStack>;
-      final timestampRange = args[3] as List<int>;
-      final id = args[4] as int;
-
-      final stacktrace = aggregateStacks(config, buffer, timestampRange);
-      sendPort.send(GetSamplesResponse(id, stacktrace));
-    }, args);
+    final stacktrace = aggregateStacks(_config, _buffer!, timestampRange);
+    sendPort.send(GetSamplesResponse(messageId, stacktrace));
   }
 
   /// Start an infinite loop to capture the [NativeStack] at intervals specified
@@ -255,22 +242,9 @@ class SamplerProcessor {
   ) {
     void addOrUpdateAggregatedNativeFrame(
         SamplerConfig config,
-        List<int> timestampRange,
         LinkedHashMap<int, AggregatedNativeFrame> aggregatedFrameMap,
         NativeFrame frame) {
-      List<String> modulePathFilters = config.modulePathFilters;
-
-      int start = timestampRange[0];
-      int end = timestampRange[1];
-
-      final isInclude = frame.module != null &&
-          frame.timestamp >= start &&
-          frame.timestamp <= end &&
-          modulePathFilters.any((pathFilter) {
-            return RegExp(pathFilter).hasMatch(frame.module!.path);
-          });
-
-      if (!isInclude) {
+      if (frame.module == null) {
         return;
       }
       final pc = frame.pc;
@@ -285,17 +259,28 @@ class SamplerProcessor {
       }
     }
 
+    int startTimestamp = timestampRange[0];
+    int endTimestamp = timestampRange[1];
+
     final maxOccurTimes =
         config.jankThreshold / config.sampleRateInMilliseconds;
 
     final parentFrameMap = LinkedHashMap<int,
         LinkedHashMap<int, AggregatedNativeFrame>>.identity();
 
-    for (final nativeStack in buffer.readAll().reversed) {
-      if (nativeStack?.frames.isEmpty == true) {
+    for (final nativeStack in buffer.readAllReversed()) {
+      if (nativeStack.frames.isEmpty) {
         continue;
       }
-      int parentFramePc = nativeStack!.frames.last.pc;
+
+      final parentFrame = nativeStack.frames.last;
+      bool isInclude = parentFrame.timestamp >= startTimestamp &&
+          parentFrame.timestamp <= endTimestamp;
+      if (!isInclude) {
+        continue;
+      }
+
+      int parentFramePc = parentFrame.pc;
       bool isContainParentFrame = parentFrameMap.containsKey(parentFramePc);
 
       if (isContainParentFrame) {
@@ -305,7 +290,7 @@ class SamplerProcessor {
         // Aggregate from parent.
         for (int i = frames.length - 1; i >= 0; --i) {
           addOrUpdateAggregatedNativeFrame(
-              config, timestampRange, aggregatedFrameMap, frames[i]);
+              config, aggregatedFrameMap, frames[i]);
         }
       } else {
         final aggregatedFrameMap =
@@ -313,23 +298,23 @@ class SamplerProcessor {
         final frames = nativeStack.frames;
         for (int i = frames.length - 1; i >= 0; --i) {
           addOrUpdateAggregatedNativeFrame(
-              config, timestampRange, aggregatedFrameMap, frames[i]);
+              config, aggregatedFrameMap, frames[i]);
         }
         parentFrameMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
       }
     }
 
-    final allFrameList = <AggregatedNativeFrame>[];
+    List<AggregatedNativeFrame> allFrameList = <AggregatedNativeFrame>[];
     for (final entry in parentFrameMap.entries) {
-      final jankFrames =
-          entry.value.values.where((e) => e.occurTimes > maxOccurTimes);
-      if (jankFrames.isNotEmpty) {
-        allFrameList.addAll(jankFrames.toList().reversed);
-      }
-    }
+      for (final jankFrame in entry.value.values.toList().reversed) {
+        if (jankFrame.occurTimes > maxOccurTimes) {
+          allFrameList.add(jankFrame);
+        }
 
-    if (allFrameList.length > kMaxStackTraces) {
-      return allFrameList.sublist(0, kMaxStackTraces);
+        if (allFrameList.length >= kMaxStackTraces) {
+          return allFrameList;
+        }
+      }
     }
 
     return allFrameList;
@@ -373,13 +358,21 @@ class RingBuffer<T extends Object> {
     return value;
   }
 
-  List<T?> readAll() {
-    List<T?> result = [];
-    int current = _head;
+  List<T> readAllReversed() {
+    List<T> result = [];
+    int current = _tail == 0 ? _buffer.length - 1 : _tail - 1;
 
     while (current != _tail || (_isFull && result.length < _buffer.length)) {
-      result.add(_buffer[current]);
-      current = (current + 1) % _buffer.length;
+      final buffer = _buffer[current];
+      if (buffer != null) {
+        result.add(buffer);
+      }
+      if (current == _head) {
+        break; // Stop if we've reached the _head
+      }
+
+      current =
+          (current - 1 + _buffer.length) % _buffer.length; // Move backward
     }
 
     return result;

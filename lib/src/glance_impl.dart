@@ -44,11 +44,9 @@ class GlanceImpl implements Glance {
     final jankThreshold = config.jankThreshold;
     final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
     _reporters = List.of(config.reporters, growable: false);
-    final List<String> modulePathFilters = config.modulePathFilters;
 
     _sampler ??= await Sampler.create(SamplerConfig(
       jankThreshold: jankThreshold,
-      modulePathFilters: modulePathFilters,
       sampleRateInMilliseconds: sampleRateInMilliseconds,
     ));
 
