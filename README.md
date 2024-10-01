@@ -4,6 +4,8 @@ An APM library for detecting UI jank in Flutter for mobile (Android/iOS).
 
 **NOTE:** This package is experimental. APIs may change without notice before the stable version 1.0.
 
+Building smooth APPs with Flutter is easy, but as your APP grows in complexity and faces a variety of user environments and devices, ensuring smooth performance in production can be challenging. Even if your app runs smoothly locally, it doesn't guarantee the same for all users. `glance` helps collect stack traces during UI jank, allowing you to pinpoint the exact function causing the performance issue, so you can resolve it effectively.
+
 `glance` detects UI jank during the build phase as well as through various callbacks, such as, `WidgetBindingObserver` callbacks, touch events, and method channel callbacks. These cover most cases that cause UI jank. It works only in release or profile builds when your application is built with the [`--split-debug-info` option](https://docs.flutter.dev/deployment/obfuscate#obfuscate-your-app). 
 
 ## Getting Started
