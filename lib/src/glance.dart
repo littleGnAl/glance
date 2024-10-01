@@ -93,7 +93,7 @@ abstract class Glance {
 
   static Glance? _instance;
   static Glance get instance {
-    _instance ??= GlanceImpl();
+    _instance ??= GlanceImpl.create(kDebugMode);
     return _instance!;
   }
 

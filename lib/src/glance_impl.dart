@@ -11,9 +11,27 @@ import 'package:glance/src/glance.dart';
 import 'package:glance/src/sampler.dart';
 import 'package:meta/meta.dart' show visibleForTesting, internal;
 
+/// No-op implementation of [Glance].
+class GlanceNoOpImpl implements Glance {
+  @override
+  Future<void> end() async {}
+
+  @override
+  Future<void> start(
+      {GlanceConfiguration config = const GlanceConfiguration()}) async {}
+}
+
 /// Implementation of [Glance]
 class GlanceImpl implements Glance {
-  GlanceImpl();
+  static Glance create(bool isNoOp) {
+    if (isNoOp) {
+      return GlanceNoOpImpl();
+    }
+
+    return GlanceImpl._();
+  }
+
+  GlanceImpl._();
 
   @visibleForTesting
   GlanceImpl.forTesting(Sampler sampler) : _sampler = sampler;
