@@ -9,14 +9,15 @@
         "types": [
           {
             "type": "feat",
-            "section": "Features"
+            "section": "Changes"
           },
           {
             "type": "fix",
-            "section": "Bug Fixes"
+            "section": "Changes"
           },
           {
-            "type": "chore"
+            "type": "chore",
+            "section": "Changes"
           }
         ]
       }
