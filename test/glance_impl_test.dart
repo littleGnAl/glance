@@ -51,6 +51,18 @@ void main() {
     glance = GlanceImpl.forTesting(sampler);
   });
 
+  group('GlanceImpl.create', () {
+    test('return GlanceImpl', () {
+      final instance = GlanceImpl.create(false);
+      expect(instance, isInstanceOf<GlanceImpl>());
+    });
+
+    test('return GlanceNoOpImpl', () {
+      final instance = GlanceImpl.create(true);
+      expect(instance, isInstanceOf<GlanceNoOpImpl>());
+    });
+  });
+
   group('GlanceWidgetBindingMixin', () {
     test(
       'call onCheckJank when calling traceFunctionCall if it is in SchedulerPhase.idle',
