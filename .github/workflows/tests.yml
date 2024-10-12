@@ -90,6 +90,31 @@ jobs:
         run: flutter build ios --no-codesign
         working-directory: example
 
+  check_android15_16k_page_alignment:
+    name: Check android15 16k page size alignment
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'ci:skip') }}
+    strategy:
+      matrix:
+        version: ['3.x']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.version }}
+          cache: true
+      - run: flutter pub get
+      - name: Run flutter build apk
+        run: flutter build apk
+        working-directory: example
+      - name: Check android15 16k page size alignment
+        run: bash scripts/check_android15_16k_page_alignment.sh example/build/app/intermediates/merged_native_libs/release/out/lib/arm64-v8a/libglance.so
+
 #   integration_test_android:
 #     name: Run Flutter Android Integration Tests
 #     if: ${{ !contains(github.event.pull_request.labels.*.name, 'ci:skip') }}
