@@ -28,3 +28,8 @@ target_link_libraries(${LIBRARY_NAME}
         )
 
 target_compile_definitions(${LIBRARY_NAME} PUBLIC DART_SHARED_LIB)
+
+if(ANDROID)
+  # Support Android 15 16k page size
+  target_link_options(${LIBRARY_NAME} PRIVATE "-Wl,-z,max-page-size=16384")
+endif()
