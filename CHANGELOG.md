@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.4.0](https://github.com/littleGnAl/glance/compare/0.3.0...0.4.0) (2024-10-17)
+
+### Changes
+
+* Optimize memory usage for stack capture ([#50](https://github.com/littleGnAl/glance/issues/50)) ([cb98944](https://github.com/littleGnAl/glance/commit/cb98944fc4b3a18fd1383b96a0fe5976c6f30452))
+* support android 15 16k page size ([#49](https://github.com/littleGnAl/glance/issues/49)) ([228a197](https://github.com/littleGnAl/glance/commit/228a197904b1c4460cbe57e95ebd225e1b603775))
+
 ## [0.3.0](https://github.com/littleGnAl/glance/compare/0.2.0...0.3.0) (2024-10-01)
 
 
