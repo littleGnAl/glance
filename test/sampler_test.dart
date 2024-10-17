@@ -68,6 +68,7 @@ SamplerProcessorFactory _samplerProcessorFactory(
 class FakeStackCapturer implements StackCapturer {
   bool isCaptureStackOfTargetThread = false;
   bool isSetCurrentThreadAsTarget = false;
+  bool isDisposed = false;
   NativeStack nativeStack = NativeStack(frames: [], modules: []);
 
   @override
@@ -79,6 +80,11 @@ class FakeStackCapturer implements StackCapturer {
   @override
   void setCurrentThreadAsTarget() {
     isSetCurrentThreadAsTarget = true;
+  }
+
+  @override
+  void dispose() {
+    isDisposed = true;
   }
 }
 
@@ -419,6 +425,7 @@ void main() {
       );
       samplerProcessor.close();
       expect(samplerProcessor.isRunning, isFalse);
+      expect(stackCapturer.isDisposed, isTrue);
     });
 
     group('aggregateStacks', () {

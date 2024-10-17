@@ -231,6 +231,7 @@ class SamplerProcessor {
   void close() {
     isRunning = false;
     _buffer = null;
+    _stackCapturer.dispose();
   }
 
   /// Aggregate the [NativeFrame]s by occurrence times.

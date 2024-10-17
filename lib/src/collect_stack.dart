@@ -175,6 +175,10 @@ class StackCapturer {
       : _nativeBindings =
             nativeBindings ?? CollectStackNativeBindings(_loadLib());
 
+  static const _maxStackDepth = 100;
+
+  ffi.Pointer<ffi.Int64>? _capturedStackBuffer;
+
   final CollectStackNativeBindings _nativeBindings;
 
   /// Set the target capture thread. This only works for the main isolate.
@@ -194,11 +198,10 @@ class StackCapturer {
   /// Before calling this function, call [setCurrentThreadAsTarget] first.
   NativeStack captureStackOfTargetThread() {
     return using((arena) {
-      const maxStackDepth = 1024;
-      final outputBuffer =
-          arena.allocate<ffi.Int64>(ffi.sizeOf<ffi.Int64>() * maxStackDepth);
+      _capturedStackBuffer ??=
+          malloc.allocate<ffi.Int64>(ffi.sizeOf<ffi.Int64>() * _maxStackDepth);
       final error = _nativeBindings.CollectStackTraceOfTargetThread(
-          outputBuffer, maxStackDepth);
+          _capturedStackBuffer!, _maxStackDepth);
       if (error != ffi.nullptr) {
         final errorString = error.toDartString();
         malloc.free(error);
@@ -215,8 +218,8 @@ class StackCapturer {
       // separated by commas. For each frame try to locate base address
       // of the module it belongs to using |dladdr|.
       final modules = <String, NativeModule>{};
-      final frames = outputBuffer
-          .asTypedList(maxStackDepth)
+      final frames = _capturedStackBuffer!
+          .asTypedList(_maxStackDepth)
           .takeWhile((value) => value != 0)
           .map((addr) {
         final found = _nativeBindings.Dladdr(
@@ -250,5 +253,12 @@ class StackCapturer {
       return NativeStack(
           frames: frames, modules: modules.values.toList(growable: false));
     });
+  }
+
+  void dispose() {
+    if (_capturedStackBuffer != null) {
+      malloc.free(_capturedStackBuffer!);
+      _capturedStackBuffer = null;
+    }
   }
 }
