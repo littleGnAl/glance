@@ -24,9 +24,6 @@ jobs:
         with:
           ref: ${{ inputs.release_branch }}
           fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
       - name: Install release-it
         run: |
           npm install -g release-it
@@ -36,6 +33,25 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Check releasing
+        run: | # Ensure we can run release-it successfully after merged
+          output=$(release-it "${{ inputs.version }}" \
+            --git.tag \
+            --git.tagName="${version}" \
+            --git.tagAnnotation="Release ${version}" \
+            --git.push \
+            --github.release \
+            --no-github.web \
+            --ci \
+            --dry-run)
+
+          # Check if the output contains "ERROR"
+          if echo "$output" | grep -q "ERROR"; then
+            echo "ERROR: The environment cannot successfully run release-it. Please check the environment configuration."
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run release-it
         id: release_it_step
         run: |
