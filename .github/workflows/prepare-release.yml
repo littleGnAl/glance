@@ -44,7 +44,7 @@ jobs:
             --git.push \
             --github.release \
             --no-github.web \
-            --ci
+            --ci \
             --dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
