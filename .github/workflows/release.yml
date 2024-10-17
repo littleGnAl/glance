@@ -18,6 +18,8 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          # Use the PAT to checkout the codes, see https://github.com/cycjimmy/semantic-release-action/issues/128
+          token: ${{ secrets.PAT }}
       - name: Install release-it
         run: |
           npm install -g release-it
@@ -45,4 +47,6 @@ jobs:
             --ci
           echo "::set-output name=version::${PUBSPEC_VERSION}"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT to run the release-it, or the pubdev-publishing.yml will not be triggered
+          # see https://github.com/orgs/community/discussions/27194#discussioncomment-7038913
+          GITHUB_TOKEN: ${{ secrets.PAT }}
