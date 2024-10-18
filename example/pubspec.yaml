@@ -33,7 +33,7 @@ dependencies:
   permission_handler: ^11.3.1
   process: ^5.0.2
   file: ^7.0.0
-  path: ^1.8.3
+  path: ^1.8.2
   args: ^2.3.1
 
 dev_dependencies:
