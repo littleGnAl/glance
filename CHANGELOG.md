@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.5.0](https://github.com/littleGnAl/glance/compare/0.4.0...0.5.0) (2024-10-18)
+
+### Changes
+
+* Updates minimum supported SDK version to Flutter 3.10/Dart 3.0 ([#58](https://github.com/littleGnAl/glance/issues/58)) ([b1f37ba](https://github.com/littleGnAl/glance/commit/b1f37ba058b7f6e4aa9ea0ecbcfb1381c2fefb3e))
+
 ## [0.4.0](https://github.com/littleGnAl/glance/compare/0.3.0...0.4.0) (2024-10-17)
 
 ### Changes
