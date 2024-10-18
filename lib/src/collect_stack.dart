@@ -16,7 +16,7 @@ import 'package:glance/src/logger.dart';
 /// Dl_info from dlfcn.h.
 ///
 /// See `man dladdr`.
-class DlInfo extends ffi.Struct {
+final class DlInfo extends ffi.Struct {
   external ffi.Pointer<Utf8> fileName;
   external ffi.Pointer<ffi.Void> baseAddress;
   external ffi.Pointer<Utf8> symbolName;
