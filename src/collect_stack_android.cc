@@ -12,6 +12,8 @@
 #include <sys/errno.h>
 #include <chrono>
 #include <unistd.h>
+#include <string.h>
+
 #include "collect_stack.h"
 
 namespace glance
