@@ -66,7 +66,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ matrix.version }}
-      - run: flutter pub get
+      - run: flutter pub get -v
       - name: Run flutter build apk
         run: flutter build apk
         working-directory: example
@@ -85,7 +85,7 @@ jobs:
         with:
           flutter-version: ${{ matrix.version }}
           cache: true
-      - run: flutter pub get
+      - run: flutter pub get -v
       - name: Run flutter build ios --no-codesign
         run: flutter build ios --no-codesign
         working-directory: example
