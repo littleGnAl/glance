@@ -94,8 +94,8 @@ class GlanceConfiguration {
 /// Refer to [Sampler] for more details.
 /// 
 /// To detect UI jank, `glance` extends [WidgetsFlutterBinding] and monitors execution time between [WidgetsFlutterBinding.handleBeginFrame] 
-/// and [WidgetsFlutterBinding.handleDrawFrame]. It also tracks various callbacks such as `WidgetBindingObserver`, touch events, 
-/// and method channel callbacks' invocations, checking each against its execution time. 
+/// and [WidgetsFlutterBinding.handleDrawFrame] during the rendering phase. It also tracks various callbacks such as `WidgetBindingObserver`, 
+/// touch events, and method channel callbacks' invocations, checking each against its execution time. 
 /// Jank is detected when the execution time exceeds the [GlanceConfiguration.jankThreshold].
 /// 
 /// Upon detecting jank, `glance` fetches stack traces from the [Sampler] during the jank period and reconstructs them into Dart stack traces. 
