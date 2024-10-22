@@ -289,7 +289,7 @@ typedef HandleDrawFrameEndCallback = void Function(
 
 typedef CheckJankCallback = void Function(int start, int end);
 
-/// Besides the build phase check ([handleBeginFrame] to [handleDrawFrame]), we only
+/// Besides the rendering phase check ([handleBeginFrame] to [handleDrawFrame]), we only
 /// override the functions that handle callbacks from the [PlatformDispatcher].
 /// Other callbacks are handled by the channel called ([_DefaultBinaryMessengerProxy]).
 mixin GlanceWidgetBindingMixin on WidgetsFlutterBinding {
@@ -307,8 +307,8 @@ mixin GlanceWidgetBindingMixin on WidgetsFlutterBinding {
   T traceFunctionCall<T>(T Function() func) {
     int start = Timeline.now;
     final ret = func();
-    // Only check jank if not in build phase, because if it is in buid phase,
-    // the jank has been checked by the build phase jank check
+    // Only check jank if not in rendering phase, because if it is in rendering phase,
+    // the jank has been checked by the rendering phase jank check
     if (schedulerPhase == SchedulerPhase.idle) {
       _onCheckJank?.call(start, Timeline.now);
     }
