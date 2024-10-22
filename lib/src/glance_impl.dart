@@ -307,7 +307,7 @@ mixin GlanceWidgetBindingMixin on WidgetsFlutterBinding {
   T traceFunctionCall<T>(T Function() func) {
     int start = Timeline.now;
     final ret = func();
-    // Only check jank if not in rendering phase, because if it is in buid phase,
+    // Only check jank if not in rendering phase, because if it is in rendering phase,
     // the jank has been checked by the rendering phase jank check
     if (schedulerPhase == SchedulerPhase.idle) {
       _onCheckJank?.call(start, Timeline.now);
