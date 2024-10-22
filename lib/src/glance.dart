@@ -89,12 +89,34 @@ class GlanceConfiguration {
 /// For more details, see https://docs.flutter.dev/deployment/obfuscate#read-an-obfuscated-stack-trace.
 /// You can save the stack traces to files or upload them to your server and symbolize them later.
 /// 
+/// For example:
+/// ```dart
+/// // Implement your `JankDetectedReporter`
+/// class MyJankDetectedReporter extends JankDetectedReporter {
+///  @override
+///  void report(JankReport info) {
+///    final stackTrace = info.stackTrace.toString();
+///    // Save the stack traces to a file, or upload them to your server,
+///    // symbolize them using the `flutter symbolize` command.
+///  }
+/// }
+///
+/// void main() {
+///  // Call `GlanceWidgetBinding.ensureInitialized()` first
+///  GlanceWidgetBinding.ensureInitialized();
+///  // Start UI Jank Detection
+///  Glance.instance.start(config: GlanceConfiguration(reporters: [MyJankDetectedReporter()]));
+///
+///  runApp(const MyApp());
+/// }
+/// ```
+/// 
 /// ## How it works
 /// `glance` starts a dedicated [Isolate] internally to capture Dart UI thread stack traces using native stack unwinding. 
 /// Refer to [Sampler] for more details.
 /// 
 /// To detect UI jank, `glance` extends [WidgetsFlutterBinding] and monitors execution time between [WidgetsFlutterBinding.handleBeginFrame] 
-/// and [WidgetsFlutterBinding.handleDrawFrame] during the rendering phase. It also tracks various callbacks such as `WidgetBindingObserver`, 
+/// and [WidgetsFlutterBinding.handleDrawFrame] during the rendering phase. It also tracks various callbacks such as [WidgetBindingObserver], 
 /// touch events, and method channel callbacks' invocations, checking each against its execution time. 
 /// Jank is detected when the execution time exceeds the [GlanceConfiguration.jankThreshold].
 /// 
