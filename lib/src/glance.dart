@@ -6,7 +6,7 @@ import 'package:glance/src/glance_impl.dart';
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 
 /// A custom binding that connects [WidgetsFlutterBinding] and [Glance] to detect
-/// UI jank during the build phase and from "external sources" such as callbacks from
+/// UI jank during the rendering phase and from "external sources" such as callbacks from
 /// [WidgetsBindingObserver], touch events, and channel messages from the platform.
 class GlanceWidgetBinding extends WidgetsFlutterBinding
     with GlanceWidgetBindingMixin {
@@ -93,10 +93,10 @@ class GlanceConfiguration {
 /// `glance` starts a dedicated [Isolate] internally to capture Dart UI thread stack traces using native stack unwinding. 
 /// Refer to [Sampler] for more details.
 /// 
-/// To detect UI jank, `glance` extends `WidgetsFlutterBinding`, monitoring the build phase execution time, 
-/// along with callbacks such as `WidgetBindingObserver`, touch events, and method channel callbacks. 
+/// To detect UI jank, `glance` extends [WidgetsFlutterBinding] and monitors execution time between [WidgetsFlutterBinding.handleBeginFrame] 
+/// and [WidgetsFlutterBinding.handleDrawFrame]. It also tracks various callbacks such as `WidgetBindingObserver`, touch events, 
+/// and method channel callbacks' invocations, checking each against its execution time. 
 /// Jank is detected when the execution time exceeds the [GlanceConfiguration.jankThreshold].
-/// For further information, refer to [GlanceWidgetBinding].
 /// 
 /// Upon detecting jank, `glance` fetches stack traces from the [Sampler] during the jank period and reconstructs them into Dart stack traces. 
 /// These are then reported to the [GlanceReporter], specified via [GlanceConfiguration.reporters].
