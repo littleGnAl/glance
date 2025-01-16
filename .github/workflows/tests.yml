@@ -115,43 +115,42 @@ jobs:
       - name: Check android15 16k page size alignment
         run: bash scripts/check_android15_16k_page_alignment.sh example/build/app/intermediates/merged_native_libs/release/out/lib/arm64-v8a/libglance.so
 
-#   integration_test_android:
-#     name: Run Flutter Android Integration Tests
-#     if: ${{ !contains(github.event.pull_request.labels.*.name, 'ci:skip') }}
-#     strategy:
-#       matrix:
-#         # version: ["3.0.0", "3.x"]
-#         version: ["3.x"]
-#     runs-on: macos-14
-#     timeout-minutes: 120
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Install JDK
-#         uses: actions/setup-java@v4
-#         with:
-#           distribution: 'zulu'
-#           java-version: '21'
-#       - uses: subosito/flutter-action@v2
-#         with:
-#           flutter-version: ${{ matrix.version }}
-#       - name: Export the llvm path
-#         run: |
-#             # Export the llvm path
-#             # https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
-#             BREW_PREFIX=$(brew --prefix llvm@15)
-#             export PATH="${BREW_PREFIX}/bin:$PATH"
-#             which llvm-symbolizer
-#       - run: bash scripts/write_entitlements.sh
-#       - name: run flutter android integration tests
-#         uses: reactivecircus/android-emulator-runner@v2
-#         with:
-#           api-level: 31
-#           arch: arm64-v8a
-#           force-avd-creation: false
-#           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-#           disable-animations: true
-#           profile: pixel_5
-#           ram-size: 2048M
-#           heap-size: 4096M
-#           disk-size: 8192M
-#           script: bash scripts/glance_integration_test.sh
+  integration_test_android:
+    name: Run Flutter Android Integration Tests
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'ci:skip') }}
+    strategy:
+      matrix:
+        version: ["3.x"]
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.version }}
+      - name: Export the llvm path
+        run: |
+            # Export the llvm path
+            # https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
+            BREW_PREFIX=$(brew --prefix llvm@15)
+            export PATH="${BREW_PREFIX}/bin:$PATH"
+            which llvm-symbolizer
+      - run: bash scripts/write_entitlements.sh
+      - name: run flutter android integration tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: arm64-v8a
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          profile: pixel_5
+          ram-size: 2048M
+          heap-size: 4096M
+          disk-size: 8192M
+          script: bash scripts/glance_integration_test.sh
