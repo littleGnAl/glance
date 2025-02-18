@@ -58,13 +58,9 @@ void main() {
       checkStackTraces(info.stackTrace.toString());
     });
     await Glance.instance.start(
-      config: GlanceConfiguration(
-        reporters: [reporter],
-      ),
+      config: GlanceConfiguration(reporters: [reporter]),
     );
 
-    runApp(JankApp(
-      builder: (c) => const BuildPhaseJankWidget(),
-    ));
+    runApp(JankApp(builder: (c) => const BuildPhaseJankWidget()));
   });
 }

@@ -43,9 +43,7 @@ abstract class JankDetectedReporter extends GlanceReporter<JankReport> {}
 /// A report containing information about detected jank. Currently, it only includes
 /// the stack trace when UI jank occurs.
 class JankReport {
-  const JankReport({
-    required this.stackTrace,
-  });
+  const JankReport({required this.stackTrace});
 
   /// The stack traces captured when UI jank was detected.
   final StackTrace stackTrace;
@@ -133,8 +131,9 @@ abstract class Glance {
 
   /// Starts monitoring UI jank with the given configuration.
   /// If no configuration is provided, the default configuration is used.
-  Future<void> start(
-      {GlanceConfiguration config = const GlanceConfiguration()});
+  Future<void> start({
+    GlanceConfiguration config = const GlanceConfiguration(),
+  });
 
   /// Ends the Glance monitoring.
   Future<void> end();

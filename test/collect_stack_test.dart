@@ -17,7 +17,9 @@ class FakeCollectStackNativeBindings implements CollectStackNativeBindings {
   @override
   // ignore: non_constant_identifier_names
   ffi.Pointer<Utf8> CollectStackTraceOfTargetThread(
-      ffi.Pointer<ffi.Int64> buf, int bufSize) {
+    ffi.Pointer<ffi.Int64> buf,
+    int bufSize,
+  ) {
     isCollectStackTraceOfTargetThread = true;
     buf[0] = 123;
     return ffi.nullptr; // success

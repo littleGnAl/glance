@@ -19,13 +19,13 @@ void expensiveFunction() {
   final watch = Stopwatch();
   watch.start();
   for (int i = 0; i < 1000; ++i) {
-    jsonEncode({
-      for (int i = 0; i < 10000; ++i) 'aaa': 0,
-    });
+    jsonEncode({for (int i = 0; i < 10000; ++i) 'aaa': 0});
   }
   watch.stop();
-  GlanceLogger.log('[expensiveFunction]: ${watch.elapsedMilliseconds}',
-      prefixTag: false);
+  GlanceLogger.log(
+    '[expensiveFunction]: ${watch.elapsedMilliseconds}',
+    prefixTag: false,
+  );
 }
 
 class JankApp extends StatelessWidget {
@@ -37,10 +37,6 @@ class JankApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: builder(context),
-      ),
-    );
+    return MaterialApp(home: Scaffold(body: builder(context)));
   }
 }

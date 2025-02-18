@@ -48,12 +48,12 @@ class TouchEventJankWidgetState extends State<TouchEventJankWidget> {
     final offset = _getElevatedButtonOffset();
 
     // Simulate click the button
-    GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-      position: (offset + const Offset(10, 10)),
-    ));
-    GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-      position: (offset + const Offset(10, 10)),
-    ));
+    GestureBinding.instance.handlePointerEvent(
+      PointerDownEvent(position: (offset + const Offset(10, 10))),
+    );
+    GestureBinding.instance.handlePointerEvent(
+      PointerUpEvent(position: (offset + const Offset(10, 10))),
+    );
   }
 
   @override
@@ -62,9 +62,7 @@ class TouchEventJankWidgetState extends State<TouchEventJankWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text(
-            'You have pushed the button this many times:',
-          ),
+          const Text('You have pushed the button this many times:'),
           Text('$_counter'),
           ElevatedButton(
             key: _buttonKey,
@@ -96,13 +94,9 @@ void main() {
       checkStackTraces(info.stackTrace.toString());
     });
     await Glance.instance.start(
-      config: GlanceConfiguration(
-        reporters: [reporter],
-      ),
+      config: GlanceConfiguration(reporters: [reporter]),
     );
 
-    runApp(JankApp(
-      builder: (c) => const TouchEventJankWidget(),
-    ));
+    runApp(JankApp(builder: (c) => const TouchEventJankWidget()));
   });
 }

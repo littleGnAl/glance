@@ -12,10 +12,11 @@ import 'package:glance/src/logger.dart';
 typedef CheckStackTraceCallback = Future<bool> Function(String stackTrace);
 
 class TestCase {
-  TestCase(
-      {required this.description,
-      required this.testFilePath,
-      required this.onCheckStackTrace});
+  TestCase({
+    required this.description,
+    required this.testFilePath,
+    required this.onCheckStackTrace,
+  });
   final String description;
 
   final String testFilePath;
@@ -41,10 +42,7 @@ Future<void> _uninstallIOSApp(
 
   // flutter symbolize -i <stack trace file> -d <symbol file> -o <out file>
   {
-    final processResult = await processManager.run([
-      'idevice_id',
-      '-l',
-    ]);
+    final processResult = await processManager.run(['idevice_id', '-l']);
     if (processResult.exitCode != 0) {
       stderr.writeln(processResult.stderr);
     } else {
@@ -77,14 +75,22 @@ Future<String> _symbolize(
   String stackTraceFileName,
   String stackTrace,
 ) async {
-  final tmpStackTraceFilePath = path.join(path.current, 'build',
-      'glance_integration_test', '$stackTraceFileName.txt');
+  final tmpStackTraceFilePath = path.join(
+    path.current,
+    'build',
+    'glance_integration_test',
+    '$stackTraceFileName.txt',
+  );
   final tmpStackTraceFile = fileSystem.file(tmpStackTraceFilePath);
   await tmpStackTraceFile.create(recursive: true);
   await tmpStackTraceFile.writeAsString(stackTrace);
 
-  final tmpStackTraceOutPath = path.join(path.current, 'build',
-      'glance_integration_test', 'out_$stackTraceFileName.txt');
+  final tmpStackTraceOutPath = path.join(
+    path.current,
+    'build',
+    'glance_integration_test',
+    'out_$stackTraceFileName.txt',
+  );
   final tmpStackTraceOutFile = fileSystem.file(tmpStackTraceOutPath);
   await tmpStackTraceOutFile.create(recursive: true);
 
@@ -106,17 +112,19 @@ Future<String> _symbolize(
   return tmpStackTraceOutFile.readAsStringSync();
 }
 
-Future<bool> _runTestCase(ProcessManager processManager,
-    file.FileSystem fileSystem, RunOnPlatform runOn, TestCase testCase) async {
+Future<bool> _runTestCase(
+  ProcessManager processManager,
+  file.FileSystem fileSystem,
+  RunOnPlatform runOn,
+  TestCase testCase,
+) async {
   GlanceLogger.log(
-      'Running TestCase(${testCase.description}, ${testCase.testFilePath}) on ${runOn == RunOnPlatform.android ? 'Android' : 'iOS'} ...',
-      prefixTag: false);
+    'Running TestCase(${testCase.description}, ${testCase.testFilePath}) on ${runOn == RunOnPlatform.android ? 'Android' : 'iOS'} ...',
+    prefixTag: false,
+  );
 
   // Run `flutter clean` to get a clean build.
-  await processManager.run([
-    'flutter',
-    'clean',
-  ]);
+  await processManager.run(['flutter', 'clean']);
   GlanceLogger.log('Cleaned cache.', prefixTag: false);
   GlanceLogger.log('Building ${testCase.testFilePath} ...', prefixTag: false);
 
@@ -156,87 +164,88 @@ Future<bool> _runTestCase(ProcessManager processManager,
   bool isCollectingStackTraces = false;
   List<String> collectedStackTraces = [];
   bool isCheckStackTracesSuccess = false;
-  process.stderr
-      .transform(utf8.decoder)
-      .transform(const LineSplitter())
-      .listen((l) async {
-    GlanceLogger.log(l, prefixTag: false);
-  });
-  process.stdout
-      .transform(utf8.decoder)
-      .transform(const LineSplitter())
-      .listen((l) async {
-    final line = runOn == RunOnPlatform.android
-        ? l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '')
-        : l.replaceAll(RegExp(r'flutter: '), '');
-    GlanceLogger.log(line, prefixTag: false);
-    if (line.trim() == _kCollectStackTracesEndFlag) {
-      isCollectingStackTraces = false;
-      stdout.writeln('Collected stack traces');
+  process.stderr.transform(utf8.decoder).transform(const LineSplitter()).listen(
+    (l) async {
+      GlanceLogger.log(l, prefixTag: false);
+    },
+  );
+  process.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen(
+    (l) async {
+      final line =
+          runOn == RunOnPlatform.android
+              ? l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '')
+              : l.replaceAll(RegExp(r'flutter: '), '');
+      GlanceLogger.log(line, prefixTag: false);
+      if (line.trim() == _kCollectStackTracesEndFlag) {
+        isCollectingStackTraces = false;
+        stdout.writeln('Collected stack traces');
 
-      const file.FileSystem fileSystem = LocalFileSystem();
-      const processManager = LocalProcessManager();
-      GlanceLogger.log('Symbolizing ...', prefixTag: false);
+        const file.FileSystem fileSystem = LocalFileSystem();
+        const processManager = LocalProcessManager();
+        GlanceLogger.log('Symbolizing ...', prefixTag: false);
 
-      final symbolFilePath = runOn == RunOnPlatform.android
-          ? path.join('debug-info-integration', 'app.android-arm64.symbols')
-          : path.join('debug-info-integration', 'app.ios-arm64.symbols');
+        final symbolFilePath =
+            runOn == RunOnPlatform.android
+                ? path.join(
+                  'debug-info-integration',
+                  'app.android-arm64.symbols',
+                )
+                : path.join('debug-info-integration', 'app.ios-arm64.symbols');
 
-      final result = await _symbolize(
+        final result = await _symbolize(
           fileSystem,
           processManager,
           symbolFilePath,
           path.basename(testCase.testFilePath),
-          collectedStackTraces.join('\n'));
+          collectedStackTraces.join('\n'),
+        );
 
-      GlanceLogger.log('Symbolized stack traces:', prefixTag: false);
-      GlanceLogger.log(result, prefixTag: false);
+        GlanceLogger.log('Symbolized stack traces:', prefixTag: false);
+        GlanceLogger.log(result, prefixTag: false);
 
-      GlanceLogger.log('Checking stack trace ...', prefixTag: false);
-      isCheckStackTracesSuccess = await testCase.onCheckStackTrace(result);
+        GlanceLogger.log('Checking stack trace ...', prefixTag: false);
+        isCheckStackTracesSuccess = await testCase.onCheckStackTrace(result);
 
-      if (isCheckStackTracesSuccess) {
-        if (runOn == RunOnPlatform.android) {
-          // adb shell pm uninstall -k <package-name>
-          // Uninsntall the package to restore to a clean state
-          final processResult = await processManager.run([
-            'adb',
-            'shell',
-            'pm',
-            'uninstall',
-            '-k',
-            'com.littlegnal.glance_example',
-          ]);
-          if (processResult.exitCode != 0) {
-            stderr.writeln(processResult.stderr);
+        if (isCheckStackTracesSuccess) {
+          if (runOn == RunOnPlatform.android) {
+            // adb shell pm uninstall -k <package-name>
+            // Uninsntall the package to restore to a clean state
+            final processResult = await processManager.run([
+              'adb',
+              'shell',
+              'pm',
+              'uninstall',
+              '-k',
+              'com.littlegnal.glance_example',
+            ]);
+            if (processResult.exitCode != 0) {
+              stderr.writeln(processResult.stderr);
+            }
           }
-        }
-        if (runOn == RunOnPlatform.ios) {
-          await _uninstallIOSApp(fileSystem, processManager);
-        }
+          if (runOn == RunOnPlatform.ios) {
+            await _uninstallIOSApp(fileSystem, processManager);
+          }
 
-        process.kill();
-        return;
+          process.kill();
+          return;
+        }
       }
-    }
 
-    if (line.trim() == _kCollectStackTracesStartFlag) {
-      isCollectingStackTraces = true;
-      stdout.writeln('Start collecting stack traces ...');
-    }
+      if (line.trim() == _kCollectStackTracesStartFlag) {
+        isCollectingStackTraces = true;
+        stdout.writeln('Start collecting stack traces ...');
+      }
 
-    if (isCollectingStackTraces) {
-      collectedStackTraces.add(line);
-    }
-  });
+      if (isCollectingStackTraces) {
+        collectedStackTraces.add(line);
+      }
+    },
+  );
   await process.exitCode;
   return isCheckStackTracesSuccess;
 }
 
-enum RunOnPlatform {
-  ios,
-  android,
-}
+enum RunOnPlatform { ios, android }
 
 Future<void> runTest(
   ProcessManager processManager,
@@ -253,11 +262,15 @@ Future<void> runTest(
       testCase,
     );
     if (success) {
-      GlanceLogger.log('Test case success: ${testCase.testFilePath}',
-          prefixTag: false);
+      GlanceLogger.log(
+        'Test case success: ${testCase.testFilePath}',
+        prefixTag: false,
+      );
     } else {
-      GlanceLogger.log('Test case failed: ${testCase.testFilePath}',
-          prefixTag: false);
+      GlanceLogger.log(
+        'Test case failed: ${testCase.testFilePath}',
+        prefixTag: false,
+      );
       failedTestCases.add(testCase);
     }
   }
@@ -265,8 +278,10 @@ Future<void> runTest(
   if (failedTestCases.isNotEmpty) {
     GlanceLogger.log('Some test cases failed:', prefixTag: false);
     for (final e in failedTestCases) {
-      GlanceLogger.log('- "${e.description}", ${e.testFilePath}',
-          prefixTag: false);
+      GlanceLogger.log(
+        '- "${e.description}", ${e.testFilePath}',
+        prefixTag: false,
+      );
     }
     exit(1);
   }
