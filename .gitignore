@@ -30,3 +30,5 @@ build/
 
 .ccls-cache/
 .vscode/
+
+.cxx/
