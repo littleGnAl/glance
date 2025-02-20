@@ -25,10 +25,20 @@ jobs:
       #       echo "Make sure you follow the dart code style (https://github.com/dart-lang/dart_style)."
       #       exit 1
       #     fi
-      - uses: axel-op/dart-package-analyzer@v3
+      - name: Run Dart Package Analyzer
         id: analysis
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          INPUT_GITHUBTOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_MINANNOTATIONLEVEL: info
+        run: |
+          flutter doctor
+          flutter pub global activate pana
+
+          git clone https://github.com/axel-op/dart-package-analyzer.git -b stable $HOME/dart-package-analyzer
+          cd $HOME/dart-package-analyzer/app
+
+          flutter pub get
+          dart bin/main.dart
       - name: Check scores
         env:
           TOTAL: ${{ steps.analysis.outputs.total }}
