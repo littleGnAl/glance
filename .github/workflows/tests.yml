@@ -32,12 +32,12 @@ jobs:
           INPUT_MINANNOTATIONLEVEL: info
         run: |
           flutter doctor
-          flutter pub global activate pana
+          dart pub global activate pana
 
           git clone https://github.com/axel-op/dart-package-analyzer.git -b stable $HOME/dart-package-analyzer
           cd $HOME/dart-package-analyzer/app
 
-          flutter pub get
+          dart pub get
           dart bin/main.dart
       - name: Check scores
         env:
