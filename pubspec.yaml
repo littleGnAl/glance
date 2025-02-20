@@ -1,6 +1,6 @@
 name: glance
 description: An APM library for detecting UI jank in Flutter for mobile (Android/iOS).
-version: 0.5.0
+version: 0.6.0
 homepage: https://github.com/littleGnAl/glance
 environment:
   sdk: '>=3.0.0 <4.0.0'

@@ -1,5 +1,7 @@
 # CHANGELOG
 
+## [0.6.0](https://github.com/littleGnAl/glance/compare/0.5.0...0.6.0) (2025-02-20)
+
 ## [0.5.0](https://github.com/littleGnAl/glance/compare/0.4.0...0.5.0) (2024-10-18)
 
 ### Changes
