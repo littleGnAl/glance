@@ -17,8 +17,9 @@ class GlanceNoOpImpl implements Glance {
   Future<void> end() async {}
 
   @override
-  Future<void> start(
-      {GlanceConfiguration config = const GlanceConfiguration()}) async {}
+  Future<void> start({
+    GlanceConfiguration config = const GlanceConfiguration(),
+  }) async {}
 }
 
 /// Implementation of [Glance]
@@ -49,24 +50,28 @@ class GlanceImpl implements Glance {
   DartStackTraceInfo? _dartStackTraceInfo;
 
   @override
-  Future<void> start(
-      {GlanceConfiguration config = const GlanceConfiguration()}) async {
+  Future<void> start({
+    GlanceConfiguration config = const GlanceConfiguration(),
+  }) async {
     if (_started) {
       return;
     }
 
     _started = true;
-    _dartStackTraceInfo ??=
-        parseDartStackTraceInfo(StackTrace.current.toString());
+    _dartStackTraceInfo ??= parseDartStackTraceInfo(
+      StackTrace.current.toString(),
+    );
 
     final jankThreshold = config.jankThreshold;
     final sampleRateInMilliseconds = config.sampleRateInMilliseconds;
     _reporters = List.of(config.reporters, growable: false);
 
-    _sampler ??= await Sampler.create(SamplerConfig(
-      jankThreshold: jankThreshold,
-      sampleRateInMilliseconds: sampleRateInMilliseconds,
-    ));
+    _sampler ??= await Sampler.create(
+      SamplerConfig(
+        jankThreshold: jankThreshold,
+        sampleRateInMilliseconds: sampleRateInMilliseconds,
+      ),
+    );
 
     _checkJank = (int start, int end) {
       if (_sampler == null) {
@@ -103,7 +108,9 @@ class GlanceImpl implements Glance {
     }
 
     final straceTrace = GlanceStackTraceImpl(
-        frames, _dartStackTraceInfo ?? const DartStackTraceInfo(0, []));
+      frames,
+      _dartStackTraceInfo ?? const DartStackTraceInfo(0, []),
+    );
     if (straceTrace == _previousStackTrace) {
       return;
     }
@@ -181,7 +188,9 @@ class GlanceImpl implements Glance {
 
 class DartStackTraceInfo {
   const DartStackTraceInfo(
-      this.isolateInstructions, this.dartStackTraceHeaderLines);
+    this.isolateInstructions,
+    this.dartStackTraceHeaderLines,
+  );
   final int isolateInstructions;
   final List<String> dartStackTraceHeaderLines;
 
@@ -196,7 +205,9 @@ class DartStackTraceInfo {
 
   @override
   int get hashCode => Object.hash(
-      isolateInstructions, Object.hashAll(dartStackTraceHeaderLines));
+    isolateInstructions,
+    Object.hashAll(dartStackTraceHeaderLines),
+  );
 }
 
 /// Implementation of [StackTrace] of glance.
@@ -284,8 +295,8 @@ class GlanceStackTraceImpl implements StackTrace {
   }
 }
 
-typedef HandleDrawFrameEndCallback = void Function(
-    int beginFrameTimeInMillis, int drawFrameTimeInMillis);
+typedef HandleDrawFrameEndCallback =
+    void Function(int beginFrameTimeInMillis, int drawFrameTimeInMillis);
 
 typedef CheckJankCallback = void Function(int start, int end);
 
@@ -330,12 +341,12 @@ mixin GlanceWidgetBindingMixin on WidgetsFlutterBinding {
 
   @override
   BinaryMessenger createBinaryMessenger() {
-    return _DefaultBinaryMessengerProxy(
-      super.createBinaryMessenger(),
-      (start, end) {
-        _onCheckJank?.call(start, end);
-      },
-    );
+    return _DefaultBinaryMessengerProxy(super.createBinaryMessenger(), (
+      start,
+      end,
+    ) {
+      _onCheckJank?.call(start, end);
+    });
   }
 
   @override
@@ -378,8 +389,11 @@ class _DefaultBinaryMessengerProxy implements BinaryMessenger {
   final BinaryMessenger _proxy;
   final CheckJankCallback _onCheckJank;
   @override
-  Future<void> handlePlatformMessage(String channel, ByteData? data,
-      PlatformMessageResponseCallback? callback) {
+  Future<void> handlePlatformMessage(
+    String channel,
+    ByteData? data,
+    PlatformMessageResponseCallback? callback,
+  ) {
     // ignore: deprecated_member_use
     return _proxy.handlePlatformMessage(channel, data, callback);
   }
@@ -392,14 +406,15 @@ class _DefaultBinaryMessengerProxy implements BinaryMessenger {
   @override
   void setMessageHandler(String channel, MessageHandler? handler) {
     _proxy.setMessageHandler(
-        channel,
-        handler == null
-            ? handler
-            : (ByteData? message) {
-                final start = Timeline.now;
-                return handler(message)!.whenComplete(() {
-                  _onCheckJank(start, Timeline.now);
-                });
-              });
+      channel,
+      handler == null
+          ? handler
+          : (ByteData? message) {
+            final start = Timeline.now;
+            return handler(message)!.whenComplete(() {
+              _onCheckJank(start, Timeline.now);
+            });
+          },
+    );
   }
 }

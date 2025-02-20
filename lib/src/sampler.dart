@@ -70,8 +70,10 @@ class Sampler {
 
     late Isolate isolate;
     try {
-      isolate =
-          await Isolate.spawn(_samplerIsolate, [initPort.sendPort, config]);
+      isolate = await Isolate.spawn(_samplerIsolate, [
+        initPort.sendPort,
+        config,
+      ]);
     } on Object {
       initPort.close();
       rethrow;
@@ -93,7 +95,8 @@ class Sampler {
   bool _closed = false;
 
   Future<List<AggregatedNativeFrame>> getSamples(
-      List<int> timestampRange) async {
+    List<int> timestampRange,
+  ) async {
     if (_closed) throw StateError('Closed');
     final completer = Completer<Object?>.sync();
     final id = _idCounter++;
@@ -166,8 +169,8 @@ class AggregatedNativeFrame {
   int get hashCode => Object.hash(frame, occurTimes);
 }
 
-typedef SamplerProcessorFactory = SamplerProcessor Function(
-    SamplerConfig config);
+typedef SamplerProcessorFactory =
+    SamplerProcessor Function(SamplerConfig config);
 
 /// Class for processing the native frames.
 class SamplerProcessor {
@@ -242,9 +245,10 @@ class SamplerProcessor {
     List<int> timestampRange,
   ) {
     void addOrUpdateAggregatedNativeFrame(
-        SamplerConfig config,
-        LinkedHashMap<int, AggregatedNativeFrame> aggregatedFrameMap,
-        NativeFrame frame) {
+      SamplerConfig config,
+      LinkedHashMap<int, AggregatedNativeFrame> aggregatedFrameMap,
+      NativeFrame frame,
+    ) {
       if (frame.module == null) {
         return;
       }
@@ -266,8 +270,11 @@ class SamplerProcessor {
     final maxOccurTimes =
         config.jankThreshold / config.sampleRateInMilliseconds;
 
-    final parentFrameMap = LinkedHashMap<int,
-        LinkedHashMap<int, AggregatedNativeFrame>>.identity();
+    final parentFrameMap =
+        LinkedHashMap<
+          int,
+          LinkedHashMap<int, AggregatedNativeFrame>
+        >.identity();
 
     for (final nativeStack in buffer.readAllReversed()) {
       if (nativeStack.frames.isEmpty) {
@@ -275,7 +282,8 @@ class SamplerProcessor {
       }
 
       final parentFrame = nativeStack.frames.last;
-      bool isInclude = parentFrame.timestamp >= startTimestamp &&
+      bool isInclude =
+          parentFrame.timestamp >= startTimestamp &&
           parentFrame.timestamp <= endTimestamp;
       if (!isInclude) {
         continue;
@@ -291,7 +299,10 @@ class SamplerProcessor {
         // Aggregate from parent.
         for (int i = frames.length - 1; i >= 0; --i) {
           addOrUpdateAggregatedNativeFrame(
-              config, aggregatedFrameMap, frames[i]);
+            config,
+            aggregatedFrameMap,
+            frames[i],
+          );
         }
       } else {
         final aggregatedFrameMap =
@@ -299,7 +310,10 @@ class SamplerProcessor {
         final frames = nativeStack.frames;
         for (int i = frames.length - 1; i >= 0; --i) {
           addOrUpdateAggregatedNativeFrame(
-              config, aggregatedFrameMap, frames[i]);
+            config,
+            aggregatedFrameMap,
+            frames[i],
+          );
         }
         parentFrameMap.putIfAbsent(parentFramePc, () => aggregatedFrameMap);
       }

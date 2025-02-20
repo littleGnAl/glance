@@ -38,7 +38,8 @@ void main(List<String> arguments) {
         testFilePath: 'glance_integration_test/touch_event_jank_test.dart',
         onCheckStackTrace: (stackTrace) async {
           final incrementFuncRegx = RegExp(
-              r'(.*)TouchEventJankWidgetState._incrementCounter(.*)\/glance_integration_test/touch_event_jank_test.dart');
+            r'(.*)TouchEventJankWidgetState._incrementCounter(.*)\/glance_integration_test/touch_event_jank_test.dart',
+          );
 
           if (incrementFuncRegx.hasMatch(stackTrace)) {
             // success
@@ -55,7 +56,8 @@ void main(List<String> arguments) {
         testFilePath: 'glance_integration_test/build_phase_jank_test.dart',
         onCheckStackTrace: (stackTrace) async {
           final expensiveFuncRegx = RegExp(
-              r'(.*)expensiveFunction(.*)\/glance_integration_test/jank_app.dart');
+            r'(.*)expensiveFunction(.*)\/glance_integration_test/jank_app.dart',
+          );
 
           if (expensiveFuncRegx.hasMatch(stackTrace)) {
             // success
@@ -66,7 +68,7 @@ void main(List<String> arguments) {
           }
           return false;
         },
-      )
+      ),
     ],
     runOn: runOn == 'android' ? RunOnPlatform.android : RunOnPlatform.ios,
   );
