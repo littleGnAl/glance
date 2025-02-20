@@ -34,7 +34,7 @@ jobs:
           flutter doctor
           dart pub global activate pana
 
-          git clone https://github.com/axel-op/dart-package-analyzer.git -b stable $HOME/dart-package-analyzer
+          git clone https://github.com/axel-op/dart-package-analyzer.git -b v3 $HOME/dart-package-analyzer
           cd $HOME/dart-package-analyzer/app
 
           dart pub get
