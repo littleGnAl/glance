@@ -33,10 +33,9 @@ class MyJankDetectedReporter extends JankDetectedReporter {
       print('[MyJankDetectedReporter] stacktraceFilePath: $stacktraceFilePath');
       final file = File(stacktraceFilePath);
       file.createSync(recursive: true);
-      File(stacktraceFilePath).writeAsStringSync(
-        info.stackTrace.toString(),
-        flush: true,
-      );
+      File(
+        stacktraceFilePath,
+      ).writeAsStringSync(info.stackTrace.toString(), flush: true);
     }, [RootIsolateToken.instance, info]);
   }
 }
@@ -60,9 +59,7 @@ void main() {
 
 Future<void> _startGlance() async {
   Glance.instance.start(
-    config: GlanceConfiguration(
-      reporters: [MyJankDetectedReporter()],
-    ),
+    config: GlanceConfiguration(reporters: [MyJankDetectedReporter()]),
   );
 
   await Permission.storage.request();
@@ -77,9 +74,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       showPerformanceOverlay: true,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -102,9 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final watch = Stopwatch();
     watch.start();
     for (int i = 0; i < 1000; ++i) {
-      jsonEncode({
-        for (int i = 0; i < 10000; ++i) 'aaa': 0,
-      });
+      jsonEncode({for (int i = 0; i < 10000; ++i) 'aaa': 0});
     }
     watch.stop();
     // ignore: avoid_print
@@ -121,16 +114,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
+            const Text('You have pushed the button this many times:'),
             Text('$_counter'),
           ],
         ),
