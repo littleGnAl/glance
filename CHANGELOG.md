@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.6.0](https://github.com/littleGnAl/glance/compare/0.5.0...0.6.0) (2025-02-20)
+
+### Changes
+
+* [android] Migrate Plugin DSL ([#64](https://github.com/littleGnAl/glance/issues/64)) ([18b45a8](https://github.com/littleGnAl/glance/commit/18b45a895bcdb1d422869c482e43ac0f14cfedb9))
+
 ## [0.5.0](https://github.com/littleGnAl/glance/compare/0.4.0...0.5.0) (2024-10-18)
 
 ### Changes
