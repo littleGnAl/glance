@@ -21,7 +21,7 @@ plugins {
 }
 
 android {
-    if (project.hasProperty("android") && project.android.hasProperty("namespace")) {
+    if (this.hasProperty("namespace")) {
         namespace = "com.littlegnal.glance"
     }
 
