@@ -100,7 +100,9 @@ jobs:
         with:
           flutter-version: ${{ matrix.version }}
           cache: true
-      - run: flutter packages get -v
+      - name: Get packages for example app
+        run: flutter packages get -v
+        working-directory: example
       - name: Run flutter build ios --no-codesign
         run: flutter build ios --no-codesign
         working-directory: example
