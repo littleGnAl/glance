@@ -21,10 +21,7 @@ plugins {
 }
 
 android {
-    if (this.hasProperty("namespace")) {
-        namespace = "com.littlegnal.glance"
-    }
-
+    namespace = "com.littlegnal.glance"
     compileSdk = 35
 
     externalNativeBuild {
