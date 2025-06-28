@@ -1,0 +1,5 @@
+{
+  // Pin the Flutter SDK version to match the version in `.github/workflows/tests.yml`
+  "image": "cirruslabs/flutter:3.32.5",
+  "forwardPorts": [3000]
+}
