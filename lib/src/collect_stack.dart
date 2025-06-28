@@ -27,11 +27,11 @@ final class DlInfo extends ffi.Struct {
 class CollectStackNativeBindings {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-  _lookup;
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
   CollectStackNativeBindings(ffi.DynamicLibrary dynamicLibrary)
-    : _lookup = dynamicLibrary.lookup;
+      : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
   CollectStackNativeBindings.fromLookup(
@@ -46,8 +46,8 @@ class CollectStackNativeBindings {
   // ignore: non_constant_identifier_names
   late final _SetCurrentThreadAsTargetPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>(
-        'SetCurrentThreadAsTarget',
-      );
+    'SetCurrentThreadAsTarget',
+  );
   // ignore: non_constant_identifier_names
   late final _SetCurrentThreadAsTarget =
       _SetCurrentThreadAsTargetPtr.asFunction<void Function()>();
@@ -62,15 +62,13 @@ class CollectStackNativeBindings {
 
   // ignore: non_constant_identifier_names
   late final _CollectStackTraceOfTargetThreadPtr = _lookup<
-    ffi.NativeFunction<
-      ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, ffi.Size)
-    >
-  >('CollectStackTraceOfTargetThread');
+      ffi.NativeFunction<
+          ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>,
+              ffi.Size)>>('CollectStackTraceOfTargetThread');
   // ignore: non_constant_identifier_names
   late final _CollectStackTraceOfTargetThread =
       _CollectStackTraceOfTargetThreadPtr.asFunction<
-        ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, int)
-      >();
+          ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, int)>();
 
   // ignore: non_constant_identifier_names
   ffi.Pointer<Utf8> LookupSymbolName(ffi.Pointer<DlInfo> info) {
@@ -79,13 +77,11 @@ class CollectStackNativeBindings {
 
   // ignore: non_constant_identifier_names
   late final _LookupSymbolNamePtr = _lookup<
-    ffi.NativeFunction<ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>
-  >('LookupSymbolName');
+          ffi.NativeFunction<ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>>(
+      'LookupSymbolName');
   // ignore: non_constant_identifier_names
-  late final _LookupSymbolName =
-      _LookupSymbolNamePtr.asFunction<
-        ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)
-      >();
+  late final _LookupSymbolName = _LookupSymbolNamePtr.asFunction<
+      ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>();
 
   // ignore: non_constant_identifier_names
   int Dladdr(ffi.Pointer<ffi.Void> addr, ffi.Pointer<DlInfo> info) {
@@ -93,15 +89,11 @@ class CollectStackNativeBindings {
   }
 
   late final _dladdrPtr = _lookup<
-    ffi.NativeFunction<
-      ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)
-    >
-  >('dladdr');
-  late final _dladdr =
-      _dladdrPtr
-          .asFunction<
-            int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)
-          >();
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)>>('dladdr');
+  late final _dladdr = _dladdrPtr
+      .asFunction<int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)>();
 }
 
 class NativeFrame {
@@ -172,8 +164,8 @@ ffi.DynamicLibrary _loadLib() {
 
 class StackCapturer {
   StackCapturer({CollectStackNativeBindings? nativeBindings})
-    : _nativeBindings =
-          nativeBindings ?? CollectStackNativeBindings(_loadLib());
+      : _nativeBindings =
+            nativeBindings ?? CollectStackNativeBindings(_loadLib());
 
   static const _maxStackDepth = 100;
 
@@ -227,34 +219,32 @@ class StackCapturer {
           .asTypedList(_maxStackDepth)
           .takeWhile((value) => value != 0)
           .map((addr) {
-            final found = _nativeBindings.Dladdr(
-              ffi.Pointer<ffi.Void>.fromAddress(addr),
-              dlInfo,
-            );
-            if (found == 0) {
-              return NativeFrame(pc: addr, timestamp: _nowInMicrosSinceEpoch());
-            }
+        final found = _nativeBindings.Dladdr(
+          ffi.Pointer<ffi.Void>.fromAddress(addr),
+          dlInfo,
+        );
+        if (found == 0) {
+          return NativeFrame(pc: addr, timestamp: _nowInMicrosSinceEpoch());
+        }
 
-            final sn = _nativeBindings.LookupSymbolName(dlInfo);
-            final symbolName = sn != ffi.nullptr ? sn.toDartString() : '';
-            malloc.free(sn);
+        final sn = _nativeBindings.LookupSymbolName(dlInfo);
+        final symbolName = sn != ffi.nullptr ? sn.toDartString() : '';
+        malloc.free(sn);
 
-            final modulePath = dlInfo.ref.fileName.toDartString();
-            final module =
-                modules[modulePath] ??= NativeModule(
-                  id: modules.length,
-                  path: modulePath,
-                  baseAddress: dlInfo.ref.baseAddress.address,
-                  symbolName: symbolName,
-                );
+        final modulePath = dlInfo.ref.fileName.toDartString();
+        final module = modules[modulePath] ??= NativeModule(
+          id: modules.length,
+          path: modulePath,
+          baseAddress: dlInfo.ref.baseAddress.address,
+          symbolName: symbolName,
+        );
 
-            return NativeFrame(
-              module: module,
-              pc: addr,
-              timestamp: _nowInMicrosSinceEpoch(),
-            );
-          })
-          .toList(growable: false);
+        return NativeFrame(
+          module: module,
+          pc: addr,
+          timestamp: _nowInMicrosSinceEpoch(),
+        );
+      }).toList(growable: false);
 
       return NativeStack(
         frames: frames,

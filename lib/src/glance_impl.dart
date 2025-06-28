@@ -205,9 +205,9 @@ class DartStackTraceInfo {
 
   @override
   int get hashCode => Object.hash(
-    isolateInstructions,
-    Object.hashAll(dartStackTraceHeaderLines),
-  );
+        isolateInstructions,
+        Object.hashAll(dartStackTraceHeaderLines),
+      );
 }
 
 /// Implementation of [StackTrace] of glance.
@@ -295,8 +295,8 @@ class GlanceStackTraceImpl implements StackTrace {
   }
 }
 
-typedef HandleDrawFrameEndCallback =
-    void Function(int beginFrameTimeInMillis, int drawFrameTimeInMillis);
+typedef HandleDrawFrameEndCallback = void Function(
+    int beginFrameTimeInMillis, int drawFrameTimeInMillis);
 
 typedef CheckJankCallback = void Function(int start, int end);
 
@@ -410,11 +410,11 @@ class _DefaultBinaryMessengerProxy implements BinaryMessenger {
       handler == null
           ? handler
           : (ByteData? message) {
-            final start = Timeline.now;
-            return handler(message)!.whenComplete(() {
-              _onCheckJank(start, Timeline.now);
-            });
-          },
+              final start = Timeline.now;
+              return handler(message)!.whenComplete(() {
+                _onCheckJank(start, Timeline.now);
+              });
+            },
     );
   }
 }

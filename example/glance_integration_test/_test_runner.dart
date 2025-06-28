@@ -171,10 +171,9 @@ Future<bool> _runTestCase(
   );
   process.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen(
     (l) async {
-      final line =
-          runOn == RunOnPlatform.android
-              ? l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '')
-              : l.replaceAll(RegExp(r'flutter: '), '');
+      final line = runOn == RunOnPlatform.android
+          ? l.replaceAll(RegExp(r'I\/flutter \((.*\d+)\): '), '')
+          : l.replaceAll(RegExp(r'flutter: '), '');
       GlanceLogger.log(line, prefixTag: false);
       if (line.trim() == _kCollectStackTracesEndFlag) {
         isCollectingStackTraces = false;
@@ -184,13 +183,12 @@ Future<bool> _runTestCase(
         const processManager = LocalProcessManager();
         GlanceLogger.log('Symbolizing ...', prefixTag: false);
 
-        final symbolFilePath =
-            runOn == RunOnPlatform.android
-                ? path.join(
-                  'debug-info-integration',
-                  'app.android-arm64.symbols',
-                )
-                : path.join('debug-info-integration', 'app.ios-arm64.symbols');
+        final symbolFilePath = runOn == RunOnPlatform.android
+            ? path.join(
+                'debug-info-integration',
+                'app.android-arm64.symbols',
+              )
+            : path.join('debug-info-integration', 'app.ios-arm64.symbols');
 
         final result = await _symbolize(
           fileSystem,

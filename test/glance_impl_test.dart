@@ -195,8 +195,8 @@ void main() {
         );
 
         await glanceWidgetBinding.defaultBinaryMessenger
-        // ignore: deprecated_member_use
-        .handlePlatformMessage('my_channel', data, (ByteData? data) {});
+            // ignore: deprecated_member_use
+            .handlePlatformMessage('my_channel', data, (ByteData? data) {});
         expect((await onCheckJankCalledCompleter.future), isTrue);
         expect((await methodCallHandlerCalledCompleter.future), isTrue);
       },
@@ -428,7 +428,9 @@ os: ios arch: arm64 comp: no sim: no
 build_id: 'a8a967193ee33ac7a4852e7160590972'
 isolate_dso_base: 1016b8000, vm_dso_base: 1016b8000
 isolate_instructions: 100, vm_instructions: 1016bc000
-'''.trim().split('\n');
+'''
+          .trim()
+          .split('\n');
       DartStackTraceInfo dartStackTraceInfo = DartStackTraceInfo(
         isolateInstructions,
         dartStackTraceHeaderLines,
@@ -496,8 +498,7 @@ isolate_instructions: 100, vm_instructions: 1016bc000
     );
 
     test('Able to parseDartStackTraceInfo', () async {
-      final fakeDartStackTrace =
-          '''
+      final fakeDartStackTrace = '''
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 pid: 3081, tid: 6164033536, name io.flutter.1.ui
 os: ios arch: arm64 comp: no sim: no
@@ -506,7 +507,8 @@ isolate_dso_base: 1016b8000, vm_dso_base: 1016b8000
 isolate_instructions: 100, vm_instructions: 1016bc000
     #00 abs 000000000000006e _kDartIsolateSnapshotInstructions+0xa
     #01 abs 0000000000000078 _kDartIsolateSnapshotInstructions+0x14
-'''.trim();
+'''
+          .trim();
 
       final info = (glance as GlanceImpl).parseDartStackTraceInfo(
         fakeDartStackTrace,
@@ -520,7 +522,9 @@ os: ios arch: arm64 comp: no sim: no
 build_id: 'a8a967193ee33ac7a4852e7160590972'
 isolate_dso_base: 1016b8000, vm_dso_base: 1016b8000
 isolate_instructions: 100, vm_instructions: 1016bc000
-'''.trim().split('\n');
+'''
+          .trim()
+          .split('\n');
       expect(
         info.dartStackTraceHeaderLines,
         equals(expectedDartStackTraceHeaderLines),

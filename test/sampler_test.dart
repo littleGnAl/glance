@@ -493,11 +493,10 @@ void main() {
         final stack1 = NativeStack(frames: [frame1], modules: [module1]);
         final stack2 = NativeStack(frames: [frame2], modules: [module2]);
         final stack3 = NativeStack(frames: [frame3], modules: [module3]);
-        final buffer =
-            RingBuffer<NativeStack>(3)
-              ..write(stack1)
-              ..write(stack2)
-              ..write(stack3);
+        final buffer = RingBuffer<NativeStack>(3)
+          ..write(stack1)
+          ..write(stack2)
+          ..write(stack3);
 
         final timestampRange = <int>[now - 1000, now];
         final aggregatedNativeFrames = SamplerProcessor.aggregateStacks(
@@ -542,10 +541,9 @@ void main() {
           frames: [frame4, frame5],
           modules: [module, module],
         );
-        final buffer =
-            RingBuffer<NativeStack>(3)
-              ..write(stack1)
-              ..write(stack2);
+        final buffer = RingBuffer<NativeStack>(3)
+          ..write(stack1)
+          ..write(stack2);
 
         final timestampRange = <int>[now - 10000, now];
         final aggregatedNativeFrames = SamplerProcessor.aggregateStacks(
@@ -613,10 +611,9 @@ void main() {
             frames: [frame4, frame5],
             modules: [module, module],
           );
-          final buffer =
-              RingBuffer<NativeStack>(3)
-                ..write(stack1)
-                ..write(stack2);
+          final buffer = RingBuffer<NativeStack>(3)
+            ..write(stack1)
+            ..write(stack2);
 
           final timestampRange = <int>[now - 10000, now];
           final aggregatedNativeFrames = SamplerProcessor.aggregateStacks(
@@ -678,11 +675,10 @@ void main() {
         final stack1 = NativeStack(frames: [frame1], modules: [module1]);
         final stack2 = NativeStack(frames: [frame2], modules: [module2]);
         final stack3 = NativeStack(frames: [frame3], modules: [module3]);
-        final buffer =
-            RingBuffer<NativeStack>(3)
-              ..write(stack1)
-              ..write(stack2)
-              ..write(stack3);
+        final buffer = RingBuffer<NativeStack>(3)
+          ..write(stack1)
+          ..write(stack2)
+          ..write(stack3);
 
         final timestampRange = <int>[now - 3500, now];
         final aggregatedNativeFrames = SamplerProcessor.aggregateStacks(
@@ -742,10 +738,9 @@ void main() {
             modules: [module, module, module],
           );
           final stack2 = NativeStack(frames: [frame5], modules: [module]);
-          final buffer =
-              RingBuffer<NativeStack>(3)
-                ..write(stack1)
-                ..write(stack2);
+          final buffer = RingBuffer<NativeStack>(3)
+            ..write(stack1)
+            ..write(stack2);
 
           final timestampRange = <int>[now - 10000, now];
           final aggregatedNativeFrames = SamplerProcessor.aggregateStacks(
