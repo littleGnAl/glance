@@ -176,8 +176,10 @@ class GlanceImpl implements Glance {
 
     // e.g.,
     // isolate_instructions: 1016c6700, vm_instructions: 1016bc000
-    final isolateInstructionsInString =
-        dartStackTraceHeaderEndLine.split(',')[0].split(':')[1].trim();
+    final isolateInstructionsInString = dartStackTraceHeaderEndLine
+        .split(',')[0]
+        .split(':')[1]
+        .trim();
 
     isolateInstructions =
         int.tryParse(isolateInstructionsInString, radix: 16) ?? 0;
@@ -410,11 +412,11 @@ class _DefaultBinaryMessengerProxy implements BinaryMessenger {
       handler == null
           ? handler
           : (ByteData? message) {
-            final start = Timeline.now;
-            return handler(message)!.whenComplete(() {
-              _onCheckJank(start, Timeline.now);
-            });
-          },
+              final start = Timeline.now;
+              return handler(message)!.whenComplete(() {
+                _onCheckJank(start, Timeline.now);
+              });
+            },
     );
   }
 }

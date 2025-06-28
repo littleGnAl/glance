@@ -61,11 +61,12 @@ class CollectStackNativeBindings {
   }
 
   // ignore: non_constant_identifier_names
-  late final _CollectStackTraceOfTargetThreadPtr = _lookup<
-    ffi.NativeFunction<
-      ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, ffi.Size)
-    >
-  >('CollectStackTraceOfTargetThread');
+  late final _CollectStackTraceOfTargetThreadPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<Utf8> Function(ffi.Pointer<ffi.Int64>, ffi.Size)
+        >
+      >('CollectStackTraceOfTargetThread');
   // ignore: non_constant_identifier_names
   late final _CollectStackTraceOfTargetThread =
       _CollectStackTraceOfTargetThreadPtr.asFunction<
@@ -78,9 +79,10 @@ class CollectStackNativeBindings {
   }
 
   // ignore: non_constant_identifier_names
-  late final _LookupSymbolNamePtr = _lookup<
-    ffi.NativeFunction<ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>
-  >('LookupSymbolName');
+  late final _LookupSymbolNamePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Pointer<Utf8> Function(ffi.Pointer<DlInfo>)>
+      >('LookupSymbolName');
   // ignore: non_constant_identifier_names
   late final _LookupSymbolName =
       _LookupSymbolNamePtr.asFunction<
@@ -92,16 +94,14 @@ class CollectStackNativeBindings {
     return _dladdr(addr, info);
   }
 
-  late final _dladdrPtr = _lookup<
-    ffi.NativeFunction<
-      ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)
-    >
-  >('dladdr');
-  late final _dladdr =
-      _dladdrPtr
-          .asFunction<
-            int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)
-          >();
+  late final _dladdrPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)
+        >
+      >('dladdr');
+  late final _dladdr = _dladdrPtr
+      .asFunction<int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<DlInfo>)>();
 }
 
 class NativeFrame {
@@ -240,13 +240,12 @@ class StackCapturer {
             malloc.free(sn);
 
             final modulePath = dlInfo.ref.fileName.toDartString();
-            final module =
-                modules[modulePath] ??= NativeModule(
-                  id: modules.length,
-                  path: modulePath,
-                  baseAddress: dlInfo.ref.baseAddress.address,
-                  symbolName: symbolName,
-                );
+            final module = modules[modulePath] ??= NativeModule(
+              id: modules.length,
+              path: modulePath,
+              baseAddress: dlInfo.ref.baseAddress.address,
+              symbolName: symbolName,
+            );
 
             return NativeFrame(
               module: module,
