@@ -8,7 +8,7 @@ RUN apt-get update \
       liblzma-dev libxcb-xinput0 libglu1-mesa \
  && rm -rf /var/lib/apt/lists/*
 
-// NOTE: Pin the Flutter SDK version to match the version in `.github/workflows/tests.yml`
+# NOTE: Pin the Flutter SDK version to match the version in `.github/workflows/tests.yml`
 ENV FLUTTER_VERSION=3.32.5
 RUN git clone --depth 1 --branch $FLUTTER_VERSION https://github.com/flutter/flutter.git /opt/flutter
 
