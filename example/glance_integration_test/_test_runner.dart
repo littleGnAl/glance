@@ -184,10 +184,7 @@ Future<bool> _runTestCase(
         GlanceLogger.log('Symbolizing ...', prefixTag: false);
 
         final symbolFilePath = runOn == RunOnPlatform.android
-            ? path.join(
-                'debug-info-integration',
-                'app.android-arm64.symbols',
-              )
+            ? path.join('debug-info-integration', 'app.android-arm64.symbols')
             : path.join('debug-info-integration', 'app.ios-arm64.symbols');
 
         final result = await _symbolize(

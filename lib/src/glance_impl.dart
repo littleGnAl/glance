@@ -176,8 +176,10 @@ class GlanceImpl implements Glance {
 
     // e.g.,
     // isolate_instructions: 1016c6700, vm_instructions: 1016bc000
-    final isolateInstructionsInString =
-        dartStackTraceHeaderEndLine.split(',')[0].split(':')[1].trim();
+    final isolateInstructionsInString = dartStackTraceHeaderEndLine
+        .split(',')[0]
+        .split(':')[1]
+        .trim();
 
     isolateInstructions =
         int.tryParse(isolateInstructionsInString, radix: 16) ?? 0;
@@ -205,9 +207,9 @@ class DartStackTraceInfo {
 
   @override
   int get hashCode => Object.hash(
-        isolateInstructions,
-        Object.hashAll(dartStackTraceHeaderLines),
-      );
+    isolateInstructions,
+    Object.hashAll(dartStackTraceHeaderLines),
+  );
 }
 
 /// Implementation of [StackTrace] of glance.
@@ -295,8 +297,8 @@ class GlanceStackTraceImpl implements StackTrace {
   }
 }
 
-typedef HandleDrawFrameEndCallback = void Function(
-    int beginFrameTimeInMillis, int drawFrameTimeInMillis);
+typedef HandleDrawFrameEndCallback =
+    void Function(int beginFrameTimeInMillis, int drawFrameTimeInMillis);
 
 typedef CheckJankCallback = void Function(int start, int end);
 

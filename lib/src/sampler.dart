@@ -169,8 +169,8 @@ class AggregatedNativeFrame {
   int get hashCode => Object.hash(frame, occurTimes);
 }
 
-typedef SamplerProcessorFactory = SamplerProcessor Function(
-    SamplerConfig config);
+typedef SamplerProcessorFactory =
+    SamplerProcessor Function(SamplerConfig config);
 
 /// Class for processing the native frames.
 class SamplerProcessor {
@@ -270,8 +270,11 @@ class SamplerProcessor {
     final maxOccurTimes =
         config.jankThreshold / config.sampleRateInMilliseconds;
 
-    final parentFrameMap = LinkedHashMap<int,
-        LinkedHashMap<int, AggregatedNativeFrame>>.identity();
+    final parentFrameMap =
+        LinkedHashMap<
+          int,
+          LinkedHashMap<int, AggregatedNativeFrame>
+        >.identity();
 
     for (final nativeStack in buffer.readAllReversed()) {
       if (nativeStack.frames.isEmpty) {
@@ -279,7 +282,8 @@ class SamplerProcessor {
       }
 
       final parentFrame = nativeStack.frames.last;
-      bool isInclude = parentFrame.timestamp >= startTimestamp &&
+      bool isInclude =
+          parentFrame.timestamp >= startTimestamp &&
           parentFrame.timestamp <= endTimestamp;
       if (!isInclude) {
         continue;
